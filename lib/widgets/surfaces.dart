@@ -3,6 +3,7 @@ import 'dart:ui' show ImageFilter;
 import 'package:flutter/widgets.dart';
 
 import '../theme/theme.dart';
+import 'itext.dart';
 
 /// `.glass`: white 5.5% fill + 1 pt white 9% hairline on a continuous rounded rectangle,
 /// with an optional backdrop blur for floating surfaces.
@@ -235,7 +236,7 @@ class RowText extends StatelessWidget {
             Text(overline!, style: Typo.manrope(12, Typo.bold, Palette.subtle)),
             const SizedBox(height: 2),
           ],
-          Text(title, style: Typo.manrope(titleSize, Typo.extrabold, Palette.text)),
+          IText(title, style: Typo.manrope(titleSize, Typo.extrabold, Palette.text)),
           if (subtitle != null) ...[
             SizedBox(height: subtitleMono ? 3 : 2),
             Text(

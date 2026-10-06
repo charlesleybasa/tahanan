@@ -279,13 +279,20 @@ class RequirementsTab extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 12),
-                Wrap(
-                  spacing: 14,
+                // Native HStack: one row, items squeezed (long labels break) rather than wrapping to a new row.
+                Row(
                   children: [
-                    LegendDot(color: Palette.green, label: 'Accepted', style: legend),
-                    LegendDot(color: Palette.yellow, label: 'Reviewed', style: legend),
-                    LegendDot(color: Palette.blue, label: 'Submitted', style: legend),
-                    LegendDot(color: Palette.orange, label: 'To upload', style: legend),
+                    for (final (k, (c, l)) in const [
+                      (Palette.green, 'Accepted'),
+                      (Palette.yellow, 'Reviewed'),
+                      (Palette.blue, 'Submitted'),
+                      (Palette.orange, 'To upload'),
+                    ].indexed) ...[
+                      if (k > 0) const SizedBox(width: 14),
+                      Flexible(
+                        child: LegendDot(color: c, label: l, style: legend),
+                      ),
+                    ],
                   ],
                 ),
               ],
@@ -333,7 +340,10 @@ class RequirementsTab extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(r.name, style: Typo.manrope(14, Typo.extrabold, Palette.text)),
+              IText(
+                r.name,
+                style: Typo.manrope(14, Typo.extrabold, Palette.text).copyWith(height: Typo.lineGap(2, 14)),
+              ),
               const SizedBox(height: 8),
               Semantics(
                 label: r.status.label,

@@ -322,3 +322,10 @@ App icon 1024², launch background `#071226`.
 - Scroll feel: bouncing physics, no overscroll glow, no scrollbars on both platforms.
 - Upgrade from the native app: same bundle ID, so iOS restores the SwiftUI scene session. The Flutter
   `AppDelegate` replaces it (requires `UIApplicationSupportsMultipleScenes = true` and iOS 17).
+- Line breaking: iOS `Text` uses `NSLineBreakStrategy.pushOut` — a paragraph never ends with a single word on its
+  own line. Flutter has no equivalent, so wrapping text uses `IText` (`lib/widgets/itext.dart`), which narrows the
+  measure until the last line holds two words. Without it headlines such as "How can we / help, Maria?" break differently.
+- Line spacing: SwiftUI `lineSpacing(n)` = Flutter `height: natural + n / size` with
+  `TextHeightBehavior(applyHeightToFirstAscent: false, applyHeightToLastDescent: false)` (set at the root).
+- Borders: SwiftUI `.overlay(strokeBorder)` doesn't inset content; Flutter `BoxDecoration.border` does. Content-sized
+  boxes draw their border in `foregroundDecoration`.

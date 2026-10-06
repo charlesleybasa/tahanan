@@ -778,11 +778,17 @@ class SitePlanCard extends StatelessWidget {
             const SizedBox(height: 16),
             Row(
               children: [
-                LegendDot(color: Palette.yellow, label: 'Open', size: 10, radius: 3, style: legend),
+                Flexible(
+                  child: LegendDot(color: Palette.yellow, label: 'Open', size: 10, radius: 3, style: legend),
+                ),
                 const SizedBox(width: 14),
-                LegendDot(color: Palette.blue, label: 'Reserved', size: 10, radius: 3, style: legend),
+                Flexible(
+                  child: LegendDot(color: Palette.blue, label: 'Reserved', size: 10, radius: 3, style: legend),
+                ),
                 const SizedBox(width: 14),
-                LegendDot(color: Palette.white(0.2), label: 'Sold', size: 10, radius: 3, style: legend),
+                Flexible(
+                  child: LegendDot(color: Palette.white(0.2), label: 'Sold', size: 10, radius: 3, style: legend),
+                ),
               ],
             ),
           ],

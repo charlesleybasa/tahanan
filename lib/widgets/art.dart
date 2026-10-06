@@ -39,7 +39,7 @@ class LegendDot extends StatelessWidget {
         decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(radius ?? size / 2)),
       ),
       const SizedBox(width: 6),
-      Text(label, style: style),
+      Flexible(child: Text(label, style: style)),
     ],
   );
 }
