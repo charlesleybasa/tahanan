@@ -284,7 +284,6 @@ class FilterChipButton extends StatelessWidget {
         curve: Motion.easeInOut,
         height: height,
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        alignment: Alignment.center,
         decoration: ShapeDecoration(
           color: selected ? selectedFill : Palette.white(0.05),
           shape: RoundedRectangleBorder(
@@ -292,7 +291,12 @@ class FilterChipButton extends StatelessWidget {
             side: hairline(selected ? selectedFill : Palette.white(0.14)),
           ),
         ),
-        child: Text(title, maxLines: 1, style: Typo.manrope(14, Typo.bold, selected ? Palette.ink : Palette.softer)),
+        // Hug the label, except fixed-radius chips (Male / Female), which fill their slot as in native.
+        child: Center(
+          widthFactor: radius == null ? 1 : null,
+          heightFactor: 1,
+          child: Text(title, maxLines: 1, style: Typo.manrope(14, Typo.bold, selected ? Palette.ink : Palette.softer)),
+        ),
       ),
     );
   }
@@ -371,9 +375,12 @@ class SegmentedPill extends StatelessWidget {
             Container(
               constraints: const BoxConstraints(minWidth: 20, minHeight: 20),
               padding: const EdgeInsets.symmetric(horizontal: 5),
-              alignment: Alignment.center,
               decoration: const ShapeDecoration(color: Palette.orange, shape: StadiumBorder()),
-              child: Text('$n', style: Typo.manrope(11, Typo.extrabold, const Color(0xFFFFFFFF))),
+              child: Center(
+                widthFactor: 1,
+                heightFactor: 1,
+                child: Text('$n', style: Typo.manrope(11, Typo.extrabold, const Color(0xFFFFFFFF))),
+              ),
             ),
           ],
         ],

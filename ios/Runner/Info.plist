@@ -47,6 +47,25 @@
 			</array>
 		</dict>
 	</dict>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.raemulanlands.tahanan</string>
+			<key>CFBundleURLSchemes</key>
+			<array><string>tahanan</string></array>
+		</dict>
+	</array>
+	<key>FlutterDeepLinkingEnabled</key>
+	<true/>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+	<key>NSCameraUsageDescription</key>
+	<string>Tahanan uses the camera to scan your seller’s QR code, scan your spouse’s ID, and photograph your requirements.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Log in to Tahanan with Face ID.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Choose a photo of a requirement or a QR code to upload.</string>
 	<key>UIUserInterfaceStyle</key>
 	<string>Dark</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>

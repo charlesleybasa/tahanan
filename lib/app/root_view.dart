@@ -1,8 +1,17 @@
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
+import '../features/application/application_screen.dart';
+import '../features/auth/auth_screens.dart';
+import '../features/booking/booking_screens.dart';
+import '../features/help/help_screens.dart';
 import '../features/home/home_screen.dart';
-import '../features/pending/pending_screen.dart';
+import '../features/onboarding/onboarding_screen.dart';
+import '../features/profile/profile_screens.dart';
+import '../features/project/project_screens.dart';
+import '../features/sheets/sheets.dart';
+import '../features/splash/splash_screen.dart';
+import '../features/spouse/spouse_flow.dart';
 import '../theme/theme.dart';
 import '../widgets/overlays.dart';
 import 'app_state.dart';
@@ -11,8 +20,44 @@ import 'router.dart';
 import 'screen_enter.dart';
 
 /// Native `RootView`: background, current screen, floating tab bar, sheet, toast — in that z-order.
-class RootView extends StatelessWidget {
+/// Also receives `tahanan://` deep links (Supabase email and reset redirects).
+class RootView extends StatefulWidget {
   const RootView({super.key});
+
+  @override
+  State<RootView> createState() => _RootViewState();
+}
+
+class _RootViewState extends State<RootView> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  Future<bool> didPushRouteInformation(RouteInformation info) async {
+    final uri = info.uri;
+    final path = '${uri.host}${uri.path}'.replaceAll(RegExp('^/+'), '');
+    final state = context.read<AppState>();
+    switch (path) {
+      case 'auth/verify-email':
+        state.update(() => state.emailVerification = EmailVerification.verified);
+        context.go(const Screen(ScreenKind.account));
+        return true;
+      case 'auth/reset':
+        state.forgotStartStep = 2;
+        context.go(const Screen(ScreenKind.forgotPassword));
+        return true;
+    }
+    return false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +93,7 @@ class RootView extends StatelessWidget {
           BottomSheetPanel(
             key: ValueKey(state.sheet),
             onDismiss: state.closeSheet,
-            child: PendingSheet(kind: state.sheet!),
+            child: SheetBody(kind: state.sheet!),
           ),
         ToastHost(toast: state.toast, onDone: state.clearToast),
       ],
@@ -56,7 +101,27 @@ class RootView extends StatelessWidget {
   }
 
   Widget _screen(Screen s) => switch (s.kind) {
+    ScreenKind.splash => const SplashScreen(),
+    ScreenKind.onboarding => const OnboardingScreen(),
+    ScreenKind.login => const LoginScreen(),
+    ScreenKind.signup => const SignupScreen(),
+    ScreenKind.welcome => const WelcomeScreen(),
+    ScreenKind.forgotPassword => const ForgotPasswordScreen(),
     ScreenKind.home => const HomeScreen(),
-    _ => PendingScreen(screen: s),
+    ScreenKind.brand => BrandScreen(brandIndex: s.a),
+    ScreenKind.location => LocationStoryScreen(brandIndex: s.a, locationIndex: s.b),
+    ScreenKind.scan => const ScanScreen(),
+    ScreenKind.booking => const BookingScreen(),
+    ScreenKind.payment => const PaymentScreen(),
+    ScreenKind.paid => const PaidScreen(),
+    ScreenKind.application => const ApplicationScreen(),
+    ScreenKind.spouse => const SpouseFlowScreen(),
+    ScreenKind.profile => const ProfileScreen(),
+    ScreenKind.account => const AccountScreen(),
+    ScreenKind.security => const SecurityScreen(),
+    ScreenKind.about => AboutScreen(doc: s.a),
+    ScreenKind.help => const HelpScreen(),
+    ScreenKind.ticket => TicketChatScreen(ticketId: s.id ?? ''),
+    ScreenKind.newTicket => const NewTicketScreen(),
   };
 }

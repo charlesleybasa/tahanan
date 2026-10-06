@@ -1,4 +1,7 @@
 import 'dart:async';
+import 'dart:io' show Directory, File;
+
+import 'package:flutter/foundation.dart' show kDebugMode;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -28,19 +31,31 @@ Future<void> main() async {
   runApp(
     TahananApp(
       state: state,
-      router: AppRouter(start: _startScreen),
+      router: AppRouter(start: _startScreen(await _start())),
     ),
   );
 }
 
-/// Debug builds accept `--dart-define=START=<screen>` to open a screen directly, like native `-start`.
-const _start = String.fromEnvironment('START');
+/// Debug builds open a screen directly for design review, like the native `-start` argument:
+/// `--dart-define=START=<screen>`, or a `Documents/debug_start` file in the app sandbox (read once, then deleted).
+Future<String> _start() async {
+  if (!kDebugMode) return '';
+  const defined = String.fromEnvironment('START');
+  if (defined.isNotEmpty) return defined;
+  // The sandbox's tmp/ sits next to Documents/ (Platform.environment is empty on iOS).
+  final f = File('${Directory.systemTemp.parent.path}/Documents/debug_start');
+  if (!f.existsSync()) return '';
+  final v = f.readAsStringSync().trim();
+  f.deleteSync();
+  return v;
+}
 
-Screen get _startScreen {
+Screen _startScreen(String start) {
+  if (start == 'ticket') return const Screen.ticket('TK-1042');
   for (final k in ScreenKind.values) {
-    if (k.name == _start) return Screen(k);
+    if (k.name == start) return Screen(k);
   }
-  return Screen.home;
+  return const Screen(ScreenKind.splash);
 }
 
 class TahananApp extends StatelessWidget {
@@ -74,7 +89,12 @@ class TahananApp extends StatelessWidget {
           type: MaterialType.transparency,
           // Replaces Material's inherited body style (which carries height 1.43) so text uses the fonts'
           // own line metrics, as SwiftUI does.
-          child: DefaultTextStyle(style: rootTextStyle, child: RootView()),
+          child: DefaultTextStyle(
+            style: rootTextStyle,
+            // SwiftUI `lineSpacing` adds space only between lines, never above the first or below the last.
+            textHeightBehavior: TextHeightBehavior(applyHeightToFirstAscent: false, applyHeightToLastDescent: false),
+            child: RootView(),
+          ),
         ),
       ),
     );

@@ -46,8 +46,12 @@ abstract final class Typo {
   /// `.lbl`: 13 / 700 / #AAB9D3.
   static final fieldLabel = manrope(13, bold, Palette.label);
 
-  /// `.muted` paragraph: 15, line-height 1.55.
-  static TextStyle mutedBody([double size = 15]) => manrope(size, regular, Palette.muted).copyWith(height: 1.55);
+  /// `.muted` paragraph: 15, line spacing 0.3 × size on top of Manrope's natural 1.366 (as native `lineSpacing`).
+  static TextStyle mutedBody([double size = 15]) =>
+      manrope(size, regular, Palette.muted).copyWith(height: lineGap(0.3 * size, size));
+
+  /// Line height that reproduces SwiftUI `lineSpacing(extra)` for Manrope at [size].
+  static double lineGap(double extra, double size) => 1.366 + extra / size;
 
   /// Settings group overline: 12 / 800 / +0.1em, uppercase.
   static TextStyle overline({Color color = Palette.subtle, double em = 0.1}) =>
