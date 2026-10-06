@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Spouse details · Live flow</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&amp;family=Manrope:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@500;600&amp;display=swap">
+<style>
+body{margin:0;background:#050D1C}
+*{box-sizing:border-box}
+a{color:#FFC42E}a:hover{color:#FFD86E}
+.app{font-family:'Manrope',system-ui,-apple-system,sans-serif;color:#F3F6FC;-webkit-font-smoothing:antialiased}
+.app button{font:inherit;color:inherit;cursor:pointer}
+.app input,.app textarea{font:inherit}
+.ff{font-family:'Outfit','Manrope',system-ui,sans-serif}
+.mono{font-family:'JetBrains Mono',ui-monospace,Menlo,monospace}
+.noscroll{scrollbar-width:none}.noscroll::-webkit-scrollbar{display:none}
+.glass{background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.09);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.btnY{height:56px;border:0;border-radius:999px;background:#FFC42E;color:#0B1A33 !important;font-weight:800 !important;font-size:16px;display:flex;align-items:center;justify-content:space-between;padding:0 6px 0 24px;width:100%;box-shadow:0 14px 34px -12px rgba(255,196,46,.6);transition:transform .15s ease,filter .2s;text-decoration:none}
+.btnY:hover{filter:brightness(1.05)}.btnY:active,.btnG:active,.press:active{transform:scale(.97)}
+.btnY .chip{width:44px;height:44px;border-radius:999px;background:#0B1A33;color:#FFC42E;display:grid;place-items:center}
+.btnC{justify-content:center;padding:0 24px}
+.btnG{height:52px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);color:#F3F6FC;font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:center;gap:10px;width:100%;transition:transform .15s ease,background .2s}
+.btnG:hover{background:rgba(255,255,255,.1)}
+.ib{width:44px;height:44px;flex:none;border-radius:999px;display:grid;place-items:center;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:#F3F6FC;padding:0;transition:background .2s}
+.ib:hover{background:rgba(255,255,255,.14)}
+.field{width:100%;height:56px;border-radius:16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.13);color:#F3F6FC;padding:0 16px;font-size:16px;outline:none;transition:border-color .2s,background .2s,box-shadow .2s}
+.field:focus{border-color:#FFC42E;background:rgba(255,196,46,.05);box-shadow:0 0 0 4px rgba(255,196,46,.12)}
+.field::placeholder{color:#7F91B2}
+textarea.field{height:120px;padding:14px 16px;resize:none;line-height:1.5}
+.lbl{display:block;font-size:13px;font-weight:700;color:#AAB9D3;margin:0 0 8px}
+.eyebrow{font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#FFC42E;margin:0}
+.h1{font-family:'Outfit',system-ui,sans-serif;font-weight:600;letter-spacing:-.035em;line-height:1.02;margin:0}
+.muted{color:#A2B2CE}
+.sub{color:#8C9DBC}
+.sec{font-family:'Outfit',system-ui,sans-serif;font-size:20px;font-weight:600;letter-spacing:-.015em;margin:0}
+.pill{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:800;white-space:nowrap}
+.p-acc{background:rgba(47,169,107,.18);color:#62D69C}
+.p-rev{background:rgba(255,196,46,.16);color:#FFC94A}
+.p-sub{background:rgba(46,107,230,.24);color:#93B4FF}
+.p-todo{background:rgba(242,98,46,.17);color:#FF9468}
+.p-mut{background:rgba(255,255,255,.08);color:#AAB9D3}
+.row{display:flex;align-items:center;gap:14px;width:100%;min-height:64px;padding:12px 16px;background:transparent;border:0;color:inherit;text-align:left;transition:background .2s}
+.row:hover{background:rgba(255,255,255,.04)}
+.ico{width:42px;height:42px;flex:none;border-radius:14px;display:grid;place-items:center}
+.otp{width:46px;height:58px;border-radius:14px;display:grid;place-items:center;font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:600;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.13)}
+.otp.on{border-color:#FFC42E;box-shadow:0 0 0 4px rgba(255,196,46,.14)}
+.chipb{height:40px;padding:0 16px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);font-weight:700;font-size:14px;white-space:nowrap;transition:all .2s}
+.navb{width:62px;height:58px;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:11px !important;font-weight:800 !important;padding:0;transition:color .25s}
+.toggle{width:52px;height:32px;border-radius:999px;border:0;padding:3px;display:flex;transition:background .25s,justify-content .25s;flex:none}
+.toggle i{width:26px;height:26px;border-radius:999px;background:#fff;display:block;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+.archimg{display:block;width:100%;height:100%;object-fit:cover}
+.scr{animation:scrIn .75s cubic-bezier(.2,.8,.2,1) both}
+@keyframes scrIn{from{opacity:0;transform:scale(1.035);filter:blur(10px)}to{opacity:1;transform:none;filter:none}}
+.rise{animation:rise .85s cubic-bezier(.2,.8,.2,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(26px);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
+.d1{animation-delay:.07s}.d2{animation-delay:.14s}.d3{animation-delay:.21s}.d4{animation-delay:.28s}.d5{animation-delay:.36s}.d6{animation-delay:.44s}.d7{animation-delay:.52s}.d8{animation-delay:.6s}
+.kb{animation:kb 16s ease-in-out infinite alternate;transform-origin:60% 40%}
+@keyframes kb{from{transform:scale(1.06)}to{transform:scale(1.22) translate(-2%,-2%)}}
+.float{animation:floaty 6s ease-in-out infinite}
+.float2{animation:floaty 7s ease-in-out -2s infinite}
+.float3{animation:floaty 8s ease-in-out -4s infinite}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.glow{animation:glowPulse 5s ease-in-out infinite}
+@keyframes glowPulse{0%,100%{opacity:.75;transform:scale(1)}50%{opacity:1;transform:scale(1.08)}}
+.ring{animation:ringA 2.2s ease-out infinite}
+@keyframes ringA{0%{transform:scale(.92);opacity:.8}100%{transform:scale(1.55);opacity:0}}
+.scanline{animation:scanA 2.4s ease-in-out infinite}
+@keyframes scanA{0%{top:8%}50%{top:88%}100%{top:8%}}
+.cornerP{animation:cornerA 2.4s ease-in-out infinite}
+@keyframes cornerA{0%,100%{transform:scale(1)}50%{transform:scale(.96)}}
+.seg-run{animation:segA 6s linear both}
+@keyframes segA{from{width:0}to{width:100%}}
+.sheet{animation:sheetUp .55s cubic-bezier(.2,.9,.2,1) both}
+@keyframes sheetUp{from{transform:translateY(100%)}to{transform:none}}
+.fade{animation:fadeA .4s ease both}
+@keyframes fadeA{from{opacity:0}to{opacity:1}}
+.spin{animation:spinA .9s linear infinite}
+@keyframes spinA{to{transform:rotate(360deg)}}
+.upbar{animation:barA 1.6s cubic-bezier(.4,0,.2,1) both}
+@keyframes barA{from{width:0}to{width:100%}}
+.pop{animation:popA .7s cubic-bezier(.2,.9,.3,1.35) both}
+@keyframes popA{0%{transform:scale(0);opacity:0}100%{transform:scale(1);opacity:1}}
+.caret{width:2px;height:26px;background:#FFC42E;animation:caretA 1s steps(1) infinite}
+@keyframes caretA{50%{opacity:0}}
+.tdot{width:7px;height:7px;border-radius:9px;background:#AAB9D3;display:block;animation:tdotA 1.2s ease-in-out infinite}
+.tdot2{animation-delay:.15s}.tdot3{animation-delay:.3s}
+@keyframes tdotA{0%,80%,100%{opacity:.3;transform:none}40%{opacity:1;transform:translateY(-3px)}}
+.stripes{background-image:repeating-linear-gradient(-45deg,rgba(11,26,51,.95) 0 6px,rgba(11,26,51,.72) 6px 12px)}
+.toast{animation:toastA 2.4s cubic-bezier(.2,.8,.2,1) both}
+@keyframes toastA{0%{opacity:0;transform:translate(-50%,-16px)}12%,82%{opacity:1;transform:translate(-50%,0)}100%{opacity:0;transform:translate(-50%,-10px)}}
+.lg-body,.lg-door{transform-origin:50% 100%}
+.sp-body{animation:archUp 1.05s cubic-bezier(.2,.9,.2,1) .35s both}
+@keyframes archUp{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+.sp-sun{animation:sunUp 1.3s cubic-bezier(.2,.8,.2,1) .85s both,sunGlow 3.2s ease-in-out 2.2s infinite}
+@keyframes sunUp{from{transform:translateY(70%) scale(.55);opacity:0}to{transform:none;opacity:1}}
+@keyframes sunGlow{0%,100%{box-shadow:0 0 36px 4px rgba(255,196,46,.45)}50%{box-shadow:0 0 70px 14px rgba(255,196,46,.65)}}
+.sp-door{animation:archUp .75s cubic-bezier(.2,.9,.2,1) 1.25s both}
+.sp-bush{animation:popA .65s cubic-bezier(.2,.9,.3,1.5) 1.55s both}
+.sp-l{display:inline-block;animation:letterA .85s cubic-bezier(.2,.8,.2,1) both}
+@keyframes letterA{from{opacity:0;transform:translateY(46px) rotate(8deg);filter:blur(10px)}to{opacity:1;transform:none;filter:none}}
+.sp-l1{animation-delay:1.7s}.sp-l2{animation-delay:1.76s}.sp-l3{animation-delay:1.82s}.sp-l4{animation-delay:1.88s}.sp-l5{animation-delay:1.94s}.sp-l6{animation-delay:2s}.sp-l7{animation-delay:2.06s}
+.sp-by{animation:trackA 1.5s cubic-bezier(.2,.8,.2,1) 2.2s both}
+@keyframes trackA{from{letter-spacing:1em;opacity:0}to{letter-spacing:.34em;opacity:1}}
+.sp-tag{animation:fadeA 1s ease 2.7s both}
+.sp-ring{animation:ringOut 3.4s cubic-bezier(.2,.8,.2,1) both}
+@keyframes ringOut{0%{transform:translateX(-50%) scale(.15);opacity:0}25%{opacity:.7}100%{transform:translateX(-50%) scale(1);opacity:0}}
+.sp-dawn{animation:dawnA 2.8s cubic-bezier(.2,.8,.2,1) .5s both}
+@keyframes dawnA{from{opacity:0;transform:translateY(35%)}to{opacity:1;transform:none}}
+.sp-out{animation:spOut .85s cubic-bezier(.6,0,.4,1) 3.55s both}
+@keyframes spOut{to{opacity:0;transform:scale(1.12);filter:blur(14px)}}
+.sv{animation:fadeA .6s ease both}
+.scanline{animation:scanA 2.4s ease-in-out infinite}
+.sp-grain{animation:fadeA 1.4s ease both}
+.q{display:block;background:#0B1A33;border-radius:1px}
+</style>
+</helmet>
+<div class="app" style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #08142A;">
+<div aria-hidden="true" style="position: absolute; inset: 0; background: radial-gradient(110% 50% at 90% -8%, rgba(46,107,230,.3), rgba(46,107,230,0) 60%), #08142A;"></div>
+
+<!-- ===== HEADER (form steps) ===== -->
+<sc-if value="{{showHead}}" hint-placeholder-val="{{true}}">
+<div style="position: absolute; top: 0; left: 0; right: 0; z-index: 20; padding: 52px 20px 12px; background: linear-gradient(#08142A 78%, rgba(8,20,42,0));">
+<div style="display: flex; align-items: center; gap: 12px;">
+<button aria-label="Back" onClick="{{back}}" class="ib"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"></path><path d="m11 6-6 6 6 6"></path></svg></button>
+<div style="flex: 1; min-width: 0;"><div class="ff" style="font-size: 19px; font-weight: 600;">Spouse information</div><div style="font-size: 12px; color: #8C9DBC; font-weight: 700;">Step {{stepNo}} of 4 · {{stepName}}</div></div>
+<span class="sv" style="display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 800; color: #62D69C;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5 10 17 19 7"></path></svg>Saved</span>
+</div>
+<div style="display: flex; gap: 6px; margin-top: 14px;" aria-label="Progress">
+<sc-for list="{{steps}}" as="s" hint-placeholder-count="4"><div style="flex: 1;"><div style="height: 4px; border-radius: 9px; background: rgba(255,255,255,.14); overflow: hidden;"><div style="height: 100%; border-radius: 9px; background: #FFC42E; transition: width .6s cubic-bezier(.2,.8,.2,1); width: {{s.w}};"></div></div><div style="font-size: 10px; font-weight: 800; letter-spacing: .04em; margin-top: 6px; color: {{s.c}}; transition: color .3s;">{{s.label}}</div></div></sc-for>
+</div>
+</div>
+</sc-if>
+
+<!-- ===== INTRO ===== -->
+<sc-if value="{{is.intro}}" hint-placeholder-val="{{false}}">
+<div class="scr noscroll" style="position: absolute; inset: 0; overflow-y: auto; padding: 56px 20px 40px;">
+<a href="/buyer/B21-Personal-Info.dc.html" aria-label="Back to my application" class="ib"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"></path><path d="m11 6-6 6 6 6"></path></svg></a>
+<div class="rise d1" style="position: relative; height: 200px; margin-top: 18px;">
+<div class="glow" aria-hidden="true" style="position: absolute; left: 120px; top: 10px; width: 150px; height: 150px; border-radius: 999px; background: radial-gradient(closest-side, rgba(255,196,46,.45), rgba(255,196,46,0));"></div>
+<div class="float" style="position: absolute; left: 70px; top: 40px; width: 118px; height: 150px; border-radius: 59px 59px 18px 18px; background: linear-gradient(160deg, #4A85F5, #2459C9); display: grid; place-items: center; box-shadow: 0 30px 60px -24px rgba(0,0,0,.8);"><span class="ff" style="font-size: 34px; font-weight: 700;">MS</span></div>
+<div class="float2" style="position: absolute; left: 172px; top: 56px; width: 118px; height: 150px; border-radius: 59px 59px 18px 18px; background: rgba(255,255,255,.06); border: 1.5px dashed rgba(255,196,46,.6); display: grid; place-items: center; color: #FFC42E; backdrop-filter: blur(10px);"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></div>
+</div>
+<p class="eyebrow rise d2" style="margin-top: 18px;">Asawa · Spouse</p>
+<h1 class="h1 rise d3" style="font-size: 34px; margin-top: 10px;">Add your spouse to your application</h1>
+<p class="muted rise d4" style="font-size: 15px; line-height: 1.55; margin: 12px 0 0;">You’re married, so your spouse is part of the home loan. Their income can also count toward your household income.</p>
+<div class="glass rise d5" style="border-radius: 22px; margin-top: 18px; padding: 6px 16px;">
+<div style="display: flex; gap: 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,.07);"><span class="ico" style="width: 36px; height: 36px; border-radius: 12px; background: rgba(46,107,230,.22); color: #93B4FF;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18v12H3z"></path><path d="M3 10h18M7 15h3"></path></svg></span><span style="font-size: 14px; font-weight: 700;">Their valid government ID</span></div>
+<div style="display: flex; gap: 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,.07);"><span class="ico" style="width: 36px; height: 36px; border-radius: 12px; background: rgba(46,107,230,.22); color: #93B4FF;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path><path d="M14 3v5h5"></path><path d="M9 13h6M9 17h4"></path></svg></span><span style="font-size: 14px; font-weight: 700;">TIN and employer details</span></div>
+<div style="display: flex; gap: 12px; align-items: center; padding: 10px 0;"><span class="ico" style="width: 36px; height: 36px; border-radius: 12px; background: rgba(46,107,230,.22); color: #93B4FF;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16v14H4z"></path><path d="M4 10h16M8 3v4M16 3v4"></path></svg></span><span style="font-size: 14px; font-weight: 700;">About 3 minutes · saves as you go</span></div>
+</div>
+<div class="rise d6" style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px;">
+<button onClick="{{scanId}}" class="btnY">Scan their ID to autofill<span class="chip"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"></path><path d="M4 12h16"></path></svg></span></button>
+<button onClick="{{manual}}" class="btnG">Type details myself</button>
+<button onClick="{{goInvite}}" style="height: 48px; border: 0; background: transparent; color: #FFC42E; font-weight: 800; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 8px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12 20 4l-6 16-3-7z"></path><path d="m11 13 9-9"></path></svg>Let my spouse fill it in</button>
+</div>
+</div>
+</sc-if>
+
+<!-- ===== ID SCAN ===== -->
+<sc-if value="{{is.idscan}}" hint-placeholder-val="{{false}}">
+<div class="scr" style="position: absolute; inset: 0; overflow: hidden; background: #02060E;">
+<img src="/_blob/474fb931a1918b43a812114ef293aaf4" alt="" aria-hidden="true" style="position: absolute; inset: -40px; width: calc(100% + 80px); height: calc(100% + 80px); object-fit: cover; filter: blur(20px) brightness(.35);">
+<div style="position: absolute; top: 54px; left: 20px; right: 20px; display: flex; align-items: center; justify-content: space-between; z-index: 3;"><button aria-label="Cancel" onClick="{{toIntro}}" class="ib"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg></button><div class="ff" style="font-size: 18px; font-weight: 600;">Scan spouse ID</div><span style="width: 44px;"></span></div>
+<div style="position: absolute; left: 24px; right: 24px; top: 230px; height: 216px; border-radius: 22px; box-shadow: 0 0 0 999px rgba(2,6,14,.6);">
+<div class="fade" style="position: absolute; inset: 14px; border-radius: 14px; background: linear-gradient(135deg, #E9EEF7, #C9D4E8); color: #16305B; padding: 16px; display: flex; gap: 14px; transform: rotate(-2deg);">
+<div style="width: 78px; height: 96px; border-radius: 10px; background: #9DB0CF; flex: none;"></div>
+<div style="flex: 1; display: flex; flex-direction: column; gap: 8px;"><span style="font-size: 9px; font-weight: 800; letter-spacing: .1em;">REPUBLIKA NG PILIPINAS</span><span style="height: 8px; width: 80%; border-radius: 4px; background: rgba(22,48,91,.35);"></span><span style="height: 8px; width: 60%; border-radius: 4px; background: rgba(22,48,91,.25);"></span><span style="height: 8px; width: 70%; border-radius: 4px; background: rgba(22,48,91,.25);"></span><span class="mono" style="font-size: 10px; margin-top: auto;">•••• •••• 2048</span></div>
+</div>
+<div style="position: absolute; inset: 0; border-radius: 22px; border: 3px solid {{scanC}}; transition: border-color .3s;"></div>
+<sc-if value="{{scanning}}"><div class="scanline" style="position: absolute; left: 14px; right: 14px; height: 3px; border-radius: 9px; background: #FFC42E; box-shadow: 0 0 22px 5px rgba(255,196,46,.65);"></div></sc-if>
+<sc-if value="{{scanOk}}"><div style="position: absolute; inset: 0; display: grid; place-items: center;"><div class="pop" style="width: 76px; height: 76px; border-radius: 999px; background: #2FA96B; color: #fff; display: grid; place-items: center; box-shadow: 0 0 0 12px rgba(47,169,107,.25);"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5 10 17 19 7"></path></svg></div></div></sc-if>
+</div>
+<p style="position: absolute; left: 30px; right: 30px; top: 470px; text-align: center; margin: 0; font-size: 15px; line-height: 1.5; color: #E2E8F3;">{{scanMsg}}</p>
+<div class="glass sheet" style="position: absolute; left: 12px; right: 12px; bottom: 16px; border-radius: 28px; padding: 18px; background: rgba(13,28,56,.85);">
+<div style="font-size: 13px; color: #A2B2CE; line-height: 1.5;">Accepted: PhilSys National ID, UMID, Passport, Driver’s license, PRC ID. We only read the name, birthdate and ID number.</div>
+<button onClick="{{capture}}" class="btnY btnC" style="margin-top: 14px;">Capture ID</button>
+</div>
+</div>
+</sc-if>
+
+<!-- ===== STEP 1: PERSONAL ===== -->
+<sc-if value="{{is.s1}}" hint-placeholder-val="{{false}}">
+<div class="scr noscroll" style="position: absolute; inset: 0; overflow-y: auto; padding: 150px 20px 130px;">
+<sc-if value="{{fromId}}"><div class="rise" style="display: flex; gap: 10px; align-items: center; padding: 12px 14px; border-radius: 16px; background: rgba(47,169,107,.14); border: 1px solid rgba(47,169,107,.35); font-size: 13px; color: #BFEBD3; margin-bottom: 18px;"><span style="color: #62D69C;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5 10 17 19 7"></path></svg></span><span>Filled from their ID — please double-check.</span></div></sc-if>
+<h2 class="h1 rise d1" style="font-size: 26px;">Who is your spouse?</h2>
+<p class="muted rise d1" style="font-size: 14px; margin: 6px 0 0;">Use their name exactly as it appears on their ID.</p>
+<div class="rise d2" style="display: flex; flex-direction: column; gap: 14px; margin-top: 20px;">
+<div><label class="lbl" for="sp-first">First name</label><input id="sp-first" class="field" value="{{F.first.v}}" onChange="{{F.first.on}}" placeholder="Jose" autocomplete="off" style="border-color: {{F.first.bd}};"></div>
+<div style="display: grid; grid-template-columns: minmax(0, 1fr) 96px; gap: 10px;">
+<div><label class="lbl" for="sp-middle">Middle name</label><input id="sp-middle" class="field" value="{{F.middle.v}}" onChange="{{F.middle.on}}" placeholder="Reyes" style="border-color: {{F.middle.bd}};"></div>
+<div><label class="lbl" for="sp-suffix">Suffix</label><input id="sp-suffix" class="field" value="{{F.suffix.v}}" onChange="{{F.suffix.on}}" placeholder="Jr." style="border-color: {{F.suffix.bd}};"></div>
+</div>
+<label style="display: flex; gap: 10px; align-items: center; font-size: 13px; color: #A2B2CE; margin-top: -4px; cursor: pointer;"><input type="checkbox" style="width: 20px; height: 20px; accent-color: #FFC42E; margin: 0;">No middle name</label>
+<div><label class="lbl" for="sp-last">Last name</label><input id="sp-last" class="field" value="{{F.last.v}}" onChange="{{F.last.on}}" placeholder="Santos" style="border-color: {{F.last.bd}};"></div>
+<div><label class="lbl" for="sp-bday">Birthdate</label><input id="sp-bday" class="field" type="date" value="{{F.bday.v}}" onChange="{{F.bday.on}}" style="color-scheme: dark; border-color: {{F.bday.bd}};"></div>
+<div><span class="lbl">Sex</span><div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px;"><sc-for list="{{sexOpts}}" as="o" hint-placeholder-count="2"><button onClick="{{o.pick}}" class="chipb" style="height: 52px; border-radius: 16px; background: {{o.bg}}; color: {{o.col}}; border-color: {{o.bd}};">{{o.label}}</button></sc-for></div></div>
+<div><label class="lbl" for="sp-cit">Citizenship</label><input id="sp-cit" class="field" value="{{F.cit.v}}" onChange="{{F.cit.on}}" placeholder="Filipino"></div>
+<div><label class="lbl" for="sp-mobile">Mobile number</label><div style="display: flex; gap: 8px;"><div class="mono" style="height: 56px; padding: 0 14px; border-radius: 16px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.13); display: flex; align-items: center; font-size: 15px; font-weight: 600;">+63</div><input id="sp-mobile" class="field" type="tel" value="{{F.mobile.v}}" onChange="{{F.mobile.on}}" placeholder="917 123 4567" style="border-color: {{F.mobile.bd}};"></div>
+<sc-if value="{{mobileErr}}"><p style="margin: 8px 0 0; font-size: 12px; font-weight: 700; color: #FF9468; display: flex; gap: 6px; align-items: center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z"></path><path d="M12 11v5M12 8h.01"></path></svg>Enter 10 digits, starting with 9</p></sc-if></div>
+<div><label class="lbl" for="sp-email">Email <span style="color: #7F91B2; font-weight: 600;">(optional)</span></label><input id="sp-email" class="field" type="email" value="{{F.email.v}}" onChange="{{F.email.on}}" placeholder="name@email.com"></div>
+</div>
+</div>
+</sc-if>
+
+<!-- ===== STEP 2: ADDRESS & ID ===== -->
+<sc-if value="{{is.s2}}" hint-placeholder-val="{{false}}">
+<div class="scr noscroll" style="position: absolute; inset: 0; overflow-y: auto; padding: 150px 20px 130px;">
+<h2 class="h1 rise" style="font-size: 26px;">Address and ID</h2>
+<div class="glass rise d1" style="border-radius: 22px; margin-top: 18px; padding: 16px; display: flex; gap: 14px; align-items: center;">
+<span class="ico" style="background: rgba(255,196,46,.16); color: #FFC42E;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"></path></svg></span>
+<div style="flex: 1;"><div style="font-weight: 800; font-size: 15px;">Lives with me</div><div style="font-size: 12px; color: #8C9DBC; margin-top: 2px;">Use my current address</div></div>
+<button role="switch" aria-checked="{{same}}" aria-label="Same address as mine" onClick="{{toggleSame}}" class="toggle" style="background: {{sameBg}}; justify-content: {{sameJ}};"><i></i></button>
+</div>
+<sc-if value="{{same}}"><div class="fade" style="margin-top: 10px; padding: 14px 16px; border-radius: 18px; background: rgba(255,255,255,.04); border: 1px dashed rgba(255,255,255,.14); font-size: 14px; line-height: 1.5; color: #C9D4E8; display: flex; gap: 10px;"><span style="color: #8C9DBC; flex: none;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"></path><path d="M12 11.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"></path></svg></span>Blk 4 Lot 12, Sampaguita St., Brgy. San Juan I, Ternate, Cavite 4111</div></sc-if>
+<sc-if value="{{notSame}}"><div class="fade" style="display: flex; flex-direction: column; gap: 14px; margin-top: 16px;">
+<div><label class="lbl" for="sp-street">House no., street</label><input id="sp-street" class="field" placeholder="Blk 4 Lot 12, Sampaguita St."></div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px;"><div><label class="lbl" for="sp-brgy">Barangay</label><input id="sp-brgy" class="field" placeholder="San Juan I"></div><div><label class="lbl" for="sp-city">City</label><input id="sp-city" class="field" placeholder="Ternate"></div></div>
+<div style="display: grid; grid-template-columns: minmax(0, 1fr) 110px; gap: 10px;"><div><label class="lbl" for="sp-prov">Province</label><input id="sp-prov" class="field" placeholder="Cavite"></div><div><label class="lbl" for="sp-zip">ZIP</label><input id="sp-zip" class="field mono" placeholder="4111"></div></div>
+</div></sc-if>
+<h3 class="sec rise d2" style="font-size: 17px; margin-top: 26px;">Valid ID</h3>
+<div class="noscroll rise d2" style="display: flex; gap: 8px; overflow-x: auto; margin: 12px -20px 0; padding: 0 20px;"><sc-for list="{{idOpts}}" as="o" hint-placeholder-count="5"><button onClick="{{o.pick}}" class="chipb" style="background: {{o.bg}}; color: {{o.col}}; border-color: {{o.bd}};">{{o.label}}</button></sc-for></div>
+<div class="rise d3" style="display: flex; flex-direction: column; gap: 14px; margin-top: 14px;">
+<div><label class="lbl" for="sp-idno">{{idLabel}} number</label><input id="sp-idno" class="field mono" value="{{F.idno.v}}" onChange="{{F.idno.on}}" placeholder="{{idPh}}" style="border-color: {{F.idno.bd}};"></div>
+<div><label class="lbl" for="sp-tin">TIN</label><input id="sp-tin" class="field mono" value="{{F.tin.v}}" onChange="{{F.tin.on}}" placeholder="000-000-000-000" style="border-color: {{F.tin.bd}};"><p style="margin: 8px 0 0; font-size: 12px; color: #8C9DBC;">No TIN yet? You can add it later — it’s needed before loan approval.</p></div>
+</div>
+</div>
+</sc-if>
+
+<!-- ===== STEP 3: WORK & INCOME ===== -->
+<sc-if value="{{is.s3}}" hint-placeholder-val="{{false}}">
+<div class="scr noscroll" style="position: absolute; inset: 0; overflow-y: auto; padding: 150px 20px 130px;">
+<h2 class="h1 rise" style="font-size: 26px;">Work and income</h2>
+<p class="muted rise" style="font-size: 14px; margin: 6px 0 0;">This helps us size your loan. Only Homeful processors see it.</p>
+<div class="rise d1" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 18px;">
+<sc-for list="{{empOpts}}" as="o" hint-placeholder-count="4"><button onClick="{{o.pick}}" class="press" style="height: 72px; border-radius: 18px; border: 1.5px solid {{o.bd}}; background: {{o.bg}}; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 2px; padding: 0 14px; text-align: left; transition: all .25s;"><span style="font-weight: 800; font-size: 14px; color: {{o.col}};">{{o.label}}</span><span style="font-size: 11px; color: #8C9DBC;">{{o.sub}}</span></button></sc-for>
+</div>
+<sc-if value="{{working}}"><div class="fade" style="display: flex; flex-direction: column; gap: 14px; margin-top: 18px;">
+<div><label class="lbl" for="sp-emp">{{empLabel}}</label><input id="sp-emp" class="field" value="{{F.employer.v}}" onChange="{{F.employer.on}}" placeholder="{{empPh}}"></div>
+<div><label class="lbl" for="sp-pos">Position</label><input id="sp-pos" class="field" value="{{F.position.v}}" onChange="{{F.position.on}}" placeholder="e.g. Staff nurse"></div>
+<div><span class="lbl">Years in this work</span><div class="glass" style="height: 56px; border-radius: 16px; display: flex; align-items: center; justify-content: space-between; padding: 0 6px;"><button aria-label="Fewer years" onClick="{{yrsDown}}" class="ib" style="border: 0;">−</button><span class="ff" style="font-size: 20px; font-weight: 600;">{{years}}</span><button aria-label="More years" onClick="{{yrsUp}}" class="ib" style="border: 0;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></button></div></div>
+<div><label class="lbl" for="sp-inc">Gross monthly income</label><div style="position: relative;"><span class="ff" style="position: absolute; left: 16px; top: 15px; font-size: 18px; font-weight: 600; color: #FFC42E;">₱</span><input id="sp-inc" class="field ff" inputmode="numeric" value="{{F.income.v}}" onChange="{{F.income.on}}" placeholder="0" style="padding-left: 38px; font-size: 20px; font-weight: 600;"></div></div>
+</div></sc-if>
+<sc-if value="{{notWorking}}"><div class="fade" style="margin-top: 18px; padding: 16px; border-radius: 18px; background: rgba(255,255,255,.04); border: 1px dashed rgba(255,255,255,.14); font-size: 14px; line-height: 1.5; color: #C9D4E8;">No problem — we’ll use your income only. You can update this anytime.</div></sc-if>
+<div class="rise d3" style="margin-top: 20px; border-radius: 24px; padding: 18px; background: #FFC42E; color: #0B1A33; position: relative; overflow: hidden;">
+<div aria-hidden="true" style="position: absolute; right: -40px; top: -60px; width: 150px; height: 180px; border-radius: 999px 999px 0 0; background: rgba(255,255,255,.22);"></div>
+<div style="display: flex; justify-content: space-between; align-items: baseline; position: relative;"><span style="font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;">Household income</span><span class="ff" style="font-size: 24px; font-weight: 700;">{{gmi.total}}</span></div>
+<div style="position: relative; height: 14px; border-radius: 999px; background: rgba(11,26,51,.14); margin-top: 14px; display: flex; overflow: visible;">
+<div style="height: 100%; border-radius: 999px 0 0 999px; background: #0B1A33; transition: width .6s cubic-bezier(.2,.8,.2,1); width: {{gmi.mine}};"></div>
+<div class="stripes" style="height: 100%; border-radius: 0 999px 999px 0; transition: width .6s cubic-bezier(.2,.8,.2,1); width: {{gmi.sp}};"></div>
+<div style="position: absolute; top: -6px; bottom: -6px; width: 2px; background: #F2622E; left: {{gmi.req}};"></div>
+</div>
+<div style="display: flex; gap: 14px; margin-top: 12px; font-size: 12px; font-weight: 700; position: relative; flex-wrap: wrap;"><span style="display: flex; gap: 6px; align-items: center;"><span style="width: 10px; height: 10px; border-radius: 3px; background: #0B1A33;"></span>You ₱22,000</span><span style="display: flex; gap: 6px; align-items: center;"><span class="stripes" style="width: 10px; height: 10px; border-radius: 3px;"></span>Spouse {{gmi.spLabel}}</span><span style="display: flex; gap: 6px; align-items: center;"><span style="width: 10px; height: 2px; background: #F2622E;"></span>Required ₱14,000</span></div>
+<div style="margin-top: 12px; font-size: 13px; font-weight: 800; position: relative;">{{gmi.msg}}</div>
+</div>
+</div>
+</sc-if>
+
+<!-- ===== STEP 4: REVIEW ===== -->
+<sc-if value="{{is.s4}}" hint-placeholder-val="{{false}}">
+<div class="scr noscroll" style="position: absolute; inset: 0; overflow-y: auto; padding: 150px 20px 130px;">
+<h2 class="h1 rise" style="font-size: 26px;">Review and confirm</h2>
+<p class="muted rise" style="font-size: 14px; margin: 6px 0 0;">Tap Edit to fix anything.</p>
+<div style="display: flex; flex-direction: column; gap: 10px; margin-top: 18px;">
+<sc-for list="{{review}}" as="r" hint-placeholder-count="3">
+<div class="glass rise d1" style="border-radius: 22px; padding: 16px;">
+<div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 12px; font-weight: 800; color: #8C9DBC; letter-spacing: .08em; text-transform: uppercase;">{{r.title}}</span><button onClick="{{r.edit}}" style="height: 36px; border: 0; background: transparent; color: #FFC42E; font-weight: 800; font-size: 13px; display: flex; gap: 6px; align-items: center; padding: 0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"></path><path d="m13.5 6.5 4 4"></path></svg>Edit</button></div>
+<sc-for list="{{r.rows}}" as="x" hint-placeholder-count="3"><div style="display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; font-size: 14px; border-top: 1px solid rgba(255,255,255,.06);"><span class="sub">{{x.k}}</span><span style="font-weight: 700; text-align: right;">{{x.v}}</span></div></sc-for>
+</div>
+</sc-for>
+</div>
+<label class="rise d3" style="display: flex; gap: 12px; align-items: flex-start; font-size: 13px; line-height: 1.5; color: #A2B2CE; margin-top: 18px; cursor: pointer;"><input type="checkbox" checked="{{consent}}" onChange="{{toggleConsent}}" style="width: 22px; height: 22px; accent-color: #FFC42E; margin: 0; flex: none;"><span>My spouse agreed to share this information with Homeful for our home loan, under the Data Privacy Act of 2012.</span></label>
+</div>
+</sc-if>
+
+<!-- ===== BOTTOM CTA (form steps) ===== -->
+<sc-if value="{{showHead}}" hint-placeholder-val="{{true}}">
+<div style="position: absolute; left: 0; right: 0; bottom: 0; padding: 16px 20px 30px; background: linear-gradient(rgba(8,20,42,0), #08142A 35%); z-index: 20;">
+<button onClick="{{next}}" class="btnY" style="opacity: {{ctaOp}}; transition: opacity .3s;">{{ctaLabel}}<span class="chip"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="m13 6 6 6-6 6"></path></svg></span></button>
+</div>
+</sc-if>
+
+<!-- ===== DONE ===== -->
+<sc-if value="{{is.done}}" hint-placeholder-val="{{false}}">
+<div class="scr" style="position: absolute; inset: 0; overflow: hidden; display: flex; flex-direction: column; align-items: center; padding: 140px 24px 0; text-align: center;">
+<div class="sp-ring" aria-hidden="true" style="position: absolute; left: 50%; top: 80px; width: 320px; height: 360px; border: 1.5px solid rgba(47,169,107,.45); border-bottom: 0; border-radius: 999px 999px 0 0; animation-iteration-count: infinite; animation-duration: 3s;"></div>
+<div class="pop" style="width: 120px; height: 120px; border-radius: 999px; background: conic-gradient(#2FA96B 360deg, rgba(255,255,255,.1) 0); display: grid; place-items: center;"><div style="width: 100px; height: 100px; border-radius: 999px; background: #08142A; display: grid; place-items: center; color: #62D69C;"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5 10 17 19 7"></path></svg></div></div>
+<p class="eyebrow rise d3" style="margin-top: 36px;">Spouse info complete</p>
+<h1 class="h1 rise d4" style="font-size: 34px; margin-top: 10px;">Jose is on your application</h1>
+<p class="muted rise d5" style="font-size: 15px; line-height: 1.55; margin: 12px 0 0;">Your profile is now 84% complete. Next, upload 2 spouse documents.</p>
+<div class="glass rise d6" style="width: 100%; border-radius: 22px; margin-top: 22px; overflow: hidden; text-align: left;">
+<div class="row"><span class="ico" style="background: rgba(242,98,46,.16); color: #FF9468;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18v12H3z"></path><path d="M3 10h18M7 15h3"></path></svg></span><span style="flex: 1; font-weight: 800; font-size: 14px;">Spouse valid government ID</span><span class="pill p-todo">To upload</span></div>
+<div style="height: 1px; background: rgba(255,255,255,.07); margin: 0 16px;"></div>
+<div class="row"><span class="ico" style="background: rgba(242,98,46,.16); color: #FF9468;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path><path d="M14 3v5h5"></path><path d="M9 13h6M9 17h4"></path></svg></span><span style="flex: 1; font-weight: 800; font-size: 14px;">Marriage contract (PSA)</span><span class="pill p-todo">To upload</span></div>
+</div>
+<div class="rise d7" style="width: 100%; margin-top: 18px; display: flex; flex-direction: column; gap: 10px;"><a href="/buyer/B22-Requirements.dc.html" class="btnY" style="text-decoration: none;">Upload documents<span class="chip"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4"></path><path d="m7 9 5-5 5 5"></path><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path></svg></span></a><a href="/buyer/B21-Personal-Info.dc.html" class="btnG" style="display: flex; align-items: center; justify-content: center; text-decoration: none;">Back to my application</a></div>
+</div>
+</sc-if>
+
+<!-- ===== INVITE ===== -->
+<sc-if value="{{is.invite}}" hint-placeholder-val="{{false}}">
+<div class="scr noscroll" style="position: absolute; inset: 0; overflow-y: auto; padding: 56px 20px 40px;">
+<button aria-label="Back" onClick="{{toIntro}}" class="ib"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"></path><path d="m11 6-6 6 6 6"></path></svg></button>
+<sc-if value="{{inviteForm}}"><div>
+<div class="ico rise d1" style="width: 64px; height: 64px; border-radius: 22px; background: #2E6BE6; color: #fff; margin-top: 26px;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12 20 4l-6 16-3-7z"></path><path d="m11 13 9-9"></path></svg></div>
+<h1 class="h1 rise d2" style="font-size: 32px; margin-top: 20px;">Send your spouse a secure link</h1>
+<p class="muted rise d3" style="font-size: 15px; line-height: 1.55; margin: 12px 0 0;">They’ll fill in their own details and ID — no account needed. The link expires in 7 days.</p>
+<div class="rise d4" style="display: flex; flex-direction: column; gap: 14px; margin-top: 22px;">
+<div><label class="lbl" for="iv-name">Spouse’s first name</label><input id="iv-name" class="field" placeholder="Jose"></div>
+<div><label class="lbl" for="iv-mobile">Their mobile number</label><div style="display: flex; gap: 8px;"><div class="mono" style="height: 56px; padding: 0 14px; border-radius: 16px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.13); display: flex; align-items: center; font-size: 15px; font-weight: 600;">+63</div><input id="iv-mobile" class="field" type="tel" placeholder="917 123 4567"></div></div>
+</div>
+<div class="rise d5" style="margin-top: 22px;"><button onClick="{{sendInvite}}" class="btnY">Send link by SMS<span class="chip"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12 20 4l-6 16-3-7z"></path><path d="m11 13 9-9"></path></svg></span></button></div>
+</div></sc-if>
+<sc-if value="{{inviteSent}}"><div style="text-align: center; padding-top: 70px;">
+<div class="pop" style="width: 104px; height: 104px; border-radius: 999px; background: #2E6BE6; color: #fff; display: grid; place-items: center; margin: 0 auto; box-shadow: 0 0 0 14px rgba(46,107,230,.18);"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12 20 4l-6 16-3-7z"></path><path d="m11 13 9-9"></path></svg></div>
+<h1 class="h1 rise d3" style="font-size: 32px; margin-top: 34px;">Link sent to Jose</h1>
+<p class="muted rise d4" style="font-size: 15px; line-height: 1.55; margin: 12px 0 0;">We’ll notify you when he finishes. You’ll review his details before they’re submitted.</p>
+<div class="glass rise d5" style="border-radius: 20px; margin-top: 22px; padding: 14px 16px; display: flex; align-items: center; gap: 12px; text-align: left;"><span class="spin" style="width: 22px; height: 22px; border-radius: 999px; border: 3px solid rgba(255,255,255,.15); border-top-color: #FFC42E; flex: none;"></span><span style="flex: 1; font-size: 14px; font-weight: 700;">Waiting for Jose</span><button style="height: 40px; border: 0; background: transparent; color: #FFC42E; font-weight: 800; font-size: 13px;">Resend</button></div>
+<a href="/buyer/B21-Personal-Info.dc.html" class="btnG rise d6" style="margin-top: 22px; display: flex; align-items: center; justify-content: center; text-decoration: none;">Back to my application</a>
+</div></sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{toastOn}}" hint-placeholder-val="{{false}}">
+<div class="toast" role="status" style="position: absolute; left: 50%; top: 56px; z-index: 90; display: flex; align-items: center; gap: 10px; padding: 12px 18px 12px 12px; border-radius: 999px; background: #F3F6FC; color: #0B1A33; font-weight: 800; font-size: 14px; box-shadow: 0 20px 40px -12px rgba(0,0,0,.6); white-space: nowrap;"><span style="width: 28px; height: 28px; border-radius: 999px; background: #F2622E; color: #fff; display: grid; place-items: center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z"></path><path d="M12 11v5M12 8h.01"></path></svg></span>{{toast}}</div>
+</sc-if>
+</div>
+</x-dc>
+
+<script type="text/x-dc" data-dc-script data-props='{"start": {"editor": "enum", "options": ["intro", "idscan", "s1", "s2", "s3", "s4", "done", "invite", "invite2"], "default": "intro"}, "$preview": {"width": 390, "height": 844}}'>
+var STEPS = ['Personal', 'Address & ID', 'Work & income', 'Review'];
+var EMPTY = { first: '', middle: '', suffix: '', last: '', bday: '', cit: 'Filipino', mobile: '', email: '', idno: '', tin: '', employer: '', position: '', income: '' };
+var FILLED = { first: 'Jose', middle: 'Reyes', suffix: '', last: 'Santos', bday: '1990-03-14', cit: 'Filipino', mobile: '917 555 2048', email: 'jose.santos@email.com', idno: '1234-5678-9012-2048', tin: '321-654-987-000', employer: 'St. Luke’s Medical Center', position: 'Staff nurse', income: '28000' };
+var IDS = [
+  { id: 'philsys', label: 'PhilSys ID', ph: '0000-0000-0000-0000' }, { id: 'umid', label: 'UMID', ph: '0000-0000000-0' },
+  { id: 'passport', label: 'Passport', ph: 'P0000000A' }, { id: 'dl', label: 'Driver’s license', ph: 'N00-00-000000' }, { id: 'prc', label: 'PRC ID', ph: '0000000' }
+];
+var EMP = [
+  { id: 'emp', label: 'Employed', sub: 'Private or government' }, { id: 'self', label: 'Self-employed', sub: 'Business or freelance' },
+  { id: 'ofw', label: 'OFW', sub: 'Working abroad' }, { id: 'none', label: 'Not working', sub: 'No regular income' }
+];
+var MINE = 22000, REQ = 14000;
+function peso(n) { return '₱' + Number(n || 0).toLocaleString('en-US'); }
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = this.initial(props.start || 'intro');
+  }
+  initial(start) {
+    var s = { screen: start, f: Object.assign({}, EMPTY), sex: 'Male', same: true, idType: 'philsys', emp: 'emp', years: 4, consent: true, fromId: false, scan: 'idle', invite: false, toast: null, touched: false };
+    if (['s2', 's3', 's4', 'done'].indexOf(start) >= 0) { s.f = Object.assign({}, FILLED); s.fromId = true; }
+    if (start === 's1') { s.f = Object.assign({}, FILLED, { mobile: '917 555 204', email: '' }); s.fromId = true; s.touched = true; }
+    if (start === 'invite2') { s.screen = 'invite'; s.invite = true; }
+    return s;
+  }
+  componentDidUpdate(prev) { if (prev.start !== this.props.start) this.setState(this.initial(this.props.start || 'intro')); }
+  componentWillUnmount() { clearTimeout(this.t1); clearTimeout(this.t2); }
+  toast(m) { this.setState({ toast: m }); clearTimeout(this.t2); this.t2 = setTimeout(() => this.setState({ toast: null }), 2400); }
+
+  renderVals() {
+    var s = this.state, self = this, f = s.f;
+    var order = ['s1', 's2', 's3', 's4'];
+    var idx = order.indexOf(s.screen);
+    var is = {}; ['intro', 'idscan', 's1', 's2', 's3', 's4', 'done', 'invite'].forEach(function (k) { is[k] = s.screen === k; });
+    var go = function (k) { self.setState({ screen: k }); };
+    var digits = String(f.mobile || '').replace(/\D/g, '');
+    var mobileErr = s.touched && digits.length > 0 && !(digits.length === 10 && digits[0] === '9');
+    var F = {};
+    Object.keys(EMPTY).forEach(function (k) {
+      var v = f[k] || '';
+      var bad = k === 'mobile' && mobileErr;
+      F[k] = { v: v, bd: bad ? '#F2622E' : (v && s.fromId && ['first', 'middle', 'last', 'bday', 'idno'].indexOf(k) >= 0 ? 'rgba(47,169,107,.55)' : 'rgba(255,255,255,.13)'),
+        on: function (e) { var nf = Object.assign({}, self.state.f); nf[k] = k === 'income' ? e.target.value.replace(/\D/g, '') : e.target.value; self.setState({ f: nf, touched: true }); } };
+    });
+    if (F.income.v) F.income.v = Number(F.income.v).toLocaleString('en-US');
+    var req = {
+      s1: !!(f.first && f.last && f.bday) && !mobileErr && digits.length === 10,
+      s2: !!f.idno, s3: s.emp === 'none' || !!(f.employer && f.income), s4: s.consent
+    };
+    var ok = idx >= 0 ? req[order[idx]] : true;
+    var pick = function (list, key, cur) {
+      return list.map(function (o) {
+        var on = (o.id || o) === cur;
+        return Object.assign({}, typeof o === 'string' ? { label: o } : o, { bg: on ? '#FFC42E' : 'rgba(255,255,255,.05)', col: on ? '#0B1A33' : '#E2E8F3', bd: on ? '#FFC42E' : 'rgba(255,255,255,.14)',
+          pick: function () { var p = {}; p[key] = o.id || o; self.setState(p); } });
+      });
+    };
+    var empOpts = EMP.map(function (o) { var on = o.id === s.emp; return Object.assign({}, o, { bg: on ? 'rgba(255,196,46,.1)' : 'rgba(255,255,255,.04)', bd: on ? '#FFC42E' : 'rgba(255,255,255,.12)', col: on ? '#FFC42E' : '#F3F6FC', pick: function () { self.setState({ emp: o.id }); } }); });
+    var spInc = s.emp === 'none' ? 0 : Number(f.income || 0);
+    var total = MINE + spInc, scale = Math.max(total, REQ * 1.2, 40000);
+    var curId = IDS.filter(function (x) { return x.id === s.idType; })[0];
+    var empName = { emp: 'Employer', self: 'Business name', ofw: 'Employer abroad', none: '' }[s.emp];
+    var name = [f.first, f.middle, f.last, f.suffix].filter(Boolean).join(' ') || '—';
+    var bdayTxt = f.bday ? new Date(f.bday + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—';
+    var review = [
+      { title: 'Personal', to: 's1', rows: [{ k: 'Name', v: name }, { k: 'Birthdate', v: bdayTxt }, { k: 'Sex', v: s.sex }, { k: 'Mobile', v: f.mobile ? '+63 ' + f.mobile : '—' }] },
+      { title: 'Address & ID', to: 's2', rows: [{ k: 'Address', v: s.same ? 'Same as mine' : 'Separate address' }, { k: curId.label, v: f.idno || '—' }, { k: 'TIN', v: f.tin || 'Add later' }] },
+      { title: 'Work & income', to: 's3', rows: s.emp === 'none' ? [{ k: 'Status', v: 'Not working' }] : [{ k: 'Status', v: EMP.filter(function (x) { return x.id === s.emp; })[0].label }, { k: empName, v: f.employer || '—' }, { k: 'Monthly income', v: peso(spInc) }] }
+    ].map(function (r) { return Object.assign(r, { edit: function () { go(r.to); } }); });
+    var next = function () {
+      if (!ok) { self.setState({ touched: true }); self.toast(idx === 3 ? 'Please confirm your spouse’s consent' : 'Fill in the highlighted fields'); return; }
+      if (idx < 3) go(order[idx + 1]); else go('done');
+    };
+    var back = function () { if (idx <= 0) go('intro'); else go(order[idx - 1]); };
+    return {
+      is: is, showHead: idx >= 0, stepNo: idx + 1, stepName: STEPS[Math.max(0, idx)],
+      steps: STEPS.map(function (l, i) { return { label: l, w: i < idx ? '100%' : (i === idx ? '50%' : '0%'), c: i <= idx ? '#F3F6FC' : '#6F82A6' }; }),
+      back: back, next: next, ctaLabel: idx === 3 ? 'Save spouse details' : 'Continue', ctaOp: ok ? '1' : '.55',
+      toApp: function () {}, toIntro: function () { self.setState({ screen: 'intro', scan: 'idle' }); },
+      manual: function () { self.setState({ screen: 's1', fromId: false, f: Object.assign({}, EMPTY) }); },
+      scanId: function () { self.setState({ screen: 'idscan', scan: 'idle' }); },
+      goInvite: function () { self.setState({ screen: 'invite', invite: false }); },
+      capture: function () {
+        self.setState({ scan: 'reading' });
+        clearTimeout(self.t1);
+        self.t1 = setTimeout(function () { self.setState({ scan: 'ok' }); self.t1 = setTimeout(function () { self.setState({ screen: 's1', fromId: true, f: Object.assign({}, EMPTY, { first: 'Jose', middle: 'Reyes', last: 'Santos', bday: '1990-03-14', idno: '1234-5678-9012-2048' }) }); }, 1100); }, 1600);
+      },
+      scanning: s.scan !== 'ok', scanOk: s.scan === 'ok', scanC: s.scan === 'ok' ? '#2FA96B' : (s.scan === 'reading' ? '#FFC42E' : 'rgba(255,255,255,.5)'),
+      scanMsg: s.scan === 'ok' ? 'Got it — Jose R. Santos' : (s.scan === 'reading' ? 'Reading the ID…' : 'Place the front of their ID inside the frame'),
+      fromId: s.fromId && is.s1, F: F, mobileErr: mobileErr,
+      sexOpts: pick(['Male', 'Female'], 'sex', s.sex),
+      same: s.same, notSame: !s.same, sameBg: s.same ? '#2FA96B' : 'rgba(255,255,255,.18)', sameJ: s.same ? 'flex-end' : 'flex-start', toggleSame: function () { self.setState({ same: !s.same }); },
+      idOpts: pick(IDS, 'idType', s.idType), idLabel: curId.label, idPh: curId.ph,
+      empOpts: empOpts, working: s.emp !== 'none', notWorking: s.emp === 'none', empLabel: empName, empPh: s.emp === 'self' ? 'e.g. Santos Sari-sari Store' : 'Company name',
+      years: s.years + (s.years === 1 ? ' year' : ' years'), yrsUp: function () { self.setState({ years: Math.min(40, s.years + 1) }); }, yrsDown: function () { self.setState({ years: Math.max(0, s.years - 1) }); },
+      gmi: { total: peso(total), mine: (MINE / scale * 100).toFixed(1) + '%', sp: (spInc / scale * 100).toFixed(1) + '%', req: (REQ / scale * 100).toFixed(1) + '%', spLabel: peso(spInc),
+        msg: spInc > 0 ? 'Combined, you’re at ' + (total / REQ).toFixed(1) + '× the required income — a stronger loan application.' : 'Your income already meets the required ₱14,000.' },
+      review: review, consent: s.consent, toggleConsent: function () { self.setState({ consent: !s.consent }); },
+      inviteForm: !s.invite, inviteSent: s.invite, sendInvite: function () { self.setState({ invite: true }); },
+      toastOn: !!s.toast, toast: s.toast || ''
+    };
+  }
+}
+
+</script>
+</body>
+</html>

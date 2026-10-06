@@ -1,0 +1,32 @@
+[
+  {
+    "id": "t1",
+    "title": "Consultation fee",
+    "subtitle": "E-wallet · Sep 14, 2026",
+    "mono": false,
+    "amount": "₱10,000.00",
+    "status": "Paid",
+    "tone": "acc",
+    "icon": "wallet"
+  },
+  {
+    "id": "t2",
+    "title": "Unit booking",
+    "subtitle": "CAV-PHC-03-B12-L07",
+    "mono": true,
+    "amount": null,
+    "status": "Reserved",
+    "tone": "sub",
+    "icon": "home"
+  },
+  {
+    "id": "t3",
+    "title": "Monthly amortization",
+    "subtitle": "Starts after loan approval",
+    "mono": false,
+    "amount": "₱3,695.55",
+    "status": "Upcoming",
+    "tone": "mut",
+    "icon": "calendar"
+  }
+]

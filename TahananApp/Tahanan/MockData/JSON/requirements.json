@@ -1,0 +1,58 @@
+[
+  {
+    "id": "r1",
+    "name": "Valid government ID",
+    "owner": "Principal buyer",
+    "status": "acc",
+    "date": "Sep 15"
+  },
+  {
+    "id": "r2",
+    "name": "Latest payslips (3 months)",
+    "owner": "Principal buyer",
+    "status": "rev",
+    "date": "Sep 18"
+  },
+  {
+    "id": "r3",
+    "name": "Certificate of employment",
+    "owner": "Principal buyer",
+    "status": "sub",
+    "date": "Sep 20"
+  },
+  {
+    "id": "r4",
+    "name": "TIN ID or BIR Form 1902",
+    "owner": "Principal buyer",
+    "status": "acc",
+    "date": "Sep 15"
+  },
+  {
+    "id": "r5",
+    "name": "Marriage contract (PSA)",
+    "owner": "Principal buyer",
+    "status": "todo",
+    "date": null
+  },
+  {
+    "id": "r6",
+    "name": "Spouse valid government ID",
+    "owner": "Spouse",
+    "status": "todo",
+    "date": null
+  },
+  {
+    "id": "r7",
+    "name": "Spouse proof of income",
+    "owner": "Spouse",
+    "status": "acc",
+    "date": "Sep 16"
+  },
+  {
+    "id": "r8",
+    "name": "Proof of billing",
+    "owner": "Spouse",
+    "status": "acc",
+    "date": "Sep 16"
+  }
+]

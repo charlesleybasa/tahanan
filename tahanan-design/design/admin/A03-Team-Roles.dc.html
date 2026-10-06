@@ -1,0 +1,703 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Team & access control</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;family=Manrope:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@500;600&amp;display=swap">
+<style>
+body{margin:0;background:#F4F3EE}
+*{box-sizing:border-box}
+a{color:#2E6BE6}a:hover{color:#1D4FB8}
+.adm{font-family:'Manrope',system-ui,sans-serif;color:#13264A;-webkit-font-smoothing:antialiased}
+.adm button{font:inherit;color:inherit;cursor:pointer}
+.adm input,.adm textarea,.adm select{font:inherit;color:inherit}
+.ff{font-family:'Outfit','Manrope',system-ui,sans-serif}
+.mono{font-family:'JetBrains Mono',ui-monospace,Menlo,monospace}
+.noscroll{scrollbar-width:thin}
+.card{background:#FFFFFF;border:1px solid #E6E3DA;border-radius:20px}
+.nv{display:flex;align-items:center;gap:12px;width:100%;height:46px;padding:0 14px;border-radius:14px;border:0;background:transparent;font-weight:700;font-size:14px;text-align:left;transition:background .2s,color .2s}
+.nv:hover{background:rgba(255,255,255,.07)}
+.by{height:44px;padding:0 18px;border-radius:999px;border:0;background:#FFC42E;color:#13264A !important;font-weight:800 !important;font-size:14px;display:inline-flex;align-items:center;gap:8px;white-space:nowrap;transition:filter .2s,transform .15s}
+.by:hover{filter:brightness(1.04)}.by:active,.bo:active{transform:scale(.97)}
+.bo{height:44px;padding:0 16px;border-radius:999px;border:1px solid #D9D5CA;background:#FFFFFF;font-weight:700;font-size:14px;display:inline-flex;align-items:center;gap:8px;white-space:nowrap;transition:background .2s}
+.bo:hover{background:#F7F6F1}
+.bi{width:40px;height:40px;border-radius:12px;border:1px solid transparent;background:transparent;display:inline-grid;place-items:center;color:#4A5B7A;padding:0;transition:background .2s}
+.bi:hover{background:#F1EFE8}
+.fld{width:100%;height:46px;border-radius:12px;border:1px solid #DAD6CB;background:#FFFFFF;padding:0 14px;font-size:14px;outline:none;transition:border-color .2s,box-shadow .2s}
+.fld:focus{border-color:#2E6BE6;box-shadow:0 0 0 4px rgba(46,107,230,.12)}
+textarea.fld{height:110px;padding:12px 14px;resize:vertical;line-height:1.55}
+.lb{display:block;font-size:12px;font-weight:800;color:#56657F;margin:0 0 6px;letter-spacing:.02em}
+.pl{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:800;white-space:nowrap}
+.pl-g{background:#E3F4EA;color:#1C7A4B}.pl-y{background:#FFF1CC;color:#8A5A00}.pl-b{background:#E2EBFD;color:#1D4FB8}.pl-o{background:#FDE6DC;color:#B03F12}.pl-m{background:#EFEDE6;color:#56657F}
+.tab{height:40px;padding:0 16px;border-radius:999px;border:0;font-weight:800;font-size:14px;transition:all .2s}
+.th{font-size:11px;font-weight:800;color:#6B7890;letter-spacing:.08em;text-transform:uppercase;text-align:left;padding:12px 16px;border-bottom:1px solid #ECE9E1;white-space:nowrap}
+.td{padding:12px 16px;border-bottom:1px solid #F0EEE7;font-size:14px;vertical-align:middle}
+.ugrid{display:grid;grid-template-columns:minmax(240px,2.4fr) minmax(130px,1.1fr) minmax(140px,1.2fr) minmax(80px,.7fr) minmax(150px,1.4fr) minmax(70px,.6fr) minmax(96px,.8fr);align-items:center}
+.tgrid{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1.2fr) minmax(0,1fr);align-items:center}
+.rgrid{display:grid;grid-template-columns:minmax(220px,2.2fr) minmax(120px,1fr) minmax(170px,1.4fr) minmax(110px,1fr) minmax(80px,.6fr) minmax(96px,.7fr);align-items:center}
+.tr{transition:background .15s}.tr:hover{background:#FAF9F5}
+.sw{width:44px;height:26px;border-radius:999px;border:0;padding:3px;display:flex;flex:none;transition:background .25s}
+.sw i{width:20px;height:20px;border-radius:999px;background:#fff;display:block;box-shadow:0 1px 4px rgba(0,0,0,.25)}
+.in{animation:inA .5s cubic-bezier(.2,.8,.2,1) both}
+@keyframes inA{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.d1{animation-delay:.05s}.d2{animation-delay:.1s}.d3{animation-delay:.15s}.d4{animation-delay:.2s}
+.drawer{animation:drA .45s cubic-bezier(.2,.9,.2,1) both}
+@keyframes drA{from{transform:translateX(100%)}to{transform:none}}
+.fade{animation:fdA .3s ease both}@keyframes fdA{from{opacity:0}to{opacity:1}}
+.pop{animation:popA .35s cubic-bezier(.2,.9,.3,1.3) both}@keyframes popA{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
+.kb{animation:kb 16s ease-in-out infinite alternate}@keyframes kb{from{transform:scale(1.05)}to{transform:scale(1.18)}}
+.archimg{display:block;width:100%;height:100%;object-fit:cover}
+.floaty{animation:fl 7s ease-in-out infinite}@keyframes fl{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@media (max-width: 900px){.adm-shell{grid-template-columns:minmax(0,1fr) !important}.adm-side{display:none !important}.adm-3{grid-template-columns:minmax(0,1fr) !important}.adm-login{grid-template-columns:minmax(0,1fr) !important}.adm-hero{display:none !important}}
+</style>
+</helmet>
+<div class="adm" style="height: 100vh; width: 100%; position: relative; overflow: hidden; background: #F4F3EE;">
+
+<!-- ============ ADMIN LOGIN ============ -->
+<sc-if value="{{isAuth}}" hint-placeholder-val="{{false}}">
+<div class="adm-login" style="height: 100%; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);">
+<div class="adm-hero" style="position: relative; overflow: hidden; background: #16305B; color: #FFFFFF; padding: 48px 56px; display: flex; flex-direction: column; justify-content: space-between;">
+<div aria-hidden="true" style="position: absolute; left: -10%; bottom: -30%; width: 80%; height: 90%; border-radius: 999px 999px 0 0; background: radial-gradient(closest-side, rgba(46,107,230,.6), rgba(46,107,230,0));"></div>
+<div style="display: flex; align-items: center; gap: 12px; position: relative;"><span aria-hidden="true" style="display: block; position: relative; flex: none; width: 40px; height: 38.46px;"><span style="display: block; position: absolute; left: 19.23px; top: 0; width: 20.77px; height: 20.77px; border-radius: 999px; background: #FFC42E; "></span><span style="display: block; position: absolute; left: 0; bottom: 0; width: 26.92px; height: 31.54px; border-radius: 13.46px 13.46px 1.92px 1.92px; background: linear-gradient(160deg, #4A85F5 0%, #2E6BE6 45%, #2459C9 100%); "></span><span style="display: block; position: absolute; left: 8.46px; bottom: 0; width: 10px; height: 14.62px; border-radius: 5px 5px 0 0; background: #F2622E; "></span><span style="display: block; position: absolute; left: 31.15px; bottom: 0; width: 7.31px; height: 8.85px; border-radius: 3.65px 3.65px 1.15px 1.15px; background: #2FA96B; "></span></span><div><div class="ff" style="font-size: 24px; font-weight: 700; letter-spacing: -0.02em;">Tahanan</div><div style="font-size: 11px; font-weight: 800; letter-spacing: .28em; color: #A9B8D2;">ADMIN CONSOLE</div></div></div>
+<div style="position: relative; display: flex; gap: 18px; align-items: flex-end; height: 340px;">
+<div class="floaty" style="width: 170px; height: 250px; border-radius: 85px 85px 20px 20px; overflow: hidden; border: 1px solid rgba(255,255,255,.2);"><img class="archimg kb" src="/_blob/845011af1a532ff1d886f641ed9fdf33" alt=""></div>
+<div class="floaty" style="width: 210px; height: 320px; border-radius: 105px 105px 24px 24px; overflow: hidden; border: 1px solid rgba(255,255,255,.2); animation-delay: -2s;"><img class="archimg kb" src="/_blob/9bf564b30af43ae11afb0b45624241e0" alt=""></div>
+<div class="floaty" style="width: 150px; height: 220px; border-radius: 75px 75px 18px 18px; overflow: hidden; border: 1px solid rgba(255,255,255,.2); animation-delay: -4s;"><img class="archimg kb" src="/_blob/fa5174b67a6555f48bd20f2c17470c87" alt=""></div>
+</div>
+<div style="position: relative;"><div class="ff" style="font-size: 40px; font-weight: 600; letter-spacing: -0.03em; line-height: 1.05; max-width: 520px;">Keep every family’s journey home moving.</div><p style="margin: 14px 0 0; color: #A9B8D2; font-size: 15px; max-width: 460px; line-height: 1.6;">Manage buyers, tickets, project slides and requirements — in one place.</p></div>
+</div>
+<div style="display: grid; place-items: center; padding: 40px 24px;">
+<form onSubmit="{{signIn}}" class="in" style="width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 16px;">
+<div><p style="margin: 0; font-size: 12px; font-weight: 800; letter-spacing: .16em; color: #B03F12; text-transform: uppercase;">Staff only</p><h1 class="ff" style="margin: 8px 0 0; font-size: 34px; font-weight: 600; letter-spacing: -0.03em;">Sign in to admin</h1></div>
+<div><label class="lb" for="ad-email">Work email</label><input id="ad-email" class="fld" type="email" placeholder="name@homeful.ph" style="height: 52px;"></div>
+<div><label class="lb" for="ad-pass">Password</label><input id="ad-pass" class="fld" type="password" placeholder="Your password" style="height: 52px;"></div>
+<div style="display: flex; justify-content: space-between; align-items: center; font-size: 14px;"><label style="display: flex; gap: 8px; align-items: center; cursor: pointer;"><input type="checkbox" style="width: 18px; height: 18px; accent-color: #2E6BE6;">Keep me signed in</label><a href="#reset">Forgot password?</a></div>
+<button type="submit" class="by" style="height: 52px; justify-content: center; font-size: 15px;">Sign in <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="m13 6 6 6-6 6"></path></svg></button>
+<div style="display: flex; gap: 10px; align-items: flex-start; padding: 14px; border-radius: 14px; background: #ECF1FC; color: #1D4FB8; font-size: 13px; line-height: 1.5;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"></path><path d="m9 12 2 2 4-4"></path></svg><span>Access is role-based. Super Admins invite staff and set what each role can manage.</span></div>
+</form>
+</div>
+</div>
+</sc-if>
+
+<!-- ============ SHELL ============ -->
+<sc-if value="{{isApp}}" hint-placeholder-val="{{true}}">
+<div class="adm-shell" style="height: 100%; display: grid; grid-template-columns: 260px minmax(0, 1fr);">
+<aside class="adm-side" style="background: #16305B; color: #E4EAF5; padding: 22px 14px; display: flex; flex-direction: column; gap: 6px; position: relative; overflow: hidden;">
+<div aria-hidden="true" style="position: absolute; left: -60px; bottom: -80px; width: 260px; height: 300px; border-radius: 999px 999px 0 0; background: rgba(46,107,230,.25);"></div>
+<div style="display: flex; align-items: center; gap: 10px; padding: 4px 10px 22px; position: relative;"><span aria-hidden="true" style="display: block; position: relative; flex: none; width: 32px; height: 30.77px;"><span style="display: block; position: absolute; left: 15.38px; top: 0; width: 16.62px; height: 16.62px; border-radius: 999px; background: #FFC42E; "></span><span style="display: block; position: absolute; left: 0; bottom: 0; width: 21.54px; height: 25.23px; border-radius: 10.77px 10.77px 1.54px 1.54px; background: linear-gradient(160deg, #4A85F5 0%, #2E6BE6 45%, #2459C9 100%); "></span><span style="display: block; position: absolute; left: 6.77px; bottom: 0; width: 8px; height: 11.69px; border-radius: 4px 4px 0 0; background: #F2622E; "></span><span style="display: block; position: absolute; left: 24.92px; bottom: 0; width: 5.85px; height: 7.08px; border-radius: 2.92px 2.92px 0.92px 0.92px; background: #2FA96B; "></span></span><div><div class="ff" style="font-size: 20px; font-weight: 700; color: #FFFFFF; letter-spacing: -0.02em;">Tahanan</div><div style="font-size: 10px; font-weight: 800; letter-spacing: .24em; color: #A9B8D2;">ADMIN</div></div></div>
+<sc-for list="{{navItems}}" as="n" hint-placeholder-count="4">
+<button onClick="{{n.go}}" class="nv" style="background: {{n.bg}}; color: {{n.col}}; position: relative;"><span style="color: {{n.ic}};"><sc-if value="{{n.u}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"></path><path d="M2 21a7 7 0 0 1 14 0"></path><path d="M16 3.5a4 4 0 0 1 0 7.5"></path><path d="M18 14a7 7 0 0 1 4 6.5"></path></svg></sc-if><sc-if value="{{n.t}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16v4a2 2 0 0 0 0 4v4H4v-4a2 2 0 0 0 0-4z"></path><path d="M14 6v2M14 11v2M14 16v2"></path></svg></sc-if><sc-if value="{{n.k}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 9 5-9 5-9-5z"></path><path d="m3 13 9 5 9-5"></path></svg></sc-if><sc-if value="{{n.r}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 6h10M10 12h10M10 18h10"></path><path d="m4 6 1.5 1.5L8 5M4 12l1.5 1.5L8 11M4 18l1.5 1.5L8 17"></path></svg></sc-if></span><span style="flex: 1;">{{n.label}}</span><sc-if value="{{n.hasBadge}}"><span style="min-width: 22px; height: 22px; border-radius: 99px; background: #F2622E; color: #fff; font-size: 11px; font-weight: 800; display: grid; place-items: center; padding: 0 6px;">{{n.badge}}</span></sc-if></button>
+</sc-for>
+<div style="flex: 1;"></div>
+<div style="position: relative; padding: 14px; border-radius: 16px; background: rgba(255,255,255,.07); display: flex; gap: 10px; align-items: center;">
+<div class="ff" style="width: 38px; height: 38px; border-radius: 999px; background: #FFC42E; color: #13264A; display: grid; place-items: center; font-weight: 700; font-size: 14px; flex: none;">AR</div>
+<div style="flex: 1; min-width: 0;"><div style="font-weight: 800; font-size: 14px; color: #FFFFFF;">Ana Ramos</div><div style="font-size: 12px; color: #A9B8D2;">Super Admin</div></div>
+<button aria-label="Sign out" onClick="{{signOut}}" class="bi" style="color: #A9B8D2;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 4h3a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-3"></path><path d="m10 16-4-4 4-4"></path><path d="M6 12h10"></path></svg></button>
+</div>
+</aside>
+<main style="height: 100%; overflow-y: auto; position: relative;" class="noscroll">
+<header style="position: sticky; top: 0; z-index: 5; display: flex; align-items: center; gap: 14px; padding: 16px 32px; background: rgba(244,243,238,.88); backdrop-filter: blur(14px); border-bottom: 1px solid #E6E3DA;">
+<div style="flex: 1; min-width: 0;"><div style="font-size: 12px; font-weight: 700; color: #6B7890;">{{crumb}}</div><h1 class="ff" style="margin: 2px 0 0; font-size: 26px; font-weight: 600; letter-spacing: -0.025em;">{{pageTitle}}</h1></div>
+<div style="position: relative; width: 300px; max-width: 34vw;"><span style="position: absolute; left: 14px; top: 13px; color: #6B7890;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14z"></path><path d="m20 20-3.5-3.5"></path></svg></span><label for="ad-search" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0);">Search</label><input id="ad-search" class="fld" placeholder="Search users, tickets, projects" style="padding-left: 42px; border-radius: 999px;"></div>
+<button aria-label="Notifications" class="bi" style="position: relative; background: #FFFFFF; border-color: #E6E3DA; border-radius: 999px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg><span style="position: absolute; top: 8px; right: 9px; width: 8px; height: 8px; border-radius: 9px; background: #F2622E;"></span></button>
+</header>
+<div style="padding: 24px 32px 48px;">
+
+<!-- ============ USERS ============ -->
+<sc-if value="{{sec.users}}" hint-placeholder-val="{{true}}">
+<div>
+<div class="in" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr)); gap: 14px;">
+<div style="border-radius: 20px; padding: 20px; background: #16305B; color: #FFFFFF; position: relative; overflow: hidden;"><div aria-hidden="true" style="position: absolute; right: -30px; bottom: -50px; width: 130px; height: 150px; border-radius: 999px 999px 0 0; background: rgba(46,107,230,.45);"></div><div style="font-size: 12px; font-weight: 800; color: #A9B8D2; letter-spacing: .06em; position: relative;">TOTAL REGISTERED USERS</div><div class="ff" style="font-size: 40px; font-weight: 600; letter-spacing: -0.03em; margin-top: 6px; position: relative;">{{kpi.total}}</div><div style="font-size: 13px; color: #FFC42E; font-weight: 700; position: relative;">+38 this week</div></div>
+<div class="card" style="padding: 20px;"><div style="font-size: 12px; font-weight: 800; color: #6B7890; letter-spacing: .06em;">LEADS</div><div class="ff" style="font-size: 34px; font-weight: 600; margin-top: 6px;">{{kpi.leads}}</div><div style="font-size: 13px; color: #6B7890;">Registered, no booking yet</div></div>
+<div class="card" style="padding: 20px;"><div style="font-size: 12px; font-weight: 800; color: #6B7890; letter-spacing: .06em;">BUYERS</div><div class="ff" style="font-size: 34px; font-weight: 600; margin-top: 6px;">{{kpi.buyers}}</div><div style="font-size: 13px; color: #6B7890;">With an active booking</div></div>
+<div class="card" style="padding: 20px;"><div style="font-size: 12px; font-weight: 800; color: #6B7890; letter-spacing: .06em;">DEACTIVATED</div><div class="ff" style="font-size: 34px; font-weight: 600; margin-top: 6px;">{{kpi.inactive}}</div><div style="font-size: 13px; color: #6B7890;">Can’t log in</div></div>
+</div>
+<div class="in d1" style="display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 26px; flex-wrap: wrap;">
+<div style="display: flex; gap: 6px; padding: 4px; border-radius: 999px; background: #EAE7DE;"><button onClick="{{ut.buyers}}" class="tab" style="background: {{ut.bBg}}; color: {{ut.bC}};">Buyers &amp; leads</button><button onClick="{{ut.team}}" class="tab" style="background: {{ut.tBg}}; color: {{ut.tC}};">Admin team &amp; roles</button></div>
+<div style="display: flex; gap: 8px;"><button class="bo"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h18l-7 8v6l-4 2v-8z"></path></svg>Filter</button><button onClick="{{openAdd}}" class="by"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Add user</button></div>
+</div>
+<sc-if value="{{ut.isBuyers}}" hint-placeholder-val="{{true}}">
+<div class="card in d2" style="margin-top: 14px; overflow: auto;">
+<div style="min-width: 940px;">
+<div class="ugrid" style="border-bottom: 1px solid #ECE9E1;"><span class="th" style="border: 0;">User</span><span class="th" style="border: 0;">Mobile</span><span class="th" style="border: 0;">Homeful ID</span><span class="th" style="border: 0;">Type</span><span class="th" style="border: 0;">Project</span><span class="th" style="border: 0;">Active</span><span class="th" style="border: 0; text-align: right;">Actions</span></div>
+<sc-for list="{{users}}" as="u" hint-placeholder-count="6">
+<div class="ugrid tr" style="border-bottom: 1px solid #F0EEE7; opacity: {{u.op}};">
+<div class="td" style="border: 0;"><div style="display: flex; align-items: center; gap: 12px;"><span class="ff" style="width: 38px; height: 38px; border-radius: 999px; display: grid; place-items: center; font-weight: 700; font-size: 13px; background: {{u.av}}; color: #FFFFFF; flex: none;">{{u.ini}}</span><span style="min-width: 0;"><span style="display: block; font-weight: 800;">{{u.name}}</span><span style="display: block; font-size: 12px; color: #6B7890;">{{u.email}}</span></span></div></div>
+<div class="td mono" style="border: 0; font-size: 13px;">{{u.mobile}}</div>
+<div class="td mono" style="border: 0; font-size: 13px;">{{u.hid}}</div>
+<div class="td" style="border: 0;"><span class="pl {{u.typeCls}}">{{u.type}}</span></div>
+<div class="td" style="border: 0; color: #4A5B7A;">{{u.project}}</div>
+<div class="td" style="border: 0;"><button role="switch" aria-checked="{{u.active}}" aria-label="Active" onClick="{{u.toggle}}" class="sw" style="background: {{u.swBg}}; justify-content: {{u.swJ}};"><i></i></button></div>
+<div class="td" style="border: 0; text-align: right; white-space: nowrap;"><button aria-label="Edit user" onClick="{{u.edit}}" class="bi"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"></path><path d="m13.5 6.5 4 4"></path></svg></button><button aria-label="Delete user" onClick="{{u.del}}" class="bi" style="color: #B03F12;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6"></path><path d="M6 7l1 13h10l1-13"></path><path d="M9 7V4h6v3"></path></svg></button></div>
+</div>
+</sc-for>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; font-size: 13px; color: #6B7890;"><span>Showing {{kpi.shown}} of {{kpi.total}}</span><div style="display: flex; gap: 6px;"><button class="bo" style="height: 36px;">Previous</button><button class="bo" style="height: 36px;">Next</button></div></div>
+</div>
+</sc-if>
+<sc-if value="{{ut.isTeam}}" hint-placeholder-val="{{false}}">
+<div class="adm-3" style="display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 14px; margin-top: 14px;">
+<div class="card in d2" style="overflow: auto;">
+<div>
+<div class="tgrid" style="border-bottom: 1px solid #ECE9E1;"><span class="th" style="border: 0;">Staff</span><span class="th" style="border: 0;">Role</span><span class="th" style="border: 0;">Last active</span></div>
+<sc-for list="{{team}}" as="m" hint-placeholder-count="4"><div class="tgrid tr" style="border-bottom: 1px solid #F0EEE7;"><div class="td" style="border: 0;"><div style="font-weight: 800;">{{m.name}}</div><div style="font-size: 12px; color: #6B7890;">{{m.email}}</div></div><div class="td" style="border: 0;"><span class="pl {{m.cls}}">{{m.role}}</span></div><div class="td" style="border: 0; color: #6B7890; font-size: 13px;">{{m.last}}</div></div></sc-for>
+</div>
+</div>
+<div class="card in d3" style="padding: 20px;">
+<div class="ff" style="font-size: 18px; font-weight: 600;">Role permissions</div>
+<p style="margin: 4px 0 14px; font-size: 13px; color: #6B7890;">What each role can manage.</p>
+<div style="display: grid; grid-template-columns: minmax(0, 1.6fr) repeat(3, minmax(0, 1fr)); gap: 0; font-size: 13px;">
+<span class="th" style="padding: 8px 0;">Area</span><span class="th" style="padding: 8px 0; text-align: center;">Super</span><span class="th" style="padding: 8px 0; text-align: center;">Support</span><span class="th" style="padding: 8px 0; text-align: center;">Content</span>
+<sc-for list="{{perms}}" as="p" hint-placeholder-count="4"><span style="padding: 12px 0; border-bottom: 1px solid #F0EEE7; font-weight: 700;">{{p.area}}</span><span style="padding: 12px 0; border-bottom: 1px solid #F0EEE7; text-align: center; color: #1C7A4B;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5 10 17 19 7"></path></svg></span><span style="padding: 12px 0; border-bottom: 1px solid #F0EEE7; text-align: center; color: {{p.sC}};">{{p.s}}</span><span style="padding: 12px 0; border-bottom: 1px solid #F0EEE7; text-align: center; color: {{p.cC}};">{{p.c}}</span></sc-for>
+</div>
+</div>
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+<!-- ============ TICKETS ============ -->
+<sc-if value="{{sec.tickets}}" hint-placeholder-val="{{false}}">
+<div class="adm-3" style="display: grid; grid-template-columns: 220px minmax(0, 1fr) minmax(0, 1.25fr); gap: 14px; height: calc(100vh - 140px); min-height: 640px;">
+<div class="card in" style="padding: 14px; display: flex; flex-direction: column; gap: 4px; overflow: auto;">
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 4px 6px 10px;"><span class="ff" style="font-weight: 600; font-size: 16px;">Categories</span><button aria-label="Manage categories" onClick="{{openCats}}" class="bi"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"></path><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"></path></svg></button></div>
+<sc-for list="{{tcats}}" as="c" hint-placeholder-count="5"><button onClick="{{c.pick}}" class="nv" style="height: 42px; background: {{c.bg}}; color: {{c.col}};"><span style="width: 10px; height: 10px; border-radius: 3px; background: {{c.dot}}; flex: none;"></span><span style="flex: 1;">{{c.name}}</span><span style="font-size: 12px; color: #6B7890;">{{c.count}}</span></button></sc-for>
+<button onClick="{{openCats}}" class="bo" style="margin-top: 10px; justify-content: center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>New category</button>
+</div>
+<div class="card in d1" style="display: flex; flex-direction: column; overflow: hidden;">
+<div style="display: flex; gap: 6px; padding: 12px; border-bottom: 1px solid #ECE9E1;"><span class="pl pl-b">Open {{tstat.open}}</span><span class="pl pl-y">In progress {{tstat.prog}}</span><span class="pl pl-g">Resolved {{tstat.res}}</span></div>
+<div class="noscroll" style="overflow-y: auto; flex: 1;">
+<sc-for list="{{atks}}" as="t" hint-placeholder-count="5">
+<button onClick="{{t.pick}}" style="width: 100%; text-align: left; border: 0; border-bottom: 1px solid #F0EEE7; padding: 14px 16px; background: {{t.bg}}; display: flex; flex-direction: column; gap: 6px; border-left: 3px solid {{t.bar}};">
+<span style="display: flex; justify-content: space-between; align-items: center; width: 100%;"><span class="mono" style="font-size: 12px; color: #6B7890;">{{t.id}} · {{t.cat}}</span><span class="pl {{t.cls}}">{{t.stLabel}}</span></span>
+<span style="font-weight: 800; font-size: 14px;">{{t.subj}}</span>
+<span style="display: flex; justify-content: space-between; width: 100%; font-size: 12px; color: #6B7890;"><span>{{t.buyer}}</span><span>{{t.time}}</span></span>
+</button>
+</sc-for>
+</div>
+</div>
+<div class="card in d2" style="display: flex; flex-direction: column; overflow: hidden;">
+<div style="padding: 16px 18px; border-bottom: 1px solid #ECE9E1; display: flex; gap: 12px; align-items: flex-start;">
+<div style="flex: 1; min-width: 0;"><div class="mono" style="font-size: 12px; color: #6B7890;">{{AT.id}} · {{AT.cat}}</div><div class="ff" style="font-size: 19px; font-weight: 600; margin-top: 2px;">{{AT.subj}}</div><div style="font-size: 13px; color: #6B7890; margin-top: 4px;">{{AT.buyer}} · <span class="mono">{{AT.hid}}</span></div></div>
+<div style="display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end;"><sc-for list="{{stBtns}}" as="b" hint-placeholder-count="3"><button onClick="{{b.pick}}" class="pl" style="height: 32px; border: 1.5px solid {{b.bd}}; background: {{b.bg}}; color: {{b.col}}; cursor: pointer;">{{b.label}}</button></sc-for></div>
+</div>
+<div class="noscroll" style="flex: 1; overflow-y: auto; padding: 18px; display: flex; flex-direction: column; gap: 10px; background: #FAF9F5;">
+<sc-for list="{{amsgs}}" as="m" hint-placeholder-count="4">
+<sc-if value="{{m.sys}}"><div style="align-self: center; font-size: 11px; font-weight: 800; color: #6B7890; background: #EFEDE6; padding: 5px 12px; border-radius: 99px;">{{m.text}}</div></sc-if>
+<sc-if value="{{m.buyer}}"><div class="in" style="max-width: 78%;"><div style="font-size: 11px; color: #6B7890; font-weight: 700; margin: 0 0 4px 4px;">{{m.who}}</div><div style="padding: 11px 14px; border-radius: 18px 18px 18px 6px; background: #FFFFFF; border: 1px solid #E6E3DA; font-size: 14px; line-height: 1.5;">{{m.text}}</div><div style="font-size: 10px; color: #8C97AB; margin: 4px 0 0 4px;">{{m.time}}</div></div></sc-if>
+<sc-if value="{{m.agent}}"><div class="in" style="max-width: 78%; align-self: flex-end; display: flex; flex-direction: column; align-items: flex-end;"><div style="font-size: 11px; color: #6B7890; font-weight: 700; margin: 0 4px 4px 0;">{{m.who}}</div><div style="padding: 11px 14px; border-radius: 18px 18px 6px 18px; background: #16305B; color: #FFFFFF; font-size: 14px; line-height: 1.5;">{{m.text}}</div><div style="font-size: 10px; color: #8C97AB; margin: 4px 4px 0 0;">{{m.time}}</div></div></sc-if>
+</sc-for>
+</div>
+<form onSubmit="{{asend}}" style="padding: 12px; border-top: 1px solid #ECE9E1; display: flex; gap: 8px; align-items: center;">
+<button type="button" aria-label="Attach" class="bi"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21 11-8.5 8.5a5 5 0 0 1-7-7L14 4a3.5 3.5 0 0 1 5 5l-8.5 8.5a2 2 0 0 1-3-3L15 7"></path></svg></button>
+<label for="ad-reply" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0);">Reply</label>
+<input id="ad-reply" class="fld" value="{{adraft}}" onChange="{{onADraft}}" placeholder="Reply to {{AT.first}}…" style="border-radius: 999px;">
+<button type="submit" class="by"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12 20 4l-6 16-3-7z"></path><path d="m11 13 9-9"></path></svg>Send</button>
+</form>
+</div>
+</div>
+</sc-if>
+
+<!-- ============ PROJECT KNOWLEDGE ============ -->
+<sc-if value="{{sec.knowledge}}" hint-placeholder-val="{{false}}">
+<div class="adm-3" style="display: grid; grid-template-columns: 250px minmax(0, 1fr) 320px; gap: 14px; align-items: start;">
+<div class="card in" style="padding: 14px; display: flex; flex-direction: column; gap: 8px;">
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 2px 4px 6px;"><span class="ff" style="font-weight: 600; font-size: 16px;">Brands</span><span style="font-size: 12px; color: #6B7890; font-weight: 700;">Step 1</span></div>
+<sc-for list="{{kb}}" as="b" hint-placeholder-count="4">
+<button onClick="{{b.pick}}" style="display: flex; gap: 12px; align-items: center; padding: 8px; border-radius: 16px; border: 1.5px solid {{b.bd}}; background: {{b.bg}}; text-align: left; width: 100%; transition: all .2s;">
+<span style="width: 46px; height: 56px; border-radius: 23px 23px 10px 10px; overflow: hidden; flex: none;"><img class="archimg" src="{{b.img}}" alt=""></span>
+<span style="flex: 1; min-width: 0;"><span style="display: block; font-weight: 800; font-size: 14px;">{{b.name}}</span><span style="display: block; font-size: 12px; color: #6B7890; margin-top: 2px;">{{b.locs}}</span><span class="pl {{b.cls}}" style="margin-top: 6px; height: 20px; font-size: 11px;">{{b.status}}</span></span>
+</button>
+</sc-for>
+<button class="bo" style="justify-content: center; margin-top: 4px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Add brand</button>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 14px; min-width: 0;">
+<div class="card in d1" style="padding: 18px; display: flex; gap: 16px; align-items: center;">
+<span style="width: 64px; height: 76px; border-radius: 32px 32px 12px 12px; overflow: hidden; flex: none;"><img class="archimg" src="{{KB.img}}" alt=""></span>
+<div style="flex: 1; min-width: 0;"><div class="ff" style="font-size: 24px; font-weight: 600; letter-spacing: -0.02em;">{{KB.name}}</div><div style="font-size: 13px; color: #6B7890; margin-top: 2px;">{{KB.product}} · Starts at {{KB.from}}</div></div>
+<div style="display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 800;"><span>Published</span><button role="switch" aria-checked="{{KB.pub}}" aria-label="Published" onClick="{{KB.togglePub}}" class="sw" style="background: {{KB.swBg}}; justify-content: {{KB.swJ}};"><i></i></button></div>
+</div>
+<div class="in d2" style="display: flex; gap: 6px; padding: 4px; border-radius: 999px; background: #EAE7DE; align-self: flex-start;"><button onClick="{{kt.content}}" class="tab" style="background: {{kt.cBg}}; color: {{kt.cC}};">1 · Brand content</button><button onClick="{{kt.locs}}" class="tab" style="background: {{kt.lBg}}; color: {{kt.lC}};">2 · Locations &amp; slides</button></div>
+
+<sc-if value="{{kt.isContent}}" hint-placeholder-val="{{true}}">
+<div class="card in d3" style="padding: 22px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: 16px;">
+<div style="grid-column: 1 / -1; display: flex; gap: 16px; align-items: stretch; flex-wrap: wrap;">
+<div style="position: relative; width: 220px; height: 220px; border-radius: 110px 110px 22px 22px; overflow: hidden; flex: none;"><img class="archimg" src="{{KB.img}}" alt="{{KB.name}} facade"><button class="bo" style="position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); height: 36px; box-shadow: 0 6px 16px rgba(0,0,0,.2);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7"></path><path d="M20 4v7h-7"></path></svg>Replace</button></div>
+<div style="flex: 1; min-width: 220px; display: flex; flex-direction: column; gap: 10px; justify-content: center;"><div style="font-weight: 800;">Brand facade</div><div style="font-size: 13px; color: #6B7890; line-height: 1.55;">Shown as the arch card on the buyer Home carousel and as the hero of the brand page. Minimum 1000 × 1000 px.</div><div style="display: flex; gap: 8px;"><span class="pl pl-g"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5 10 17 19 7"></path></svg>Meets size</span><span class="pl pl-m">JPG · 1.2 MB</span></div></div>
+</div>
+<div><label class="lb" for="kb-name">Brand name</label><input id="kb-name" class="fld" value="{{KB.name}}" readonly></div>
+<div><label class="lb" for="kb-prod">Product type</label><input id="kb-prod" class="fld" value="{{KB.product}}" readonly></div>
+<div><label class="lb" for="kb-from">Starts at</label><input id="kb-from" class="fld" value="{{KB.from}}" readonly></div>
+<div><label class="lb" for="kb-gmi">Min. required GMI</label><input id="kb-gmi" class="fld" value="{{KB.gmi}}" readonly></div>
+<div style="grid-column: 1 / -1;"><label class="lb" for="kb-desc">Brand details</label><textarea id="kb-desc" class="fld" readonly value="{{KB.desc}}"></textarea></div>
+<div style="grid-column: 1 / -1; display: flex; justify-content: flex-end; gap: 8px;"><button class="bo">Discard</button><button onClick="{{saveToast}}" class="by"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5 10 17 19 7"></path></svg>Save brand</button></div>
+</div>
+</sc-if>
+
+<sc-if value="{{kt.isLocs}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-direction: column; gap: 14px;">
+<div class="card in d3" style="padding: 12px; display: flex; gap: 8px; overflow-x: auto;" role="tablist" aria-label="Locations">
+<sc-for list="{{kls}}" as="l" hint-placeholder-count="4"><button role="tab" onClick="{{l.pick}}" style="flex: none; text-align: left; padding: 10px 14px; border-radius: 14px; border: 1.5px solid {{l.bd}}; background: {{l.bg}}; transition: all .2s;"><span style="display: block; font-weight: 800; font-size: 14px; white-space: nowrap;">{{l.name}}</span><span style="display: block; font-size: 12px; color: #6B7890; margin-top: 2px; white-space: nowrap;">{{l.brgy}}</span></button></sc-for>
+<button class="bo" style="flex: none; height: auto; border-style: dashed;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Add location</button>
+</div>
+<div class="card in d3" style="padding: 18px;">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px;"><div><div class="ff" style="font-size: 18px; font-weight: 600;">Slides · {{KL.name}}</div><div style="font-size: 13px; color: #6B7890; margin-top: 2px;">Shown as full-screen stories in the buyer app. Drag to reorder.</div></div><button class="by"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Add slide</button></div>
+<div style="display: flex; flex-direction: column; gap: 8px; margin-top: 14px;">
+<sc-for list="{{kslides}}" as="sl" hint-placeholder-count="5">
+<div style="display: flex; align-items: center; gap: 12px; padding: 8px 10px; border-radius: 16px; border: 1.5px solid {{sl.bd}}; background: {{sl.bg}}; opacity: {{sl.op}}; transition: all .2s;">
+<span style="color: #A3ACBD; cursor: grab;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h.01M15 6h.01M9 12h.01M15 12h.01M9 18h.01M15 18h.01"></path></svg></span>
+<span class="mono" style="font-size: 12px; color: #6B7890; width: 18px;">{{sl.n}}</span>
+<button onClick="{{sl.pick}}" style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; border: 0; background: transparent; padding: 0; text-align: left;">
+<span style="width: 44px; height: 56px; border-radius: 10px; overflow: hidden; flex: none; background: #16305B; display: grid; place-items: center; color: #FFC42E;"><sc-if value="{{sl.hasImg}}"><img class="archimg" src="{{sl.img}}" alt=""></sc-if><sc-if value="{{sl.noImg}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2z"></path><path d="M9 4v14M15 6v14"></path></svg></sc-if></span>
+<span style="flex: 1; min-width: 0;"><span class="pl pl-m" style="height: 20px; font-size: 11px;">{{sl.kind}}</span><span style="display: block; font-weight: 800; font-size: 14px; margin-top: 4px;">{{sl.title}}</span></span>
+</button>
+<button role="switch" aria-checked="{{sl.vis}}" aria-label="Visible in app" onClick="{{sl.toggle}}" class="sw" style="background: {{sl.swBg}}; justify-content: {{sl.swJ}};"><i></i></button>
+<button aria-label="Edit slide" onClick="{{sl.pick}}" class="bi"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"></path><path d="m13.5 6.5 4 4"></path></svg></button>
+</div>
+</sc-for>
+</div>
+</div>
+<div class="card in d4" style="padding: 18px;">
+<div style="display: flex; justify-content: space-between; align-items: center;"><div><div class="ff" style="font-size: 18px; font-weight: 600;">Gallery · {{KL.name}}</div><div style="font-size: 13px; color: #6B7890; margin-top: 2px;">Each location has its own gallery. Tag photos so buyers can filter.</div></div><span style="font-size: 12px; color: #6B7890; font-weight: 700;">Min. 1000 × 1000 px</span></div>
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-top: 14px;">
+<button style="height: 140px; border-radius: 16px; border: 1.5px dashed #C9C4B6; background: #FAF9F5; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: #4A5B7A; font-weight: 800; font-size: 13px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4"></path><path d="m7 9 5-5 5 5"></path><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path></svg>Upload photos</button>
+<sc-for list="{{kgal}}" as="gi" hint-placeholder-count="5"><div style="position: relative; height: 140px; border-radius: 16px; overflow: hidden; background: #EFEDE6;"><sc-if value="{{gi.hasImg}}"><img class="archimg" src="{{gi.img}}" alt="{{gi.tag}}"></sc-if><sc-if value="{{gi.noImg}}"><div style="position: absolute; inset: 0; display: grid; place-items: center; color: #A3ACBD;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16v16H4z"></path><path d="m4 16 5-5 4 4 2-2 5 5"></path><path d="M15.5 9.5h.01"></path></svg></div></sc-if><span class="pl" style="position: absolute; left: 8px; bottom: 8px; background: rgba(255,255,255,.92); color: #13264A;">{{gi.tag}}</span></div></sc-for>
+</div>
+</div>
+<div class="card in d4" style="padding: 18px;">
+<div class="ff" style="font-size: 18px; font-weight: 600;">Location details · {{KL.name}}</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(160px, 100%), 1fr)); gap: 12px; margin-top: 14px;">
+<div><label class="lb" for="kl-tcp">Typical TCP</label><input id="kl-tcp" class="fld" value="{{KL.tcp}}" readonly></div>
+<div><label class="lb" for="kl-fa">Floor area (sqm)</label><input id="kl-fa" class="fld" value="{{KL.fa}}" readonly></div>
+<div><label class="lb" for="kl-la">Lot area (sqm)</label><input id="kl-la" class="fld" value="{{KL.la}}" readonly></div>
+<div><label class="lb" for="kl-ma">Monthly amortization</label><input id="kl-ma" class="fld" value="{{KL.ma}}" readonly></div>
+<div><label class="lb" for="kl-gmi">Required GMI</label><input id="kl-gmi" class="fld" value="{{KL.gmi}}" readonly></div>
+<div><label class="lb" for="kl-cf">Consultation fee</label><input id="kl-cf" class="fld" value="₱10,000" readonly></div>
+</div>
+</div>
+</div>
+</sc-if>
+</div>
+
+<div class="in d2" style="position: sticky; top: 100px;">
+<div style="font-size: 12px; font-weight: 800; color: #6B7890; letter-spacing: .08em; margin: 0 0 10px 4px;">LIVE PREVIEW · BUYER APP</div>
+<div style="width: 300px; height: 620px; border-radius: 44px; background: #0B1A33; padding: 10px; box-shadow: 0 30px 60px -24px rgba(22,48,91,.55);">
+<div style="position: relative; width: 100%; height: 100%; border-radius: 35px; overflow: hidden; background: #050D1C; color: #F3F6FC;">
+<sc-if value="{{PV.hasImg}}"><img class="archimg kb" src="{{PV.img}}" alt="" style="position: absolute; inset: 0;"></sc-if>
+<sc-if value="{{PV.noImg}}"><div style="position: absolute; inset: 0; background: radial-gradient(90% 60% at 50% 30%, #12305E, #050D1C 75%); display: grid; place-items: center; color: #FFC42E;"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2z"></path><path d="M9 4v14M15 6v14"></path></svg></div></sc-if>
+<div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(5,13,28,.6) 0%, rgba(5,13,28,0) 22%, rgba(5,13,28,.15) 50%, rgba(5,13,28,.95) 85%);"></div>
+<div style="position: absolute; top: 16px; left: 14px; right: 14px; display: flex; gap: 3px;"><sc-for list="{{PV.segs}}" as="g" hint-placeholder-count="5"><span style="flex: 1; height: 3px; border-radius: 9px; display: block; background: {{g.c}};"></span></sc-for></div>
+<div style="position: absolute; top: 30px; left: 14px; font-size: 12px; font-weight: 800;">{{KB.name}}<div style="font-weight: 600; color: #C9D4E8; font-size: 11px;">{{KL.name}}</div></div>
+<div class="fade" style="position: absolute; left: 18px; right: 18px; bottom: 26px;">
+<div style="font-size: 10px; font-weight: 800; letter-spacing: .16em; color: #FFC42E; text-transform: uppercase;">{{PV.eyebrow}}</div>
+<div class="ff" style="font-size: 30px; font-weight: 600; letter-spacing: -0.03em; line-height: 1.02; margin-top: 8px;">{{PV.title}}</div>
+<div style="font-size: 13px; color: #C9D4E8; margin-top: 8px; line-height: 1.45;">{{PV.sub}}</div>
+</div>
+</div>
+</div>
+<div style="display: flex; justify-content: center; gap: 8px; margin-top: 12px;"><button aria-label="Previous slide" onClick="{{PV.prev}}" class="bo" style="width: 44px; padding: 0; justify-content: center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"></path><path d="m11 6-6 6 6 6"></path></svg></button><span style="align-self: center; font-size: 13px; font-weight: 800; color: #4A5B7A; min-width: 60px; text-align: center;">{{PV.pos}}</span><button aria-label="Next slide" onClick="{{PV.next}}" class="bo" style="width: 44px; padding: 0; justify-content: center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="m13 6 6 6-6 6"></path></svg></button></div>
+</div>
+</div>
+</sc-if>
+
+<!-- ============ REQUIREMENTS ============ -->
+<sc-if value="{{sec.reqs}}" hint-placeholder-val="{{false}}">
+<div>
+<div class="in" style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
+<div style="display: flex; gap: 6px; padding: 4px; border-radius: 999px; background: #EAE7DE;"><sc-for list="{{rt}}" as="t" hint-placeholder-count="3"><button onClick="{{t.pick}}" class="tab" style="background: {{t.bg}}; color: {{t.col}};">{{t.label}}</button></sc-for></div>
+<button class="by"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>{{rtAdd}}</button>
+</div>
+
+<sc-if value="{{rtv.list}}" hint-placeholder-val="{{true}}">
+<div class="card in d1" style="margin-top: 14px; overflow: auto;">
+<div style="min-width: 860px;">
+<div class="rgrid" style="border-bottom: 1px solid #ECE9E1;"><span class="th" style="border: 0;">Requirement</span><span class="th" style="border: 0;">Type</span><span class="th" style="border: 0;">Applies to</span><span class="th" style="border: 0;">Formats</span><span class="th" style="border: 0;">Required</span><span class="th" style="border: 0; text-align: right;">Actions</span></div>
+<sc-for list="{{areqs}}" as="r" hint-placeholder-count="6">
+<div class="rgrid tr" style="border-bottom: 1px solid #F0EEE7;">
+<div class="td" style="border: 0;"><div style="font-weight: 800;">{{r.name}}</div><div style="font-size: 12px; color: #6B7890; margin-top: 2px;">{{r.hint}}</div></div>
+<div class="td" style="border: 0;"><span class="pl pl-m">{{r.type}}</span></div>
+<div class="td" style="border: 0;"><div style="display: flex; gap: 4px; flex-wrap: wrap;"><sc-for list="{{r.who}}" as="w" hint-placeholder-count="2"><span class="pl pl-b" style="height: 22px; font-size: 11px;">{{w}}</span></sc-for></div></div>
+<div class="td mono" style="border: 0; font-size: 12px; color: #4A5B7A;">{{r.fmt}}</div>
+<div class="td" style="border: 0;"><button role="switch" aria-checked="{{r.req}}" aria-label="Required" onClick="{{r.toggle}}" class="sw" style="background: {{r.swBg}}; justify-content: {{r.swJ}};"><i></i></button></div>
+<div class="td" style="border: 0; text-align: right; white-space: nowrap;"><button aria-label="Edit requirement" class="bi"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"></path><path d="m13.5 6.5 4 4"></path></svg></button><button aria-label="Delete requirement" class="bi" style="color: #B03F12;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6"></path><path d="M6 7l1 13h10l1-13"></path><path d="M9 7V4h6v3"></path></svg></button></div>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{rtv.types}}" hint-placeholder-val="{{false}}">
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr)); gap: 14px; margin-top: 14px;">
+<sc-for list="{{rtypes}}" as="t" hint-placeholder-count="5">
+<div class="card in d1" style="padding: 20px; display: flex; flex-direction: column; gap: 10px;">
+<div style="display: flex; justify-content: space-between; align-items: center;"><span class="ico" style="width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; background: {{t.bg}}; color: {{t.col}};"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path><path d="M14 3v5h5"></path><path d="M9 13h6M9 17h4"></path></svg></span><button aria-label="Edit type" class="bi"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"></path><path d="m13.5 6.5 4 4"></path></svg></button></div>
+<div class="ff" style="font-size: 19px; font-weight: 600;">{{t.name}}</div>
+<div style="font-size: 13px; color: #6B7890; line-height: 1.5;">{{t.desc}}</div>
+<div style="font-size: 12px; font-weight: 800; color: #4A5B7A;">{{t.count}}</div>
+</div>
+</sc-for>
+<button class="in d2" style="border-radius: 20px; border: 1.5px dashed #C9C4B6; background: transparent; min-height: 180px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; font-weight: 800; color: #4A5B7A;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>New requirement type</button>
+</div>
+</sc-if>
+
+<sc-if value="{{rtv.statuses}}" hint-placeholder-val="{{false}}">
+<div class="adm-3" style="display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 14px; margin-top: 14px; align-items: start;">
+<div class="card in d1" style="padding: 8px;">
+<sc-for list="{{astat}}" as="s" hint-placeholder-count="4">
+<div class="tr" style="display: flex; align-items: center; gap: 14px; padding: 14px; border-radius: 14px;">
+<span style="color: #A3ACBD; cursor: grab;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h.01M15 6h.01M9 12h.01M15 12h.01M9 18h.01M15 18h.01"></path></svg></span>
+<span style="width: 34px; height: 34px; border-radius: 10px; background: {{s.c}}; flex: none;"></span>
+<div style="flex: 1; min-width: 0;"><div style="display: flex; gap: 8px; align-items: center;"><span style="font-weight: 800; font-size: 15px;">{{s.name}}</span><span class="pl {{s.cls}}" style="height: 20px; font-size: 11px;">Preview</span></div><div style="font-size: 13px; color: #6B7890; margin-top: 2px;">{{s.desc}}</div></div>
+<div style="display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 800; color: #4A5B7A;">Visible to buyer<button role="switch" aria-checked="{{s.vis}}" aria-label="Visible to buyer" onClick="{{s.toggle}}" class="sw" style="background: {{s.swBg}}; justify-content: {{s.swJ}};"><i></i></button></div>
+<button aria-label="Edit status" class="bi"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"></path><path d="m13.5 6.5 4 4"></path></svg></button>
+</div>
+</sc-for>
+</div>
+<div class="card in d2" style="padding: 20px; background: #16305B; color: #FFFFFF; border-color: #16305B;">
+<div style="font-size: 12px; font-weight: 800; letter-spacing: .1em; color: #A9B8D2;">HOW BUYERS SEE IT</div>
+<div class="ff" style="font-size: 20px; font-weight: 600; margin-top: 6px;">Requirement journey</div>
+<div style="display: flex; flex-direction: column; gap: 10px; margin-top: 16px;">
+<sc-for list="{{astatVis}}" as="s" hint-placeholder-count="3"><div style="display: flex; align-items: center; gap: 12px;"><span style="width: 28px; height: 28px; border-radius: 999px; background: {{s.c}}; display: grid; place-items: center; font-size: 12px; font-weight: 800; color: #0B1A33;">{{s.n}}</span><span style="font-weight: 800;">{{s.name}}</span></div></sc-for>
+</div>
+<p style="margin: 16px 0 0; font-size: 13px; color: #A9B8D2; line-height: 1.55;">Reorder statuses to change the step order shown on each requirement in the buyer app.</p>
+</div>
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+</div>
+</main>
+</div>
+</sc-if>
+
+<!-- ============ USER DRAWER ============ -->
+<sc-if value="{{drawerOn}}" hint-placeholder-val="{{false}}">
+<div style="position: absolute; inset: 0; z-index: 50;">
+<button aria-label="Close" onClick="{{closeDrawer}}" class="fade" style="position: absolute; inset: 0; border: 0; padding: 0; background: rgba(19,38,74,.35); backdrop-filter: blur(2px);"></button>
+<div class="drawer" role="dialog" aria-label="{{drawer.title}}" style="position: absolute; right: 0; top: 0; bottom: 0; width: 440px; max-width: 100%; background: #FFFFFF; box-shadow: -20px 0 50px -20px rgba(19,38,74,.35); display: flex; flex-direction: column;">
+<div style="padding: 22px 24px; border-bottom: 1px solid #ECE9E1; display: flex; justify-content: space-between; align-items: center;"><div class="ff" style="font-size: 22px; font-weight: 600;">{{drawer.title}}</div><button aria-label="Close" onClick="{{closeDrawer}}" class="bi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg></button></div>
+<div style="flex: 1; overflow-y: auto; padding: 22px 24px; display: flex; flex-direction: column; gap: 16px;">
+<div><label class="lb" for="dw-name">Full name</label><input id="dw-name" class="fld" placeholder="Juan Dela Cruz" value="{{drawer.name}}" onChange="{{drawer.onName}}"></div>
+<div><label class="lb" for="dw-email">Email address</label><input id="dw-email" class="fld" type="email" placeholder="name@email.com" value="{{drawer.email}}" onChange="{{drawer.onEmail}}"></div>
+<div><label class="lb" for="dw-mobile">Mobile number</label><input id="dw-mobile" class="fld mono" placeholder="+63 9XX XXX XXXX" value="{{drawer.mobile}}" onChange="{{drawer.onMobile}}"></div>
+<div><span class="lb">User type</span><div style="display: flex; gap: 8px;"><sc-for list="{{drawer.types}}" as="t" hint-placeholder-count="2"><button onClick="{{t.pick}}" class="tab" style="border: 1.5px solid {{t.bd}}; background: {{t.bg}}; color: {{t.col}};">{{t.label}}</button></sc-for></div></div>
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 14px; border-radius: 14px; background: #FAF9F5;"><div><div style="font-weight: 800; font-size: 14px;">Account active</div><div style="font-size: 12px; color: #6B7890;">Inactive users can’t log in</div></div><button role="switch" aria-checked="{{drawer.active}}" aria-label="Account active" onClick="{{drawer.toggle}}" class="sw" style="background: {{drawer.swBg}}; justify-content: {{drawer.swJ}};"><i></i></button></div>
+<div style="display: flex; gap: 10px; padding: 14px; border-radius: 14px; background: #ECF1FC; color: #1D4FB8; font-size: 13px; line-height: 1.5;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z"></path><path d="m3 7 9 6 9-6"></path></svg><span>{{drawer.note}}</span></div>
+</div>
+<div style="padding: 16px 24px; border-top: 1px solid #ECE9E1; display: flex; justify-content: flex-end; gap: 8px;"><button onClick="{{closeDrawer}}" class="bo">Cancel</button><button onClick="{{drawer.save}}" class="by"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5 10 17 19 7"></path></svg>{{drawer.cta}}</button></div>
+</div>
+</div>
+</sc-if>
+
+<!-- ============ DELETE CONFIRM ============ -->
+<sc-if value="{{delOn}}" hint-placeholder-val="{{false}}">
+<div class="fade" style="position: absolute; inset: 0; z-index: 60; display: grid; place-items: center; background: rgba(19,38,74,.4); backdrop-filter: blur(2px);">
+<div class="pop" role="alertdialog" aria-label="Delete user" style="width: 420px; max-width: calc(100% - 32px); background: #FFFFFF; border-radius: 24px; padding: 24px; box-shadow: 0 30px 60px -20px rgba(19,38,74,.5);">
+<span style="width: 52px; height: 52px; border-radius: 16px; background: #FDE6DC; color: #B03F12; display: grid; place-items: center;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6"></path><path d="M6 7l1 13h10l1-13"></path><path d="M9 7V4h6v3"></path></svg></span>
+<div class="ff" style="font-size: 22px; font-weight: 600; margin-top: 14px;">Delete {{delName}}?</div>
+<p style="margin: 8px 0 0; font-size: 14px; color: #56657F; line-height: 1.55;">This removes their account and uploaded requirements. To keep their records, deactivate them instead.</p>
+<div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px;"><button onClick="{{cancelDel}}" class="bo">Cancel</button><button onClick="{{deactivateInstead}}" class="bo">Deactivate</button><button onClick="{{confirmDel}}" class="by" style="background: #B03F12; color: #FFFFFF !important;">Delete user</button></div>
+</div>
+</div>
+</sc-if>
+
+<!-- ============ CATEGORIES MODAL ============ -->
+<sc-if value="{{catsOn}}" hint-placeholder-val="{{false}}">
+<div class="fade" style="position: absolute; inset: 0; z-index: 60; display: grid; place-items: center; background: rgba(19,38,74,.4); backdrop-filter: blur(2px);">
+<div class="pop" role="dialog" aria-label="Ticket categories" style="width: 480px; max-width: calc(100% - 32px); background: #FFFFFF; border-radius: 24px; padding: 24px; box-shadow: 0 30px 60px -20px rgba(19,38,74,.5);">
+<div style="display: flex; justify-content: space-between; align-items: center;"><div class="ff" style="font-size: 22px; font-weight: 600;">Ticket categories</div><button aria-label="Close" onClick="{{closeCats}}" class="bi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg></button></div>
+<p style="margin: 6px 0 16px; font-size: 13px; color: #6B7890;">Buyers pick one when they open a ticket.</p>
+<div style="display: flex; flex-direction: column; gap: 6px;">
+<sc-for list="{{catRows}}" as="c" hint-placeholder-count="5"><div style="display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 14px; background: #FAF9F5;"><span style="color: #A3ACBD;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h.01M15 6h.01M9 12h.01M15 12h.01M9 18h.01M15 18h.01"></path></svg></span><span style="width: 14px; height: 14px; border-radius: 4px; background: {{c.dot}};"></span><span style="flex: 1; font-weight: 800; font-size: 14px;">{{c.name}}</span><span style="font-size: 12px; color: #6B7890;">{{c.count}} tickets</span><button aria-label="Edit category" class="bi" style="width: 34px; height: 34px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"></path><path d="m13.5 6.5 4 4"></path></svg></button></div></sc-for>
+</div>
+<form onSubmit="{{addCat}}" style="display: flex; gap: 8px; margin-top: 14px;"><label for="cat-new" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0);">New category</label><input id="cat-new" class="fld" value="{{catDraft}}" onChange="{{onCatDraft}}" placeholder="New category name"><button type="submit" class="by"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Add</button></form>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{toastOn}}" hint-placeholder-val="{{false}}">
+<div class="pop" role="status" style="position: absolute; right: 28px; bottom: 28px; z-index: 80; display: flex; align-items: center; gap: 10px; padding: 12px 18px 12px 12px; border-radius: 999px; background: #16305B; color: #FFFFFF; font-weight: 800; font-size: 14px; box-shadow: 0 20px 40px -12px rgba(19,38,74,.5);"><span style="width: 28px; height: 28px; border-radius: 999px; background: #2FA96B; display: grid; place-items: center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5 10 17 19 7"></path></svg></span>{{toast}}</div>
+</sc-if>
+</div>
+</x-dc>
+
+<script type="text/x-dc" data-dc-script data-props='{"start": {"editor": "enum", "options": ["auth", "users", "users:add", "users:team", "tickets", "tickets:cats", "knowledge", "knowledge:locations", "reqs:list", "reqs:types", "reqs:statuses"], "default": "users:team"}, "$preview": {"width": 1440, "height": 960}}'>
+var IMG = {
+  ph: '/_blob/9bf564b30af43ae11afb0b45624241e0', pp: '/_blob/845011af1a532ff1d886f641ed9fdf33',
+  hts: '/_blob/fa5174b67a6555f48bd20f2c17470c87', pv: '/_blob/212188c28a8828030c7b166a39c0ab7d',
+  row: '/_blob/73dab25e24708e2eb7d89f85c9b36e55', int: '/_blob/474fb931a1918b43a812114ef293aaf4'
+};
+var KBRANDS = [
+  { name: 'Pasinaya Homes', img: IMG.ph, from: '₱750,000', gmi: '₱14,000', product: 'Full 2-Storey Townhouse', pub: true,
+    desc: 'Pasinaya Homes is an exclusive gated community that offers full 2-storey 32 square meter townhomes; ideal for individuals or couples who are purchasing their first home. Pasinaya Homes offers its house and lots at 0-equity and no downpayment needed.',
+    locs: [
+      { name: 'Ternate, Cavite', brgy: 'Brgy. San Juan I', tcp: '₱800,000.00', fa: '32', la: '30', ma: '₱3,695.55', gmi: '₱14,000.00' },
+      { name: 'Bay, Laguna', brgy: 'Brgy. Maitim', tcp: '₱800,000.00', fa: '32', la: '30', ma: '₱3,695.55', gmi: '₱14,000.00' },
+      { name: 'San Miguel, Bulacan', brgy: 'Brgy. Balaong', tcp: '₱750,000.00', fa: '32', la: '30', ma: '₱3,463.65', gmi: '₱14,000.00' },
+      { name: 'Magalang, Pampanga', brgy: 'Brgy. San Isidro', tcp: '₱800,000.00', fa: '32', la: '30', ma: '₱3,695.55', gmi: '₱14,000.00' },
+      { name: 'Naic, Cavite', brgy: 'Brgy. Timalan Balsahan', tcp: '₱930,000.00', fa: '36', la: '32', ma: '₱4,294.92', gmi: '₱14,000.00' }
+    ] },
+  { name: 'Pagsikat Place', img: IMG.pp, from: '₱1,250,000', gmi: '₱20,000', product: 'Full 2-Storey Townhouse', pub: true,
+    desc: 'Pagsikat Place is an exclusive gated community featuring full 2-storey, 44-square-meter townhomes with provisions for 2 bedrooms. Ideal for individuals or couples buying their first home.',
+    locs: [ { name: 'Magalang, Pampanga', brgy: 'Brgy. Dolores', tcp: '₱1,300,000.00', fa: '44', la: '36', ma: '₱7,110.00', gmi: '₱20,000.00' } ] },
+  { name: 'Pasinaya Heights', img: IMG.hts, from: '₱1,588,000', gmi: '₱20,000', product: 'Studio Condominium', pub: true,
+    desc: 'Pasinaya Heights is a socialized condominium that offers affordable housing units within a condominium complex with its own exclusive amenity area. Pasinaya Heights supports the 4PH program of the Philippine government.',
+    locs: [ { name: 'Cabuyao, Laguna', brgy: 'Brgy. Baclaran', tcp: '₱1,588,000.00', fa: '28', la: '—', ma: '₱7,334.00', gmi: '₱20,000.00' } ] },
+  { name: 'Pagsibol Village', img: IMG.pv, from: '₱1,404,000', gmi: '₱14,212.39', product: 'Full 2-Storey Duplex', pub: false,
+    desc: 'Pagsibol Village is an exclusive gated community that offers full 2-storey duplex homes with provision for 2 bedrooms. Ideal for families who need space but also want the opportunity to design their home layout.',
+    locs: [ { name: 'Naic, Cavite', brgy: 'Brgy. Sabang', tcp: '₱1,350,000.00', fa: '36', la: '44', ma: '₱8,855.09', gmi: '₱24,400.00' }, { name: 'Location B', brgy: '[Barangay, City]', tcp: '—', fa: '—', la: '—', ma: '—', gmi: '—' } ] }
+];
+var USERS = [
+  { id: 1, name: 'Maria L. Santos', email: 'maria.santos@email.com', mobile: '+63 917 555 4821', hid: 'HF-2026-004817', type: 'Buyer', project: 'Pasinaya Homes · Ternate', active: true, av: '#2E6BE6' },
+  { id: 2, name: 'Paolo Reyes', email: 'paolo.reyes@email.com', mobile: '+63 918 555 1093', hid: 'HF-2026-004822', type: 'Lead', project: '—', active: true, av: '#F2622E' },
+  { id: 3, name: 'Liza Mercado', email: 'liza.m@email.com', mobile: '+63 927 555 7710', hid: 'HF-2026-004790', type: 'Buyer', project: 'Pagsikat Place · Magalang', active: true, av: '#2FA96B' },
+  { id: 4, name: 'Ramon Villanueva', email: 'ramon.v@email.com', mobile: '+63 905 555 3384', hid: 'HF-2026-004751', type: 'Buyer', project: 'Pasinaya Heights · Cabuyao', active: true, av: '#16305B' },
+  { id: 5, name: 'Grace Tan', email: 'grace.tan@email.com', mobile: '+63 919 555 2207', hid: 'HF-2026-004833', type: 'Lead', project: '—', active: true, av: '#C98F00' },
+  { id: 6, name: 'Jerome Bautista', email: 'jbautista@email.com', mobile: '+63 936 555 6650', hid: 'HF-2026-004702', type: 'Buyer', project: 'Pasinaya Homes · Bay', active: false, av: '#7A5AF8' },
+  { id: 7, name: 'Kristine Dizon', email: 'kdizon@email.com', mobile: '+63 977 555 1408', hid: 'HF-2026-004841', type: 'Lead', project: '—', active: true, av: '#2E6BE6' }
+];
+var ATICKETS = [
+  { id: 'TK-1051', subj: 'Change of unit to Block 12 Lot 9', cat: 'Booking', st: 'open', buyer: 'Maria L. Santos', hid: 'HF-2026-004817', time: '2h' },
+  { id: 'TK-1049', subj: 'Payment QR not scanning', cat: 'Payments', st: 'open', buyer: 'Liza Mercado', hid: 'HF-2026-004790', time: '3h' },
+  { id: 'TK-1042', subj: 'Payslip marked as reviewed only', cat: 'Documents', st: 'progress', buyer: 'Maria L. Santos', hid: 'HF-2026-004817', time: '1d' },
+  { id: 'TK-1040', subj: 'Can’t verify my email', cat: 'Account', st: 'progress', buyer: 'Paolo Reyes', hid: 'HF-2026-004822', time: '1d' },
+  { id: 'TK-1038', subj: 'Consultation fee receipt', cat: 'Payments', st: 'resolved', buyer: 'Maria L. Santos', hid: 'HF-2026-004817', time: 'Sep 14' }
+];
+var ATHREADS = {
+  'TK-1051': [ { k: 'sys', text: 'Opened today · Booking' }, { k: 'buyer', who: 'Maria L. Santos', text: 'Hi! Can I move my booking from Lot 7 to Lot 9 in the same block? It’s closer to the park.', time: '8:41 AM' }, { k: 'agent', who: 'Carla · Support', text: 'Hi Maria! We’ve forwarded your request to the sales team to check Lot 9’s availability.', time: '9:02 AM' } ],
+  'TK-1049': [ { k: 'sys', text: 'Opened today · Payments' }, { k: 'buyer', who: 'Liza Mercado', text: 'The payment QR from my seller won’t scan. It says the code is not recognized.', time: '7:55 AM' } ],
+  'TK-1042': [ { k: 'sys', text: 'Opened Sep 19 · Documents' }, { k: 'buyer', who: 'Maria L. Santos', text: 'Hi! My payslips show “Reviewed” but not accepted yet. Is anything missing?', time: '9:12 AM' }, { k: 'agent', who: 'Carla · Support', text: 'Hi Maria! Your July and August payslips are clear. We just need September to complete the 3-month requirement.', time: '9:20 AM' }, { k: 'buyer', who: 'Maria L. Santos', text: 'Got it — I’ll upload it tonight.', time: '9:24 AM' } ],
+  'TK-1040': [ { k: 'sys', text: 'Opened Sep 30 · Account' }, { k: 'buyer', who: 'Paolo Reyes', text: 'I never got the verification email.', time: '5:10 PM' }, { k: 'agent', who: 'Carla · Support', text: 'I’ve resent it. Please check your spam folder too.', time: '5:22 PM' } ],
+  'TK-1038': [ { k: 'sys', text: 'Opened Sep 14 · Payments' }, { k: 'buyer', who: 'Maria L. Santos', text: 'Where can I get the official receipt for my consultation fee?', time: '4:10 PM' }, { k: 'agent', who: 'Carla · Support', text: 'We’ve sent the receipt to your email. It’s also in Transactions on your home.', time: '4:31 PM' }, { k: 'sys', text: 'Marked resolved by Carla' } ]
+};
+var TCATS = [ { name: 'Payments', dot: '#2FA96B' }, { name: 'Documents', dot: '#FFC42E' }, { name: 'Booking', dot: '#2E6BE6' }, { name: 'Account', dot: '#F2622E' }, { name: 'Others', dot: '#A3ACBD' } ];
+var TSTAT = { open: { label: 'Open', cls: 'pl-b' }, progress: { label: 'In progress', cls: 'pl-y' }, resolved: { label: 'Resolved', cls: 'pl-g' } };
+var AREQS = [
+  { name: 'Valid government ID', hint: 'Front and back, not expired', type: 'Identity', who: ['Principal', 'Spouse', 'Cobo', 'AIF'], fmt: 'JPG PNG PDF', req: true },
+  { name: 'Latest payslips (3 months)', hint: 'Most recent consecutive months', type: 'Income', who: ['Principal', 'Cobo'], fmt: 'PDF JPG', req: true },
+  { name: 'Certificate of employment', hint: 'With salary and date hired', type: 'Income', who: ['Principal', 'Cobo'], fmt: 'PDF', req: true },
+  { name: 'TIN ID or BIR Form 1902', hint: 'Any one is accepted', type: 'Identity', who: ['Principal'], fmt: 'JPG PDF', req: true },
+  { name: 'Marriage contract (PSA)', hint: 'For married buyers only', type: 'Civil status', who: ['Principal'], fmt: 'PDF', req: true },
+  { name: 'Proof of billing', hint: 'Within the last 3 months', type: 'Property & billing', who: ['Principal'], fmt: 'JPG PDF', req: false },
+  { name: 'Special power of attorney', hint: 'Consularized if signed abroad', type: 'Others', who: ['AIF'], fmt: 'PDF', req: true }
+];
+var RTYPES = [
+  { name: 'Identity', desc: 'Government-issued IDs and tax numbers that confirm who the buyer is.', bg: '#E2EBFD', col: '#1D4FB8' },
+  { name: 'Income', desc: 'Proof that the household meets the required gross monthly income.', bg: '#E3F4EA', col: '#1C7A4B' },
+  { name: 'Civil status', desc: 'Marriage or other civil records that decide whether spouse details are needed.', bg: '#FFF1CC', col: '#8A5A00' },
+  { name: 'Property & billing', desc: 'Address and billing documents for verification.', bg: '#FDE6DC', col: '#B03F12' },
+  { name: 'Others', desc: 'Special cases such as an Attorney-in-Fact for buyers abroad.', bg: '#EFEDE6', col: '#56657F' }
+];
+var STATUSES = [
+  { name: 'Submitted', desc: 'Buyer uploaded the file. Waiting for review.', c: '#2E6BE6', cls: 'pl-b', vis: true },
+  { name: 'Reviewed', desc: 'A processor checked it. Pending final acceptance.', c: '#FFC42E', cls: 'pl-y', vis: true },
+  { name: 'Accepted', desc: 'Approved. Nothing else needed for this item.', c: '#2FA96B', cls: 'pl-g', vis: true },
+  { name: 'Needs remedy', desc: 'Something’s wrong. Buyer is asked to re-upload.', c: '#F2622E', cls: 'pl-o', vis: true }
+];
+var SLIDES = [
+  { kind: 'Hero', eyebrow: 'Welcome to', key: 'hero' },
+  { kind: 'Video', eyebrow: 'Project video', key: 'video' },
+  { kind: 'Site plan', eyebrow: 'Site plan', key: 'map' },
+  { kind: 'The home', eyebrow: 'The home', key: 'home' },
+  { kind: 'Investment', eyebrow: 'Investment', key: 'invest' }
+];
+var SECTIONS = ['users', 'tickets', 'knowledge', 'reqs'];
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.timers = {};
+    this.state = this.initial(props.start || 'users:team');
+  }
+  initial(start) {
+    var p = String(start).split(':');
+    var s = {
+      section: p[0], userTab: 'buyers', users: USERS.map(function (u) { return Object.assign({}, u); }), drawer: null, dName: '', dEmail: '', dMobile: '', dType: 'Lead', dActive: true, editId: null, delId: null,
+      tcat: 'All', tickets: ATICKETS.map(function (t) { return Object.assign({}, t); }), threads: JSON.parse(JSON.stringify(ATHREADS)), tid: 'TK-1042', adraft: '', catsOn: false, cats: TCATS.slice(), catDraft: '',
+      kbi: 0, ktab: 'content', kli: 0, ksi: 0, pubs: KBRANDS.map(function (b) { return b.pub; }), hidden: {},
+      rtab: 'list', reqs: AREQS.map(function (r) { return Object.assign({}, r); }), stats: STATUSES.map(function (x) { return Object.assign({}, x); }), toast: null
+    };
+    var x = p[1];
+    if (s.section === 'users' && x === 'add') { s.drawer = 'add'; }
+    if (s.section === 'users' && x === 'team') { s.userTab = 'team'; }
+    if (s.section === 'knowledge' && x === 'locations') { s.ktab = 'locs'; s.ksi = 0; }
+    if (s.section === 'reqs' && x) { s.rtab = x; }
+    if (s.section === 'tickets' && x === 'cats') { s.catsOn = true; }
+    return s;
+  }
+  componentWillUnmount() { Object.keys(this.timers).forEach((k) => clearTimeout(this.timers[k])); }
+  componentDidUpdate(prev) { if (prev.start !== this.props.start) this.setState(this.initial(this.props.start || 'users:team')); }
+  toast(msg) {
+    this.setState({ toast: msg });
+    if (this.timers.t) clearTimeout(this.timers.t);
+    this.timers.t = setTimeout(() => this.setState({ toast: null }), 2400);
+  }
+  sw(on) { return { swBg: on ? '#2FA96B' : '#D3CFC4', swJ: on ? 'flex-end' : 'flex-start' }; }
+
+  renderVals() {
+    var s = this.state, self = this;
+    var sw = function (on) { return self.sw(on); };
+    var sec = { users: s.section === 'users', tickets: s.section === 'tickets', knowledge: s.section === 'knowledge', reqs: s.section === 'reqs' };
+    var titles = { users: ['Users', 'People'], tickets: ['Tickets', 'Support'], knowledge: ['Project knowledge', 'Content'], reqs: ['Requirements', 'Maintenance'] };
+    var open = s.tickets.filter(function (t) { return t.st !== 'resolved'; }).length;
+    var navItems = [
+      { id: 'users', label: 'Users', u: true }, { id: 'tickets', label: 'Tickets', t: true, badge: open }, { id: 'knowledge', label: 'Project knowledge', k: true }, { id: 'reqs', label: 'Requirements', r: true }
+    ].map(function (n) {
+      var on = s.section === n.id;
+      return Object.assign({ u: false, t: false, k: false, r: false, badge: 0 }, n, { hasBadge: !!n.badge, bg: on ? '#FFC42E' : 'transparent', col: on ? '#13264A' : '#E4EAF5', ic: on ? '#13264A' : '#A9B8D2', go: function () { self.setState({ section: n.id, drawer: null, catsOn: false }); } });
+    });
+
+    // users
+    var total = 1284 + (s.users.length - USERS.length);
+    var leads = s.users.filter(function (u) { return u.type === 'Lead'; }).length;
+    var inactive = s.users.filter(function (u) { return !u.active; }).length;
+    var kpi = { total: total.toLocaleString('en-US'), leads: (812 + leads - 3).toLocaleString('en-US'), buyers: (472 + (s.users.length - leads) - 4).toLocaleString('en-US'), inactive: String(19 + inactive - 1), shown: s.users.length };
+    var users = s.users.map(function (u) {
+      var parts = u.name.split(' ');
+      return Object.assign({}, u, sw(u.active), { ini: (parts[0][0] + parts[parts.length - 1][0]).toUpperCase(), op: u.active ? '1' : '.55', typeCls: u.type === 'Buyer' ? 'pl-b' : 'pl-y',
+        toggle: function () { self.setState({ users: s.users.map(function (x) { return x.id === u.id ? Object.assign({}, x, { active: !x.active }) : x; }) }); self.toast(u.active ? u.name + ' deactivated' : u.name + ' activated'); },
+        edit: function () { self.setState({ drawer: 'edit', editId: u.id, dName: u.name, dEmail: u.email, dMobile: u.mobile, dType: u.type, dActive: u.active }); },
+        del: function () { self.setState({ delId: u.id }); } });
+    });
+    var ut = { isBuyers: s.userTab === 'buyers', isTeam: s.userTab === 'team', buyers: function () { self.setState({ userTab: 'buyers' }); }, team: function () { self.setState({ userTab: 'team' }); },
+      bBg: s.userTab === 'buyers' ? '#FFFFFF' : 'transparent', bC: s.userTab === 'buyers' ? '#13264A' : '#56657F', tBg: s.userTab === 'team' ? '#FFFFFF' : 'transparent', tC: s.userTab === 'team' ? '#13264A' : '#56657F' };
+    var team = [
+      { name: 'Ana Ramos', email: 'ana.ramos@homeful.ph', role: 'Super Admin', cls: 'pl-o', last: 'Online now' },
+      { name: 'Carla Mendoza', email: 'carla.m@homeful.ph', role: 'Support agent', cls: 'pl-b', last: '5 min ago' },
+      { name: 'Miguel Torres', email: 'miguel.t@homeful.ph', role: 'Content editor', cls: 'pl-y', last: 'Yesterday' },
+      { name: 'Bea Castillo', email: 'bea.c@homeful.ph', role: 'Support agent', cls: 'pl-b', last: '2 days ago' }
+    ];
+    var Y = { s: '✓', c: '#1C7A4B' }, N = { s: '—', c: '#B8BFCC' };
+    var perms = [
+      { area: 'Users', s: Y, c: N }, { area: 'Tickets', s: Y, c: N }, { area: 'Project knowledge', s: N, c: Y }, { area: 'Requirements', s: Y, c: Y }
+    ].map(function (p) { return { area: p.area, s: p.s.s, sC: p.s.c, c: p.c.s, cC: p.c.c }; });
+    var openAdd = function () { self.setState({ drawer: 'add', editId: null, dName: '', dEmail: '', dMobile: '', dType: 'Lead', dActive: true }); };
+    var isEdit = s.drawer === 'edit';
+    var drawer = {
+      title: isEdit ? 'Edit user' : 'Add user', cta: isEdit ? 'Save changes' : 'Add user', name: s.dName, email: s.dEmail, mobile: s.dMobile, active: s.dActive,
+      note: isEdit ? 'Changing the email sends a verification link to the new address.' : 'We’ll email them a link to set their password. New sign-ups start as Leads.',
+      onName: function (e) { self.setState({ dName: e.target.value }); }, onEmail: function (e) { self.setState({ dEmail: e.target.value }); }, onMobile: function (e) { self.setState({ dMobile: e.target.value }); },
+      toggle: function () { self.setState({ dActive: !s.dActive }); },
+      types: ['Lead', 'Buyer'].map(function (t) { var on = s.dType === t; return { label: t, bg: on ? '#16305B' : '#FFFFFF', col: on ? '#FFFFFF' : '#13264A', bd: on ? '#16305B' : '#D9D5CA', pick: function () { self.setState({ dType: t }); } }; }),
+      save: function () {
+        var name = (s.dName || '').trim() || 'New user';
+        if (isEdit) {
+          self.setState({ drawer: null, users: s.users.map(function (u) { return u.id === s.editId ? Object.assign({}, u, { name: name, email: s.dEmail, mobile: s.dMobile, type: s.dType, active: s.dActive }) : u; }) });
+          self.toast('Changes saved');
+        } else {
+          var nu = { id: Date.now(), name: name, email: s.dEmail || 'pending@email.com', mobile: s.dMobile || '—', hid: 'HF-2026-00' + (4842 + s.users.length - USERS.length), type: s.dType, project: '—', active: s.dActive, av: '#2E6BE6' };
+          self.setState({ drawer: null, users: [nu].concat(s.users) });
+          self.toast(name + ' added');
+        }
+      }
+    };
+    Object.assign(drawer, sw(s.dActive));
+    var delU = s.users.filter(function (u) { return u.id === s.delId; })[0];
+
+    // tickets
+    var cnt = function (c) { return s.tickets.filter(function (t) { return t.cat === c; }).length; };
+    var tcats = [{ name: 'All', dot: '#13264A' }].concat(s.cats).map(function (c) {
+      var on = s.tcat === c.name;
+      return { name: c.name, dot: c.dot, count: c.name === 'All' ? s.tickets.length : cnt(c.name), bg: on ? '#16305B' : 'transparent', col: on ? '#FFFFFF' : '#13264A', pick: function () { self.setState({ tcat: c.name }); } };
+    });
+    var dotOf = {}; s.cats.forEach(function (c) { dotOf[c.name] = c.dot; });
+    var atks = s.tickets.filter(function (t) { return s.tcat === 'All' || t.cat === s.tcat; }).map(function (t) {
+      var on = t.id === s.tid;
+      return Object.assign({}, t, { stLabel: TSTAT[t.st].label, cls: TSTAT[t.st].cls, bg: on ? '#F4F7FE' : '#FFFFFF', bar: on ? '#2E6BE6' : 'transparent', pick: function () { self.setState({ tid: t.id, adraft: '' }); } });
+    });
+    var Tt = s.tickets.filter(function (t) { return t.id === s.tid; })[0] || s.tickets[0];
+    var AT = Object.assign({}, Tt, { first: Tt.buyer.split(' ')[0] });
+    var stBtns = ['open', 'progress', 'resolved'].map(function (k) {
+      var on = Tt.st === k, col = { open: '#1D4FB8', progress: '#8A5A00', resolved: '#1C7A4B' }[k], bg = { open: '#E2EBFD', progress: '#FFF1CC', resolved: '#E3F4EA' }[k];
+      return { label: TSTAT[k].label, bg: on ? bg : '#FFFFFF', col: on ? col : '#6B7890', bd: on ? col : '#E0DCD2', pick: function () {
+        var th = Object.assign({}, s.threads); th[Tt.id] = (th[Tt.id] || []).concat([{ k: 'sys', text: 'Status changed to ' + TSTAT[k].label }]);
+        self.setState({ threads: th, tickets: s.tickets.map(function (t) { return t.id === Tt.id ? Object.assign({}, t, { st: k }) : t; }) });
+      } };
+    });
+    var amsgs = (s.threads[Tt.id] || []).map(function (m) { return { sys: m.k === 'sys', buyer: m.k === 'buyer', agent: m.k === 'agent', text: m.text, who: m.who || '', time: m.time || '' }; });
+    var asend = function (e) {
+      if (e && e.preventDefault) e.preventDefault();
+      var t = (s.adraft || '').trim(); if (!t) return;
+      var th = Object.assign({}, s.threads); th[Tt.id] = (th[Tt.id] || []).concat([{ k: 'agent', who: 'Ana · Super Admin', text: t, time: 'Now' }]);
+      self.setState({ threads: th, adraft: '', tickets: s.tickets.map(function (x) { return x.id === Tt.id && x.st === 'open' ? Object.assign({}, x, { st: 'progress' }) : x; }) });
+    };
+    var tstat = { open: s.tickets.filter(function (t) { return t.st === 'open'; }).length, prog: s.tickets.filter(function (t) { return t.st === 'progress'; }).length, res: s.tickets.filter(function (t) { return t.st === 'resolved'; }).length };
+    var catRows = s.cats.map(function (c) { return { name: c.name, dot: c.dot, count: cnt(c.name) }; });
+    var addCat = function (e) { if (e && e.preventDefault) e.preventDefault(); var n = (s.catDraft || '').trim(); if (!n) return; self.setState({ cats: s.cats.concat([{ name: n, dot: '#7A5AF8' }]), catDraft: '' }); self.toast('Category “' + n + '” added'); };
+
+    // knowledge
+    var KBd = KBRANDS[s.kbi];
+    var kb = KBRANDS.map(function (b, i) {
+      var on = i === s.kbi, pub = s.pubs[i];
+      return { name: b.name, img: b.img, locs: b.locs.length + (b.locs.length === 1 ? ' location' : ' locations'), status: pub ? 'Published' : 'Draft', cls: pub ? 'pl-g' : 'pl-m', bd: on ? '#2E6BE6' : 'transparent', bg: on ? '#F4F7FE' : 'transparent', pick: function () { self.setState({ kbi: i, kli: 0, ksi: 0 }); } };
+    });
+    var KB = Object.assign({}, KBd, sw(s.pubs[s.kbi]), { pub: s.pubs[s.kbi], togglePub: function () { var p = s.pubs.slice(); p[s.kbi] = !p[s.kbi]; self.setState({ pubs: p }); self.toast(KBd.name + (p[s.kbi] ? ' published' : ' unpublished')); } });
+    var kt = { isContent: s.ktab === 'content', isLocs: s.ktab === 'locs', content: function () { self.setState({ ktab: 'content' }); }, locs: function () { self.setState({ ktab: 'locs' }); },
+      cBg: s.ktab === 'content' ? '#FFFFFF' : 'transparent', cC: s.ktab === 'content' ? '#13264A' : '#56657F', lBg: s.ktab === 'locs' ? '#FFFFFF' : 'transparent', lC: s.ktab === 'locs' ? '#13264A' : '#56657F' };
+    var KLd = KBd.locs[s.kli] || KBd.locs[0];
+    var KL = KLd;
+    var kls = KBd.locs.map(function (l, i) { var on = i === s.kli; return { name: l.name, brgy: l.brgy, bd: on ? '#2E6BE6' : '#E6E3DA', bg: on ? '#F4F7FE' : '#FFFFFF', pick: function () { self.setState({ kli: i, ksi: 0 }); } }; });
+    var slideImg = function (key) { return key === 'map' ? '' : (key === 'home' ? IMG.int : (key === 'video' && s.kbi === 0 ? IMG.row : KBd.img)); };
+    var slideTitle = function (key) {
+      return { hero: KBd.name, video: 'Take the tour', map: 'Find your lot', home: KBd.product, invest: 'Own it from ' + KLd.ma + '/mo' }[key];
+    };
+    var slideSub = function (key) {
+      return { hero: KLd.brgy + ', ' + KLd.name, video: 'Walk the streets before you visit.', map: 'Yellow lots are open.', home: KLd.fa + ' sqm floor area · ' + KLd.la + ' sqm lot', invest: 'TCP ' + KLd.tcp + ' · No downpayment' }[key];
+    };
+    var hk = function (i) { return s.kbi + '-' + s.kli + '-' + i; };
+    var kslides = SLIDES.map(function (sl, i) {
+      var on = i === s.ksi, vis = !s.hidden[hk(i)], img = slideImg(sl.key);
+      return Object.assign({ n: String(i + 1), kind: sl.kind, title: slideTitle(sl.key), img: img, hasImg: !!img, noImg: !img, vis: vis, op: vis ? '1' : '.5', bd: on ? '#2E6BE6' : '#ECE9E1', bg: on ? '#F4F7FE' : '#FFFFFF',
+        pick: function () { self.setState({ ksi: i }); },
+        toggle: function () { var h = Object.assign({}, s.hidden); h[hk(i)] = vis; self.setState({ hidden: h }); } }, sw(vis));
+    });
+    var kgal = [
+      { img: KBd.img, tag: 'Facade', hasImg: true }, { img: IMG.int, tag: 'Interior', hasImg: true }, { img: s.kbi === 0 ? IMG.row : KBd.img, tag: 'Streetscape', hasImg: true },
+      { img: '', tag: 'Amenities', hasImg: false }, { img: '', tag: 'Nearby', hasImg: false }
+    ].map(function (g) { return Object.assign(g, { noImg: !g.hasImg }); });
+    var cur = SLIDES[s.ksi];
+    var pimg = slideImg(cur.key);
+    var PV = { img: pimg, hasImg: !!pimg, noImg: !pimg, eyebrow: cur.eyebrow, title: slideTitle(cur.key), sub: slideSub(cur.key), pos: (s.ksi + 1) + ' / ' + SLIDES.length,
+      segs: SLIDES.map(function (x, i) { return { c: i < s.ksi ? '#FFFFFF' : (i === s.ksi ? '#FFC42E' : 'rgba(255,255,255,.25)') }; }),
+      prev: function () { self.setState({ ksi: Math.max(0, s.ksi - 1) }); }, next: function () { self.setState({ ksi: Math.min(SLIDES.length - 1, s.ksi + 1) }); } };
+
+    // requirements
+    var rlabels = { list: 'Requirements', types: 'Requirement types', statuses: 'Statuses' };
+    var rt = ['list', 'types', 'statuses'].map(function (k) { var on = s.rtab === k; return { label: rlabels[k], bg: on ? '#FFFFFF' : 'transparent', col: on ? '#13264A' : '#56657F', pick: function () { self.setState({ rtab: k }); } }; });
+    var rtv = { list: s.rtab === 'list', types: s.rtab === 'types', statuses: s.rtab === 'statuses' };
+    var areqs = s.reqs.map(function (r, i) { return Object.assign({}, r, sw(r.req), { toggle: function () { self.setState({ reqs: s.reqs.map(function (x, j) { return j === i ? Object.assign({}, x, { req: !x.req }) : x; }) }); } }); });
+    var rtypes = RTYPES.map(function (t) { var c = s.reqs.filter(function (r) { return r.type === t.name; }).length; return Object.assign({}, t, { count: c + (c === 1 ? ' requirement' : ' requirements') }); });
+    var astat = s.stats.map(function (x, i) { return Object.assign({}, x, sw(x.vis), { toggle: function () { self.setState({ stats: s.stats.map(function (y, j) { return j === i ? Object.assign({}, y, { vis: !y.vis }) : y; }) }); } }); });
+    var astatVis = s.stats.filter(function (x) { return x.vis; }).map(function (x, i) { return { name: x.name, c: x.c, n: String(i + 1) }; });
+
+    return {
+      isAuth: s.section === 'auth', isApp: s.section !== 'auth',
+      signIn: function (e) { if (e && e.preventDefault) e.preventDefault(); self.setState({ section: 'users' }); },
+      signOut: function () { self.setState({ section: 'auth' }); },
+      navItems: navItems, sec: sec, crumb: (titles[s.section] || ['', ''])[1], pageTitle: (titles[s.section] || ['', ''])[0],
+      kpi: kpi, users: users, ut: ut, team: team, perms: perms, openAdd: openAdd,
+      drawerOn: !!s.drawer, drawer: drawer, closeDrawer: function () { self.setState({ drawer: null }); },
+      delOn: !!delU, delName: delU ? delU.name : '', cancelDel: function () { self.setState({ delId: null }); },
+      confirmDel: function () { self.setState({ delId: null, users: s.users.filter(function (u) { return u.id !== s.delId; }) }); self.toast((delU ? delU.name : 'User') + ' deleted'); },
+      deactivateInstead: function () { self.setState({ delId: null, users: s.users.map(function (u) { return u.id === s.delId ? Object.assign({}, u, { active: false }) : u; }) }); self.toast((delU ? delU.name : 'User') + ' deactivated'); },
+      tcats: tcats, atks: atks, AT: AT, stBtns: stBtns, amsgs: amsgs, asend: asend, adraft: s.adraft, onADraft: function (e) { self.setState({ adraft: e.target.value }); }, tstat: tstat,
+      openCats: function () { self.setState({ catsOn: true }); }, closeCats: function () { self.setState({ catsOn: false }); }, catsOn: s.catsOn, catRows: catRows, catDraft: s.catDraft,
+      onCatDraft: function (e) { self.setState({ catDraft: e.target.value }); }, addCat: addCat,
+      kb: kb, KB: KB, kt: kt, KL: KL, kls: kls, kslides: kslides, kgal: kgal, PV: PV, saveToast: function () { self.toast('Brand saved'); },
+      rt: rt, rtv: rtv, rtAdd: { list: 'New requirement', types: 'New type', statuses: 'New status' }[s.rtab], areqs: areqs, rtypes: rtypes, astat: astat, astatVis: astatVis,
+      toastOn: !!s.toast, toast: s.toast || ''
+    };
+  }
+}
+
+</script>
+</body>
+</html>

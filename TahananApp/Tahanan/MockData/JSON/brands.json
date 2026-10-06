@@ -1,0 +1,122 @@
+[
+  {
+    "id": "ph",
+    "name": "Pasinaya Homes",
+    "image": "photoPH",
+    "from": "₱750,000",
+    "gmi": "₱14,000",
+    "monthly": "₱3,464",
+    "product": "Full 2-Storey Townhouse",
+    "description": "An exclusive gated community of full 2-storey, 32 sqm townhomes — ideal for individuals or couples buying their first home. 0-equity, with no downpayment needed.",
+    "locations": [
+      {
+        "name": "Ternate, Cavite",
+        "barangay": "Brgy. San Juan I",
+        "tcp": "₱800,000",
+        "floorArea": "32",
+        "lotArea": "30",
+        "monthlyAmortization": "₱3,695.55",
+        "gmi": "₱14,000"
+      },
+      {
+        "name": "Bay, Laguna",
+        "barangay": "Brgy. Maitim",
+        "tcp": "₱800,000",
+        "floorArea": "32",
+        "lotArea": "30",
+        "monthlyAmortization": "₱3,695.55",
+        "gmi": "₱14,000"
+      },
+      {
+        "name": "San Miguel, Bulacan",
+        "barangay": "Brgy. Balaong",
+        "tcp": "₱750,000",
+        "floorArea": "32",
+        "lotArea": "30",
+        "monthlyAmortization": "₱3,463.65",
+        "gmi": "₱14,000"
+      },
+      {
+        "name": "Magalang, Pampanga",
+        "barangay": "Brgy. San Isidro",
+        "tcp": "₱800,000",
+        "floorArea": "32",
+        "lotArea": "30",
+        "monthlyAmortization": "₱3,695.55",
+        "gmi": "₱14,000"
+      },
+      {
+        "name": "Naic, Cavite",
+        "barangay": "Brgy. Timalan Balsahan",
+        "tcp": "₱930,000",
+        "floorArea": "36",
+        "lotArea": "32",
+        "monthlyAmortization": "₱4,294.92",
+        "gmi": "₱14,000"
+      }
+    ]
+  },
+  {
+    "id": "pp",
+    "name": "Pagsikat Place",
+    "image": "photoPP",
+    "from": "₱1,250,000",
+    "gmi": "₱20,000",
+    "monthly": "₱7,110",
+    "product": "Full 2-Storey Townhouse",
+    "description": "An exclusive gated community of full 2-storey, 44 sqm townhomes with provisions for 2 bedrooms — for first-time buyers who want room to personalize.",
+    "locations": [
+      {
+        "name": "Magalang, Pampanga",
+        "barangay": "Brgy. Dolores",
+        "tcp": "₱1,300,000",
+        "floorArea": "44",
+        "lotArea": "36",
+        "monthlyAmortization": "₱7,110.00",
+        "gmi": "₱20,000"
+      }
+    ]
+  },
+  {
+    "id": "hts",
+    "name": "Pasinaya Heights",
+    "image": "photoHTS",
+    "from": "₱1,588,000",
+    "gmi": "₱20,000",
+    "monthly": "₱7,334",
+    "product": "Studio Condominium",
+    "description": "Socialized condominiums with their own exclusive amenity area. Pasinaya Heights supports the government’s 4PH housing program.",
+    "locations": [
+      {
+        "name": "Cabuyao, Laguna",
+        "barangay": "Brgy. Baclaran",
+        "tcp": "₱1,588,000",
+        "floorArea": "28",
+        "lotArea": "—",
+        "monthlyAmortization": "₱7,334.00",
+        "gmi": "₱20,000"
+      }
+    ]
+  },
+  {
+    "id": "pv",
+    "name": "Pagsibol Village",
+    "image": "photoPV",
+    "from": "₱1,404,000",
+    "gmi": "₱14,212",
+    "monthly": "₱8,855",
+    "product": "Full 2-Storey Duplex",
+    "description": "An exclusive gated community of full 2-storey duplex homes with provisions for 2 bedrooms — space for families to shape their own layout.",
+    "locations": [
+      {
+        "name": "Naic, Cavite",
+        "barangay": "Brgy. Sabang",
+        "tcp": "₱1,350,000",
+        "floorArea": "36",
+        "lotArea": "44",
+        "monthlyAmortization": "₱8,855.09",
+        "gmi": "₱24,400"
+      }
+    ]
+  }
+]

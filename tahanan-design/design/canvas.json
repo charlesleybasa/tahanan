@@ -1,0 +1,740 @@
+{
+ "v": 3,
+ "attachments": {},
+ "boards": {
+  "Main.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "page": "buyer",
+   "radius": 44,
+   "title": "Tahanan · Live prototype",
+   "w": 390,
+   "x": 0,
+   "y": 0
+  },
+  "admin/A01-Users.dc.html": {
+   "expand": "fill",
+   "h": 960,
+   "is_interactive": true,
+   "page": "admin",
+   "title": "Users",
+   "w": 1440,
+   "x": 1520,
+   "y": 0
+  },
+  "admin/A02-Add-User.dc.html": {
+   "expand": "fill",
+   "h": 960,
+   "is_interactive": true,
+   "page": "admin",
+   "title": "Add user",
+   "w": 1440,
+   "x": 3040,
+   "y": 0
+  },
+  "admin/A03-Team-Roles.dc.html": {
+   "expand": "fill",
+   "h": 960,
+   "is_interactive": true,
+   "page": "admin",
+   "title": "Team & access control",
+   "w": 1440,
+   "x": 0,
+   "y": 1320
+  },
+  "admin/A04-Tickets.dc.html": {
+   "expand": "fill",
+   "h": 960,
+   "is_interactive": true,
+   "page": "admin",
+   "title": "Tickets & chat",
+   "w": 1440,
+   "x": 1520,
+   "y": 1320
+  },
+  "admin/A05-Ticket-Categories.dc.html": {
+   "expand": "fill",
+   "h": 960,
+   "is_interactive": true,
+   "page": "admin",
+   "title": "Ticket categories",
+   "w": 1440,
+   "x": 3040,
+   "y": 1320
+  },
+  "admin/A06-Knowledge-Brand.dc.html": {
+   "expand": "fill",
+   "h": 960,
+   "is_interactive": true,
+   "page": "admin",
+   "title": "Project knowledge · Brand",
+   "w": 1440,
+   "x": 0,
+   "y": 2640
+  },
+  "admin/A07-Knowledge-Slides.dc.html": {
+   "expand": "fill",
+   "h": 960,
+   "is_interactive": true,
+   "page": "admin",
+   "title": "Project knowledge · Locations & slides",
+   "w": 1440,
+   "x": 1520,
+   "y": 2640
+  },
+  "admin/A08-Requirements.dc.html": {
+   "expand": "fill",
+   "h": 960,
+   "is_interactive": true,
+   "page": "admin",
+   "title": "Requirements",
+   "w": 1440,
+   "x": 0,
+   "y": 3960
+  },
+  "admin/A09-Requirement-Types.dc.html": {
+   "expand": "fill",
+   "h": 960,
+   "is_interactive": true,
+   "page": "admin",
+   "title": "Requirement types",
+   "w": 1440,
+   "x": 1520,
+   "y": 3960
+  },
+  "admin/A10-Requirement-Statuses.dc.html": {
+   "expand": "fill",
+   "h": 960,
+   "is_interactive": true,
+   "page": "admin",
+   "title": "Requirement statuses",
+   "w": 1440,
+   "x": 3040,
+   "y": 3960
+  },
+  "admin/Admin.dc.html": {
+   "expand": "fill",
+   "h": 960,
+   "is_interactive": true,
+   "page": "admin",
+   "title": "Admin · Live prototype",
+   "w": 1440,
+   "x": 0,
+   "y": 0
+  },
+  "brand/App-Icon-Motion.dc.html": {
+   "h": 1240,
+   "page": "brand",
+   "title": "App icon & motion system",
+   "w": 1680,
+   "x": 0,
+   "y": 0
+  },
+  "buyer/B01-Onboarding.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "page": "buyer",
+   "radius": 44,
+   "title": "Onboarding",
+   "w": 390,
+   "x": 470,
+   "y": 0
+  },
+  "buyer/B02-Onboarding-Scan.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "page": "buyer",
+   "radius": 44,
+   "title": "Onboarding · Scan",
+   "w": 390,
+   "x": 940,
+   "y": 0
+  },
+  "buyer/B03-Onboarding-Track.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "page": "buyer",
+   "radius": 44,
+   "title": "Onboarding · Track",
+   "w": 390,
+   "x": 1410,
+   "y": 0
+  },
+  "buyer/B04-Login.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "page": "buyer",
+   "radius": 44,
+   "title": "Log in",
+   "w": 390,
+   "x": 0,
+   "y": 1204
+  },
+  "buyer/B05-Signup.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "page": "buyer",
+   "radius": 44,
+   "title": "Sign up",
+   "w": 390,
+   "x": 470,
+   "y": 1204
+  },
+  "buyer/B06-Welcome.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "page": "buyer",
+   "radius": 44,
+   "title": "Welcome",
+   "w": 390,
+   "x": 940,
+   "y": 1204
+  },
+  "buyer/B07-Forgot.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "page": "buyer",
+   "radius": 44,
+   "title": "Forgot password",
+   "w": 390,
+   "x": 1410,
+   "y": 1204
+  },
+  "buyer/B08-Forgot-OTP.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "page": "buyer",
+   "radius": 44,
+   "title": "Forgot · OTP",
+   "w": 390,
+   "x": 1880,
+   "y": 1204
+  },
+  "buyer/B09-Reset.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "page": "buyer",
+   "radius": 44,
+   "title": "Reset password",
+   "w": 390,
+   "x": 2350,
+   "y": 1204
+  },
+  "buyer/B10-Home.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "page": "buyer",
+   "radius": 44,
+   "title": "Home",
+   "w": 390,
+   "x": 0,
+   "y": 2408
+  },
+  "buyer/B11-Link-Account.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "page": "buyer",
+   "radius": 44,
+   "title": "Link an account",
+   "w": 390,
+   "x": 470,
+   "y": 2408
+  },
+  "buyer/B12-Brand.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "page": "buyer",
+   "radius": 44,
+   "title": "Brand · Pasinaya Homes",
+   "w": 390,
+   "x": 940,
+   "y": 2408
+  },
+  "buyer/B13-Slides.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "page": "buyer",
+   "radius": 44,
+   "title": "Location slides",
+   "w": 390,
+   "x": 1410,
+   "y": 2408
+  },
+  "buyer/B14-Slides-Map.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "page": "buyer",
+   "radius": 44,
+   "title": "Slides · Site plan",
+   "w": 390,
+   "x": 1880,
+   "y": 2408
+  },
+  "buyer/B15-Slides-Invest.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "page": "buyer",
+   "radius": 44,
+   "title": "Slides · Investment",
+   "w": 390,
+   "x": 2350,
+   "y": 2408
+  },
+  "buyer/B16-Gallery.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "page": "buyer",
+   "radius": 44,
+   "title": "Location gallery",
+   "w": 390,
+   "x": 2820,
+   "y": 2408
+  },
+  "buyer/B17-Scan.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "page": "buyer",
+   "radius": 44,
+   "title": "Scan QR",
+   "w": 390,
+   "x": 0,
+   "y": 3612
+  },
+  "buyer/B18-Booking.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "page": "buyer",
+   "radius": 44,
+   "title": "Booking page",
+   "w": 390,
+   "x": 470,
+   "y": 3612
+  },
+  "buyer/B19-Payment.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "page": "buyer",
+   "radius": 44,
+   "title": "Payment page",
+   "w": 390,
+   "x": 940,
+   "y": 3612
+  },
+  "buyer/B20-Paid.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "page": "buyer",
+   "radius": 44,
+   "title": "Payment received",
+   "w": 390,
+   "x": 1410,
+   "y": 3612
+  },
+  "buyer/B21-Personal-Info.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "page": "buyer",
+   "radius": 44,
+   "title": "Personal info",
+   "w": 390,
+   "x": 0,
+   "y": 4816
+  },
+  "buyer/B22-Requirements.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "page": "buyer",
+   "radius": 44,
+   "title": "Requirements",
+   "w": 390,
+   "x": 470,
+   "y": 4816
+  },
+  "buyer/B23-Upload.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "page": "buyer",
+   "radius": 44,
+   "title": "Upload requirement",
+   "w": 390,
+   "x": 940,
+   "y": 4816
+  },
+  "buyer/B24-Profile.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "page": "buyer",
+   "radius": 44,
+   "title": "Profile",
+   "w": 390,
+   "x": 0,
+   "y": 6020
+  },
+  "buyer/B25-Account.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "page": "buyer",
+   "radius": 44,
+   "title": "Account · Email verification",
+   "w": 390,
+   "x": 470,
+   "y": 6020
+  },
+  "buyer/B26-Security.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "page": "buyer",
+   "radius": 44,
+   "title": "Security",
+   "w": 390,
+   "x": 940,
+   "y": 6020
+  },
+  "buyer/B27-About.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "page": "buyer",
+   "radius": 44,
+   "title": "About Homeful",
+   "w": 390,
+   "x": 1410,
+   "y": 6020
+  },
+  "buyer/B28-Help.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "page": "buyer",
+   "radius": 44,
+   "title": "Get help",
+   "w": 390,
+   "x": 0,
+   "y": 7224
+  },
+  "buyer/B29-Ticket-Chat.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "page": "buyer",
+   "radius": 44,
+   "title": "Ticket chat",
+   "w": 390,
+   "x": 470,
+   "y": 7224
+  },
+  "buyer/B30-New-Ticket.dc.html": {
+   "h": 844,
+   "is_interactive": true,
+   "page": "buyer",
+   "radius": 44,
+   "title": "New ticket",
+   "w": 390,
+   "x": 940,
+   "y": 7224
+  },
+  "buyer/Onboarding-Cinematic.dc.html": {
+   "x": 1880,
+   "y": 0,
+   "w": 390,
+   "h": 844,
+   "title": "Onboarding · Cinematic morph",
+   "page": "buyer",
+   "is_interactive": true,
+   "radius": 44
+  },
+  "buyer/S00-Spouse-Flow.dc.html": {
+   "x": 0,
+   "y": 8428,
+   "w": 390,
+   "h": 844,
+   "title": "Spouse details · Live flow",
+   "page": "buyer",
+   "is_interactive": true,
+   "radius": 44
+  },
+  "buyer/S01-Scan-ID.dc.html": {
+   "x": 470,
+   "y": 8428,
+   "w": 390,
+   "h": 844,
+   "title": "Spouse · Scan ID",
+   "page": "buyer",
+   "is_interactive": true,
+   "radius": 44
+  },
+  "buyer/S02-Personal.dc.html": {
+   "x": 940,
+   "y": 8428,
+   "w": 390,
+   "h": 844,
+   "title": "Spouse · 1 Personal",
+   "page": "buyer",
+   "is_interactive": true,
+   "radius": 44
+  },
+  "buyer/S03-Address-ID.dc.html": {
+   "x": 1410,
+   "y": 8428,
+   "w": 390,
+   "h": 844,
+   "title": "Spouse · 2 Address & ID",
+   "page": "buyer",
+   "is_interactive": true,
+   "radius": 44
+  },
+  "buyer/S04-Work-Income.dc.html": {
+   "x": 1880,
+   "y": 8428,
+   "w": 390,
+   "h": 844,
+   "title": "Spouse · 3 Work & income",
+   "page": "buyer",
+   "is_interactive": true,
+   "radius": 44
+  },
+  "buyer/S05-Review.dc.html": {
+   "x": 2350,
+   "y": 8428,
+   "w": 390,
+   "h": 844,
+   "title": "Spouse · 4 Review",
+   "page": "buyer",
+   "is_interactive": true,
+   "radius": 44
+  },
+  "buyer/S06-Done.dc.html": {
+   "x": 2820,
+   "y": 8428,
+   "w": 390,
+   "h": 844,
+   "title": "Spouse · Complete",
+   "page": "buyer",
+   "is_interactive": true,
+   "radius": 44
+  },
+  "buyer/S07-Invite.dc.html": {
+   "x": 3290,
+   "y": 8428,
+   "w": 390,
+   "h": 844,
+   "title": "Spouse · Invite to fill",
+   "page": "buyer",
+   "is_interactive": true,
+   "radius": 44
+  },
+  "buyer/S08-Invite-Sent.dc.html": {
+   "x": 3760,
+   "y": 8428,
+   "w": 390,
+   "h": 844,
+   "title": "Spouse · Invite sent",
+   "page": "buyer",
+   "is_interactive": true,
+   "radius": 44
+  }
+ },
+ "createdOnFiles": {
+  "at": "2026-10-01T06:42:26Z",
+  "v": 1
+ },
+ "designSystems": [],
+ "launch": {
+  "page": "buyer",
+  "view": "canvas"
+ },
+ "notes": {
+  "a0": {
+   "kind": "title1",
+   "maxW": 4480,
+   "page": "admin",
+   "text": "Admin console · Sign in & users",
+   "w": 240,
+   "x": 0,
+   "y": -250
+  },
+  "a1": {
+   "kind": "title1",
+   "maxW": 4480,
+   "page": "admin",
+   "text": "Access control, tickets & categories",
+   "w": 240,
+   "x": 0,
+   "y": 1070
+  },
+  "a2": {
+   "kind": "title1",
+   "maxW": 2960,
+   "page": "admin",
+   "text": "Project knowledge: brand → locations → slides & gallery",
+   "w": 240,
+   "x": 0,
+   "y": 2390
+  },
+  "a3": {
+   "kind": "title1",
+   "maxW": 4480,
+   "page": "admin",
+   "text": "Requirements maintenance",
+   "w": 240,
+   "x": 0,
+   "y": 3710
+  },
+  "b0": {
+   "kind": "title1",
+   "maxW": 2270,
+   "page": "buyer",
+   "text": "Live prototype · Splash & onboarding",
+   "w": 240,
+   "x": 0,
+   "y": -250
+  },
+  "b1": {
+   "kind": "title1",
+   "maxW": 2740,
+   "page": "buyer",
+   "text": "Log in, sign up & password reset",
+   "w": 240,
+   "x": 0,
+   "y": 954
+  },
+  "b2": {
+   "kind": "title1",
+   "maxW": 3210,
+   "page": "buyer",
+   "text": "Home & project knowledge slides",
+   "w": 240,
+   "x": 0,
+   "y": 2158
+  },
+  "b3": {
+   "kind": "title1",
+   "maxW": 1800,
+   "page": "buyer",
+   "text": "QR scan → booking → payment",
+   "w": 240,
+   "x": 0,
+   "y": 3362
+  },
+  "b4": {
+   "kind": "title1",
+   "maxW": 1600,
+   "page": "buyer",
+   "text": "My application: personal info & requirements",
+   "w": 240,
+   "x": 0,
+   "y": 4566
+  },
+  "b5": {
+   "kind": "title1",
+   "maxW": 1800,
+   "page": "buyer",
+   "text": "Profile, account & security",
+   "w": 240,
+   "x": 0,
+   "y": 5770
+  },
+  "b6": {
+   "kind": "title1",
+   "maxW": 1600,
+   "page": "buyer",
+   "text": "Get help: tickets & chat",
+   "w": 240,
+   "x": 0,
+   "y": 6974
+  },
+  "bplay": {
+   "maxH": 420,
+   "page": "buyer",
+   "size": 24,
+   "text": "Press Play on “Tahanan · Live prototype” to run the whole app: animated splash → onboarding → sign up → home → project slides → scan → booking → payment, plus docs, profile and help. Every other artboard is the same prototype opened on one screen — use its Tweaks › start to jump anywhere.",
+   "w": 340,
+   "x": -420,
+   "y": 0
+  },
+  "br": {
+   "kind": "title1",
+   "maxW": 1680,
+   "page": "brand",
+   "text": "Brand: refined app icon, splash storyboard & tokens",
+   "w": 240,
+   "x": 0,
+   "y": -250
+  },
+  "b7": {
+   "kind": "title1",
+   "maxW": 4150,
+   "page": "buyer",
+   "text": "Complete spouse details: scan ID → 4 steps → done (or invite spouse)",
+   "x": 0,
+   "y": 8178
+  }
+ },
+ "order": [
+  "Main.dc.html",
+  "buyer/B01-Onboarding.dc.html",
+  "buyer/B02-Onboarding-Scan.dc.html",
+  "buyer/B03-Onboarding-Track.dc.html",
+  "buyer/Onboarding-Cinematic.dc.html",
+  "buyer/B04-Login.dc.html",
+  "buyer/B05-Signup.dc.html",
+  "buyer/B06-Welcome.dc.html",
+  "buyer/B07-Forgot.dc.html",
+  "buyer/B08-Forgot-OTP.dc.html",
+  "buyer/B09-Reset.dc.html",
+  "buyer/B10-Home.dc.html",
+  "buyer/B11-Link-Account.dc.html",
+  "buyer/B12-Brand.dc.html",
+  "buyer/B13-Slides.dc.html",
+  "buyer/B14-Slides-Map.dc.html",
+  "buyer/B15-Slides-Invest.dc.html",
+  "buyer/B16-Gallery.dc.html",
+  "buyer/B17-Scan.dc.html",
+  "buyer/B18-Booking.dc.html",
+  "buyer/B19-Payment.dc.html",
+  "buyer/B20-Paid.dc.html",
+  "buyer/B21-Personal-Info.dc.html",
+  "buyer/B22-Requirements.dc.html",
+  "buyer/B23-Upload.dc.html",
+  "buyer/B24-Profile.dc.html",
+  "buyer/B25-Account.dc.html",
+  "buyer/B26-Security.dc.html",
+  "buyer/B27-About.dc.html",
+  "buyer/B28-Help.dc.html",
+  "buyer/B29-Ticket-Chat.dc.html",
+  "buyer/B30-New-Ticket.dc.html",
+  "buyer/S00-Spouse-Flow.dc.html",
+  "buyer/S01-Scan-ID.dc.html",
+  "buyer/S02-Personal.dc.html",
+  "buyer/S03-Address-ID.dc.html",
+  "buyer/S04-Work-Income.dc.html",
+  "buyer/S05-Review.dc.html",
+  "buyer/S06-Done.dc.html",
+  "buyer/S07-Invite.dc.html",
+  "buyer/S08-Invite-Sent.dc.html",
+  "admin/Admin.dc.html",
+  "admin/A01-Users.dc.html",
+  "admin/A02-Add-User.dc.html",
+  "admin/A03-Team-Roles.dc.html",
+  "admin/A04-Tickets.dc.html",
+  "admin/A05-Ticket-Categories.dc.html",
+  "admin/A06-Knowledge-Brand.dc.html",
+  "admin/A07-Knowledge-Slides.dc.html",
+  "admin/A08-Requirements.dc.html",
+  "admin/A09-Requirement-Types.dc.html",
+  "admin/A10-Requirement-Statuses.dc.html",
+  "brand/App-Icon-Motion.dc.html"
+ ],
+ "pages": [
+  {
+   "id": "buyer",
+   "name": "Buyers app"
+  },
+  {
+   "id": "admin",
+   "name": "Admin dashboard"
+  },
+  {
+   "id": "brand",
+   "name": "Brand & icon"
+  }
+ ],
+ "title": "Tahanan Buyers App"
+}

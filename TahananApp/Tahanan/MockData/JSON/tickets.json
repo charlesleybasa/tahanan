@@ -1,0 +1,115 @@
+{
+  "categories": [
+    "Payments",
+    "Documents",
+    "Booking",
+    "Account",
+    "Others"
+  ],
+  "tickets": [
+    {
+      "id": "TK-1051",
+      "subject": "Change of unit to Block 12 Lot 9",
+      "category": "Booking",
+      "status": "open",
+      "time": "2h",
+      "messages": [
+        {
+          "kind": "sys",
+          "text": "Ticket opened · Today",
+          "who": null,
+          "time": null,
+          "attachment": false
+        },
+        {
+          "kind": "me",
+          "text": "Hi! Can I move my booking from Lot 7 to Lot 9 in the same block? It’s closer to the park.",
+          "who": null,
+          "time": "8:41 AM",
+          "attachment": false
+        },
+        {
+          "kind": "them",
+          "text": "Hi Maria! We’ve forwarded your request to the sales team to check Lot 9’s availability.",
+          "who": "Homeful Support · Carla",
+          "time": "9:02 AM",
+          "attachment": false
+        }
+      ]
+    },
+    {
+      "id": "TK-1042",
+      "subject": "Payslip marked as reviewed only",
+      "category": "Documents",
+      "status": "progress",
+      "time": "Yesterday",
+      "messages": [
+        {
+          "kind": "sys",
+          "text": "Ticket opened · Sep 19",
+          "who": null,
+          "time": null,
+          "attachment": false
+        },
+        {
+          "kind": "me",
+          "text": "Hi! My payslips show “Reviewed” but not accepted yet. Is anything missing?",
+          "who": null,
+          "time": "9:12 AM",
+          "attachment": false
+        },
+        {
+          "kind": "them",
+          "text": "Hi Maria! Your July and August payslips are clear. We just need September to complete the 3-month requirement.",
+          "who": "Homeful Support · Carla",
+          "time": "9:20 AM",
+          "attachment": true
+        },
+        {
+          "kind": "me",
+          "text": "Got it — I’ll upload it tonight.",
+          "who": null,
+          "time": "9:24 AM",
+          "attachment": false
+        }
+      ]
+    },
+    {
+      "id": "TK-1038",
+      "subject": "Consultation fee receipt",
+      "category": "Payments",
+      "status": "resolved",
+      "time": "Sep 14",
+      "messages": [
+        {
+          "kind": "sys",
+          "text": "Ticket opened · Sep 14",
+          "who": null,
+          "time": null,
+          "attachment": false
+        },
+        {
+          "kind": "me",
+          "text": "Where can I get the official receipt for my consultation fee?",
+          "who": null,
+          "time": "4:10 PM",
+          "attachment": false
+        },
+        {
+          "kind": "them",
+          "text": "We’ve sent the receipt to maria.santos@email.com. It’s also in Transactions on your home.",
+          "who": "Homeful Support · Carla",
+          "time": "4:31 PM",
+          "attachment": false
+        },
+        {
+          "kind": "sys",
+          "text": "Marked resolved",
+          "who": null,
+          "time": null,
+          "attachment": false
+        }
+      ]
+    }
+  ]
+}
