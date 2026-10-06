@@ -1,0 +1,35 @@
+{
+  "firstName": "Maria",
+  "fullName": "Maria L. Santos",
+  "initials": "MS",
+  "homefulId": "HF-2026-004817",
+  "email": "maria.santos@email.com",
+  "emailMasked": "m••••••@email.com",
+  "mobileMasked": "+63 917 ••• 4821",
+  "emailVerified": false,
+  "mobileVerified": true,
+  "role": "Buyer",
+  "unit": {
+    "code": "CAV-PHC-03-B12-L07",
+    "brandId": "ph",
+    "brandName": "Pasinaya Homes",
+    "location": "Ternate, Cavite",
+    "barangay": "Brgy. San Juan I",
+    "block": "Block 12 · Lot 7",
+    "product": "Full 2-Storey Townhouse",
+    "floorArea": "32",
+    "lotArea": "30",
+    "tcp": "₱800,000.00",
+    "monthly": "₱3,695.55",
+    "term": "30 yrs",
+    "consultationFee": "₱10,000.00",
+    "seller": {
+      "name": "Juan Dela Cruz",
+      "initials": "JD"
+    },
+    "referenceNo": "TXN-260914-88412"
+  },
+  "address": "Blk 4 Lot 12, Sampaguita St., Brgy. San Juan I, Ternate, Cavite 4111",
+  "grossMonthlyIncome": 22000,
+  "requiredIncome": 14000
+}

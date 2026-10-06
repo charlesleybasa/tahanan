@@ -1,0 +1,64 @@
+[
+  {
+    "id": "personal",
+    "title": "Personal details",
+    "subtitle": "Principal buyer · Complete",
+    "percent": 100,
+    "cta": "Edit personal details",
+    "fields": [
+      {
+        "key": "Full name",
+        "value": "Maria L. Santos"
+      },
+      {
+        "key": "Civil status",
+        "value": "Married"
+      },
+      {
+        "key": "Employer",
+        "value": "[Employer name]"
+      },
+      {
+        "key": "Gross monthly income",
+        "value": "[₱ amount]"
+      }
+    ]
+  },
+  {
+    "id": "spouse",
+    "title": "Spouse information",
+    "subtitle": "3 fields left",
+    "percent": 60,
+    "cta": "Complete spouse details",
+    "fields": [
+      {
+        "key": "Full name",
+        "value": "Jose R. Santos"
+      },
+      {
+        "key": "Employer",
+        "value": "Not yet added"
+      },
+      {
+        "key": "Monthly income",
+        "value": "Not yet added"
+      }
+    ]
+  },
+  {
+    "id": "cobo",
+    "title": "Co-borrower (Cobo)",
+    "subtitle": "Optional · adds to your GMI",
+    "percent": 0,
+    "cta": "Add a co-borrower",
+    "fields": []
+  },
+  {
+    "id": "aif",
+    "title": "Attorney-in-Fact (AIF)",
+    "subtitle": "For buyers abroad",
+    "percent": 0,
+    "cta": "Add an attorney-in-fact",
+    "fields": []
+  }
+]
