@@ -350,8 +350,13 @@ class _JourneyCardState extends State<JourneyCard> with SingleTickerProviderStat
   Timer? _delay;
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_grow.status != AnimationStatus.dismissed || _delay != null) return;
+    if (SkipEntrance.of(context)) {
+      _grow.value = 1;
+      return;
+    }
     _delay = Timer(const Duration(milliseconds: 600), () {
       if (mounted) _grow.forward();
     });

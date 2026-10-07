@@ -9,9 +9,10 @@ import 'router.dart';
 /// * [EnterStyle.tab] — 0.18 s ease-out fade; `.rise` content shows in place.
 /// * [EnterStyle.plain] — no transition.
 class ScreenEnter extends StatefulWidget {
-  const ScreenEnter({super.key, required this.style, required this.child});
+  const ScreenEnter({super.key, required this.style, this.skip = false, required this.child});
 
   final EnterStyle style;
+  final bool skip;
   final Widget child;
 
   @override
@@ -22,7 +23,7 @@ class _ScreenEnterState extends State<ScreenEnter> with SingleTickerProviderStat
   late final _c = AnimationController(
     vsync: this,
     duration: widget.style == EnterStyle.tab ? Motion.tabSwitch : Motion.screen,
-    value: widget.style == EnterStyle.plain ? 1 : 0,
+    value: widget.style == EnterStyle.plain || widget.skip ? 1 : 0,
   )..forward();
 
   late final _t = CurvedAnimation(parent: _c, curve: widget.style == EnterStyle.tab ? Curves.easeOut : Motion.standard);
@@ -35,8 +36,8 @@ class _ScreenEnterState extends State<ScreenEnter> with SingleTickerProviderStat
 
   @override
   Widget build(BuildContext context) {
-    final child = SkipEntrance(skip: widget.style == EnterStyle.tab, child: widget.child);
-    if (widget.style == EnterStyle.plain) return child;
+    final child = SkipEntrance(skip: widget.style == EnterStyle.tab || widget.skip, child: widget.child);
+    if (widget.style == EnterStyle.plain || widget.skip) return child;
     final scaled = widget.style == EnterStyle.screen;
     return AnimatedBuilder(
       animation: _t,

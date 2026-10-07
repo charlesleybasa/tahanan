@@ -87,7 +87,7 @@ class _RiseState extends State<Rise> with SingleTickerProviderStateMixin {
       _c.value = 1;
       return;
     }
-    final d = widget.delay ?? Motion.stagger[widget.step.clamp(0, 8)];
+    final d = widget.delay ?? 0.0;
     _timer = Timer(seconds(d), () {
       if (mounted) _c.forward();
     });
@@ -304,8 +304,13 @@ class _OnceState extends State<_Once> with SingleTickerProviderStateMixin {
   Timer? _timer;
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_c.status != AnimationStatus.dismissed || _timer != null) return;
+    if (SkipEntrance.of(context)) {
+      _c.value = 1;
+      return;
+    }
     if (widget.delay <= 0) {
       _c.forward();
     } else {

@@ -83,11 +83,15 @@ abstract final class Discover {
 enum EnterStyle { screen, tab, plain }
 
 class AppRouter extends ChangeNotifier {
-  AppRouter({Screen start = Screen.home}) : _screen = start;
+  AppRouter({Screen start = Screen.home}) : _screen = start {
+    _visited.add(start);
+  }
 
   Screen _screen;
   int _visit = 0;
   EnterStyle _enter = EnterStyle.plain;
+  final Set<Screen> _visited = {};
+  bool _hasVisited = false;
 
   Screen get screen => _screen;
 
@@ -95,14 +99,18 @@ class AppRouter extends ChangeNotifier {
   int get visit => _visit;
   EnterStyle get enter => _enter;
   bool get tabSwitch => _enter == EnterStyle.tab;
+  bool get hasVisited => _hasVisited;
 
   /// Callers close any open sheet first (`AppState.closeSheet`), as native `go` does.
   void go(Screen next) {
-    if (next == _screen && next.tab != null) return;
+    if (next == _screen) return;
     final tab = _screen.tab != null && next.tab != null;
     _enter = next.entersPlain ? EnterStyle.plain : (tab ? EnterStyle.tab : EnterStyle.screen);
+    _hasVisited = _visited.contains(next);
+    _visited.add(next);
     _screen = next;
     _visit++;
     notifyListeners();
   }
 }
+

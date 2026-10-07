@@ -71,10 +71,24 @@ class _RootViewState extends State<RootView> with WidgetsBindingObserver {
       fit: StackFit.expand,
       children: [
         const AppBackground(),
-        KeyedSubtree(
-          key: ValueKey(router.visit),
-          child: ScreenEnter(style: router.enter, child: _screen(screen)),
+        // Keep the 4 main tabs alive in the background to prevent re-triggering entrance animations
+        Offstage(
+          offstage: tab == null,
+          child: IndexedStack(
+            index: tab?.index ?? 0,
+            children: const [
+              HomeScreen(),
+              ApplicationScreen(),
+              HelpScreen(),
+              ProfileScreen(),
+            ],
+          ),
         ),
+        if (tab == null)
+          KeyedSubtree(
+            key: ValueKey(router.visit),
+            child: ScreenEnter(style: router.enter, skip: router.hasVisited, child: _screen(screen)),
+          ),
         if (tab != null)
           Positioned(
             left: 0,
