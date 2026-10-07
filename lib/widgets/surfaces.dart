@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'dart:ui' show ImageFilter;
 
 import 'package:flutter/widgets.dart';
@@ -321,7 +322,8 @@ class SegmentedPill extends StatelessWidget {
         padding: const EdgeInsets.all(5),
         child: LayoutBuilder(
           builder: (context, box) {
-            final w = (box.maxWidth - 4 * (options.length - 1)) / options.length;
+            // Android lays the first frame out at zero width; never hand out a negative segment width.
+            final w = math.max(0.0, (box.maxWidth - 4 * (options.length - 1)) / options.length);
             return Stack(
               children: [
                 AnimatedPositioned(

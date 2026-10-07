@@ -3,12 +3,14 @@ import 'package:provider/provider.dart';
 
 import '../features/application/application_screen.dart';
 import '../features/auth/auth_screens.dart';
+import '../features/discover/catalog_screen.dart';
+import '../features/discover/product_screen.dart';
+import '../features/discover/project_screen.dart';
 import '../features/booking/booking_screens.dart';
 import '../features/help/help_screens.dart';
 import '../features/home/home_screen.dart';
 import '../features/onboarding/onboarding_screen.dart';
 import '../features/profile/profile_screens.dart';
-import '../features/project/project_screens.dart';
 import '../features/sheets/sheets.dart';
 import '../features/splash/splash_screen.dart';
 import '../features/spouse/spouse_flow.dart';
@@ -108,8 +110,14 @@ class _RootViewState extends State<RootView> with WidgetsBindingObserver {
     ScreenKind.welcome => const WelcomeScreen(),
     ScreenKind.forgotPassword => const ForgotPasswordScreen(),
     ScreenKind.home => const HomeScreen(),
-    ScreenKind.brand => BrandScreen(brandIndex: s.a),
-    ScreenKind.location => LocationStoryScreen(brandIndex: s.a, locationIndex: s.b),
+    ScreenKind.catalog => const CatalogScreen(),
+    ScreenKind.project => ProjectScreen(brandIndex: s.a, locationIndex: s.b, from: s.id ?? Discover.catalog),
+    ScreenKind.product => ProductScreen(
+      brandIndex: s.a,
+      locationIndex: s.b,
+      productIndex: s.c,
+      from: s.id ?? Discover.catalog,
+    ),
     ScreenKind.scan => const ScanScreen(),
     ScreenKind.booking => const BookingScreen(),
     ScreenKind.payment => const PaymentScreen(),

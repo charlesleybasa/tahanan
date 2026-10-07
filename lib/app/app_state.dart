@@ -3,12 +3,13 @@ import 'dart:typed_data';
 
 import 'package:flutter/widgets.dart';
 
+import '../data/api/api_client.dart';
 import '../data/repositories.dart';
 import '../models/models.dart';
 import '../theme/theme.dart';
 import '../widgets/overlays.dart';
 
-enum SheetKind { link, changeEmail, changeMobile, upload }
+enum SheetKind { link, changeEmail, changeMobile, upload, location }
 
 enum ApplicationTab { info, requirements }
 
@@ -31,6 +32,10 @@ class AppState extends ChangeNotifier {
 
   SheetKind? sheet;
   String? uploadRequirementId;
+
+  /// The brand whose locations the location sheet lists, and where it was opened from.
+  int sheetBrand = 0;
+  String sheetOrigin = 'catalog';
   ToastData? toast;
   ApplicationTab applicationTab = ApplicationTab.info;
   bool biometricsEnabled = true;
@@ -44,30 +49,39 @@ class AppState extends ChangeNotifier {
   final Set<String> agentTyping = {};
 
   /// Loads the bundled data before the first frame, so screens never render empty (as on iOS).
-  static Future<AppState> load({Repositories repos = Repositories.live}) async {
-    final s = AppState._(repos);
+  static Future<AppState> load({Repositories? repos}) async {
+    final s = AppState._(repos ?? Repositories.fromEnvironment());
     await s.refresh();
     return s;
   }
 
+  /// Loads the public catalog and, when signed in, the buyer's data. Never throws: an unreachable server or a
+  /// signed-out user leaves the affected lists empty (the screens render their empty states).
   Future<void> refresh() async {
-    final r = await Future.wait<Object>([
-      repos.projects.brands(),
-      repos.requirements.requirements(),
-      repos.tickets.load(),
-      repos.buyer.profile(),
-      repos.buyer.transactions(),
-      repos.buyer.applicationSections(),
-    ]);
-    brands = r[0] as List<Brand>;
-    requirements = r[1] as List<Requirement>;
-    final t = r[2] as TicketsFile;
-    tickets = t.tickets;
-    ticketCategories = t.categories;
-    profile = r[3] as BuyerProfile;
-    transactions = r[4] as List<Transaction>;
-    sections = r[5] as List<ApplicationSection>;
-    emailVerification = profile!.emailVerified ? EmailVerification.verified : EmailVerification.idle;
+    try {
+      brands = await repos.projects.brands();
+    } on ApiException catch (e) {
+      debugPrint('Catalog not loaded: $e');
+    }
+    try {
+      final r = await Future.wait<Object>([
+        repos.requirements.requirements(),
+        repos.tickets.load(),
+        repos.buyer.profile(),
+        repos.buyer.transactions(),
+        repos.buyer.applicationSections(),
+      ]);
+      requirements = r[0] as List<Requirement>;
+      final t = r[1] as TicketsFile;
+      tickets = t.tickets;
+      ticketCategories = t.categories;
+      profile = r[2] as BuyerProfile;
+      transactions = r[3] as List<Transaction>;
+      sections = r[4] as List<ApplicationSection>;
+      emailVerification = profile!.emailVerified ? EmailVerification.verified : EmailVerification.idle;
+    } on ApiException catch (e) {
+      debugPrint('Buyer data not loaded: $e');
+    }
     notifyListeners();
   }
 
@@ -78,9 +92,11 @@ class AppState extends ChangeNotifier {
 
   // Sheets and toast
 
-  void showSheet(SheetKind kind, {String? requirementId}) {
+  void showSheet(SheetKind kind, {String? requirementId, int brand = 0, String origin = 'catalog'}) {
     sheet = kind;
     uploadRequirementId = requirementId;
+    sheetBrand = brand;
+    sheetOrigin = origin;
     notifyListeners();
   }
 
@@ -128,7 +144,7 @@ class AppState extends ChangeNotifier {
     t.messages.add(TicketMessage(kind: MessageKind.me, text: text, time: 'Now'));
     agentTyping.add(to);
     notifyListeners();
-    unawaited(repos.tickets.send(text, ticketId: to));
+    unawaited(run((r) => r.tickets.send(text, ticketId: to)));
     // Demo: the agent replies after 1.8 s, as in the prototype.
     Timer(const Duration(milliseconds: 1800), () {
       agentTyping.remove(to);
@@ -165,7 +181,7 @@ class AppState extends ChangeNotifier {
     );
     agentTyping.add(id);
     notifyListeners();
-    unawaited(repos.tickets.create(category: category, subject: subj, message: msg));
+    unawaited(run((r) => r.tickets.create(category: category, subject: subj, message: msg)));
     Timer(const Duration(milliseconds: 2200), () {
       agentTyping.remove(id);
       ticket(id)?.messages.add(
@@ -181,10 +197,42 @@ class AppState extends ChangeNotifier {
     return id;
   }
 
-  // Auth (demo: any email and password are accepted, as in the native mock)
+  // Backend calls from screens
 
-  // TODO: API — Supabase sign-in, session refresh every 3 h and on foreground, Keychain/Keystore storage.
-  Future<void> signIn({required String email, required String password}) async {}
+  /// Runs a repository call fired from the UI. The screens update optimistically (as the design's demo flows do);
+  /// a failure surfaces as a toast. Returns whether the call succeeded.
+  Future<bool> run(Future<Object?> Function(Repositories r) call) async {
+    try {
+      await call(repos);
+      return true;
+    } on ApiException catch (e) {
+      showToast(e.message, icon: TIcon.info, tint: Palette.orange);
+      return false;
+    }
+  }
 
-  Future<void> signOut() async {}
+  // Auth (mock repositories accept any email and password)
+
+  /// Signs in and reloads the buyer's data. Throws [ApiException] on bad credentials so the form can show it.
+  // TODO: API — refresh the session every 3 h and on foreground (see AuthRepository.refresh).
+  Future<void> signIn({required String email, required String password}) async {
+    await repos.auth.signIn(email: email, password: password);
+    await refresh();
+  }
+
+  /// New users are saved as Leads.
+  Future<void> signUp({required String name, required String email, required String mobile}) async {
+    await repos.auth.signUp(name: name, email: email, mobile: mobile);
+    await refresh();
+  }
+
+  Future<void> signOut() async {
+    await run((r) => r.auth.signOut());
+    profile = null;
+    requirements = const [];
+    tickets = [];
+    transactions = const [];
+    sections = [];
+    notifyListeners();
+  }
 }

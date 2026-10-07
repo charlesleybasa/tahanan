@@ -13,6 +13,7 @@ import '../../widgets/brand.dart';
 import '../../widgets/buttons.dart';
 import '../../widgets/scaffold.dart';
 import '../../widgets/surfaces.dart';
+import '../discover/discover_widgets.dart';
 
 /// Home dashboard — maps 1:1 to native `HomeView.swift`.
 class HomeScreen extends StatelessWidget {
@@ -44,8 +45,21 @@ class HomeScreen extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(top: 26),
           child: _SectionHeader(
-            title: 'Explore communities',
-            trailing: Text('${state.brands.length} brands', style: Typo.manrope(13, Typo.bold, Palette.subtle)),
+            title: 'Explore all brands',
+            trailing: Tap(
+              onTap: () => context.go(Screen.catalog),
+              semanticLabel: 'See all ${state.brands.length} brands',
+              child: SizedBox(
+                height: 44,
+                child: Row(
+                  children: [
+                    Text('See all ${state.brands.length}', style: Typo.manrope(13, Typo.extrabold, Palette.yellow)),
+                    const SizedBox(width: 2),
+                    const TIconView(TIcon.chevronRight, size: 16, color: Palette.yellow),
+                  ],
+                ),
+              ),
+            ),
           ),
         ).rise(2),
         Padding(
@@ -190,46 +204,18 @@ class _BrandCarousel extends StatelessWidget {
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.fromLTRB(Spacing.gutter, 4, Spacing.gutter, 8),
-            physics: const _SnapPhysics(_card + _gap),
+            physics: const SnapPhysics(_card + _gap),
             itemCount: brands.length,
             separatorBuilder: (_, _) => const SizedBox(width: _gap),
-            itemBuilder: (context, i) => BrandArchCard(brand: brands[i], onTap: () => context.go(Screen.brand(i))),
+            itemBuilder: (context, i) => BrandArchCard(
+              brand: brands[i],
+              onTap: () => openBrand(context, i, from: Discover.home),
+            ),
           ),
         ),
       ),
     );
   }
-}
-
-/// SwiftUI `.scrollTargetBehavior(.viewAligned)`: settles with a card's leading edge on the content margin.
-class _SnapPhysics extends ScrollPhysics {
-  const _SnapPhysics(this.extent, {super.parent});
-
-  final double extent;
-
-  @override
-  _SnapPhysics applyTo(ScrollPhysics? ancestor) => _SnapPhysics(extent, parent: buildParent(ancestor));
-
-  @override
-  ScrollPhysics? buildParent(ScrollPhysics? ancestor) =>
-      super.buildParent(ancestor) ?? const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics());
-
-  @override
-  Simulation? createBallisticSimulation(ScrollMetrics position, double velocity) {
-    if ((velocity <= 0 && position.pixels <= position.minScrollExtent) ||
-        (velocity >= 0 && position.pixels >= position.maxScrollExtent)) {
-      return super.createBallisticSimulation(position, velocity);
-    }
-    final tol = toleranceFor(position);
-    final projected = position.pixels + velocity * 0.35;
-    final page = (velocity.abs() < tol.velocity ? position.pixels : projected) / extent;
-    final target = (page.round() * extent).clamp(position.minScrollExtent, position.maxScrollExtent);
-    if ((target - position.pixels).abs() < tol.distance) return null;
-    return ScrollSpringSimulation(spring, position.pixels, target, velocity, tolerance: tol);
-  }
-
-  @override
-  bool get allowImplicitScrolling => false;
 }
 
 /// 252 × 340 arch card with Ken Burns photo, location pill, name, "STARTS AT" price and arrow chip.
@@ -245,7 +231,7 @@ class BrandArchCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Pressable(
       onTap: onTap,
-      semanticLabel: '${brand.name}, starts at ${brand.from}',
+      semanticLabel: '${brand.name}, ${brand.locationLabel}, starts at ${peso(brand.from)}',
       child: Container(
         width: 252,
         height: 340,
@@ -276,7 +262,7 @@ class BrandArchCard extends StatelessWidget {
               Column(
                 children: [
                   const SizedBox(height: 74),
-                  _LocationPill(label: brand.carouselLocationLabel),
+                  _LocationPill(label: brand.locationLabel),
                   const Spacer(),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(20, 0, 20, 18),
@@ -296,7 +282,7 @@ class BrandArchCard extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text('STARTS AT', style: Typo.manrope(11, Typo.bold, Palette.muted)),
-                                  Text(brand.from, style: Typo.outfit(20, Typo.bold, Palette.yellow)),
+                                  Text(peso(brand.from), style: Typo.outfit(20, Typo.bold, Palette.yellow)),
                                 ],
                               ),
                             ),

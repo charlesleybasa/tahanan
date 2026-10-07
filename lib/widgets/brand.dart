@@ -87,7 +87,8 @@ class TahananLockup extends StatelessWidget {
   }
 }
 
-/// A photo filling its frame (object-fit: cover), optionally with Ken Burns.
+/// A photo filling its frame (object-fit: cover), optionally with Ken Burns. [name] is a bundled image
+/// (`assets/images/<name>.jpg`) or an absolute `http(s)` URL from the API.
 class Photo extends StatelessWidget {
   const Photo(this.name, {super.key, this.kenBurns = false, this.kbDuration = 16});
 
@@ -97,8 +98,9 @@ class Photo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final img = Image.asset(
-      'assets/images/$name.jpg',
+    if (name.isEmpty) return const ColoredBox(color: Palette.panel);
+    final img = Image(
+      image: photoProvider(name),
       fit: BoxFit.cover,
       width: double.infinity,
       height: double.infinity,
@@ -110,3 +112,7 @@ class Photo extends StatelessWidget {
     );
   }
 }
+
+/// Bundled asset name or network URL → image provider.
+ImageProvider photoProvider(String name) =>
+    name.startsWith('http') ? NetworkImage(name) : AssetImage('assets/images/$name.jpg') as ImageProvider;

@@ -668,3 +668,35 @@ class EdgeScroller extends StatelessWidget {
     ),
   );
 }
+
+/// Darkens an image like SwiftUI `.brightness(b)` (b < 0) and optionally boosts saturation.
+Widget adjusted(Widget child, {double brightness = 0, double saturation = 1}) {
+  final s = saturation;
+  const lr = 0.2126, lg = 0.7152, lb = 0.0722;
+  final b = brightness * 255;
+  return ColorFiltered(
+    colorFilter: ColorFilter.matrix([
+      lr * (1 - s) + s,
+      lg * (1 - s),
+      lb * (1 - s),
+      0,
+      b,
+      lr * (1 - s),
+      lg * (1 - s) + s,
+      lb * (1 - s),
+      0,
+      b,
+      lr * (1 - s),
+      lg * (1 - s),
+      lb * (1 - s) + s,
+      0,
+      b,
+      0,
+      0,
+      0,
+      1,
+      0,
+    ]),
+    child: child,
+  );
+}

@@ -10,8 +10,9 @@ enum ScreenKind {
   welcome,
   forgotPassword,
   home,
-  brand,
-  location,
+  catalog,
+  project,
+  product,
   scan,
   booking,
   payment,
@@ -30,17 +31,21 @@ enum ScreenKind {
 /// A screen in the buyer prototype's `go(screen)` state machine.
 @immutable
 class Screen {
-  const Screen(this.kind, {this.a = 0, this.b = 0, this.id});
+  const Screen(this.kind, {this.a = 0, this.b = 0, this.c = 0, this.id});
 
-  const Screen.brand(int index) : this(ScreenKind.brand, a: index);
-  const Screen.location(int brand, int location) : this(ScreenKind.location, a: brand, b: location);
+  /// A brand's location page. [location] is -1 when the spreadsheet hasn't named it yet.
+  /// [from] is where Back returns: [Discover.home] or [Discover.catalog].
+  const Screen.project(int brand, int location, {String from = Discover.catalog})
+    : this(ScreenKind.project, a: brand, b: location, id: from);
+  const Screen.product(int brand, int location, int product, {String from = Discover.catalog})
+    : this(ScreenKind.product, a: brand, b: location, c: product, id: from);
   const Screen.ticket(String ticketId) : this(ScreenKind.ticket, id: ticketId);
 
   /// About: 0 = privacy, 1 = terms.
   const Screen.about(int doc) : this(ScreenKind.about, a: doc);
 
   final ScreenKind kind;
-  final int a, b;
+  final int a, b, c;
   final String? id;
 
   static const home = Screen(ScreenKind.home);
@@ -48,6 +53,7 @@ class Screen {
   static const help = Screen(ScreenKind.help);
   static const profile = Screen(ScreenKind.profile);
   static const scan = Screen(ScreenKind.scan);
+  static const catalog = Screen(ScreenKind.catalog);
 
   MainTab? get tab => switch (kind) {
     ScreenKind.home => MainTab.home,
@@ -58,14 +64,20 @@ class Screen {
   };
 
   /// Screens that enter without the scale/blur transition (they animate their own content).
-  bool get entersPlain => kind == ScreenKind.splash || kind == ScreenKind.location || kind == ScreenKind.forgotPassword;
+  bool get entersPlain => kind == ScreenKind.splash || kind == ScreenKind.forgotPassword;
 
   @override
   bool operator ==(Object other) =>
-      other is Screen && other.kind == kind && other.a == a && other.b == b && other.id == id;
+      other is Screen && other.kind == kind && other.a == a && other.b == b && other.c == c && other.id == id;
 
   @override
-  int get hashCode => Object.hash(kind, a, b, id);
+  int get hashCode => Object.hash(kind, a, b, c, id);
+}
+
+/// Where a Discover page was opened from, so Back returns there.
+abstract final class Discover {
+  static const home = 'home';
+  static const catalog = 'catalog';
 }
 
 enum EnterStyle { screen, tab, plain }

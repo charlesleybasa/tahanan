@@ -16,7 +16,7 @@ class IText extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, box) {
-        final text = box.maxWidth.isFinite ? _pushOut(context, box.maxWidth) : data;
+        final text = box.maxWidth.isFinite && box.maxWidth > 0 ? _pushOut(context, box.maxWidth) : data;
         return Text(text, style: style, textAlign: textAlign, maxLines: maxLines, overflow: overflow);
       },
     );

@@ -70,3 +70,34 @@ class TahananScrollBehavior extends ScrollBehavior {
   @override
   Widget buildScrollbar(BuildContext context, Widget child, ScrollableDetails details) => child;
 }
+
+/// SwiftUI `.scrollTargetBehavior(.viewAligned)`: settles with an item's leading edge on the content margin.
+class SnapPhysics extends ScrollPhysics {
+  const SnapPhysics(this.extent, {super.parent});
+
+  final double extent;
+
+  @override
+  SnapPhysics applyTo(ScrollPhysics? ancestor) => SnapPhysics(extent, parent: buildParent(ancestor));
+
+  @override
+  ScrollPhysics? buildParent(ScrollPhysics? ancestor) =>
+      super.buildParent(ancestor) ?? const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics());
+
+  @override
+  Simulation? createBallisticSimulation(ScrollMetrics position, double velocity) {
+    if ((velocity <= 0 && position.pixels <= position.minScrollExtent) ||
+        (velocity >= 0 && position.pixels >= position.maxScrollExtent)) {
+      return super.createBallisticSimulation(position, velocity);
+    }
+    final tol = toleranceFor(position);
+    final projected = position.pixels + velocity * 0.35;
+    final page = (velocity.abs() < tol.velocity ? position.pixels : projected) / extent;
+    final target = (page.round() * extent).clamp(position.minScrollExtent, position.maxScrollExtent);
+    if ((target - position.pixels).abs() < tol.distance) return null;
+    return ScrollSpringSimulation(spring, position.pixels, target, velocity, tolerance: tol);
+  }
+
+  @override
+  bool get allowImplicitScrolling => false;
+}

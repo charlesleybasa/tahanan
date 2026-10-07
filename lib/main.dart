@@ -51,7 +51,16 @@ Future<String> _start() async {
 }
 
 Screen _startScreen(String start) {
-  if (start == 'ticket') return const Screen.ticket('TK-1042');
+  switch (start) {
+    case 'ticket':
+      return const Screen.ticket('TK-1042');
+    case 'tradizo': // Terraces Tradizo, Imus
+      return const Screen.project(8, 0);
+    case 'tradizo1br':
+      return const Screen.product(8, 0, 1);
+    case 'pending': // Pagsikat Place: locations not named yet
+      return const Screen.project(1, -1);
+  }
   for (final k in ScreenKind.values) {
     if (k.name == start) return Screen(k);
   }
@@ -82,20 +91,24 @@ class TahananApp extends StatelessWidget {
           final mq = MediaQuery.of(context);
           return MediaQuery(
             data: mq.copyWith(textScaler: mq.textScaler.clamp(maxScaleFactor: maxTextScale)),
-            child: child!,
+            // Above the Navigator so pushed routes (the gallery viewer) share the root text style.
+            child: Material(
+              type: MaterialType.transparency,
+              // Replaces Material's inherited body style (which carries height 1.43) so text uses the fonts'
+              // own line metrics, as SwiftUI does.
+              child: DefaultTextStyle(
+                style: rootTextStyle,
+                // SwiftUI `lineSpacing` adds space only between lines, never above the first or below the last.
+                textHeightBehavior: const TextHeightBehavior(
+                  applyHeightToFirstAscent: false,
+                  applyHeightToLastDescent: false,
+                ),
+                child: child!,
+              ),
+            ),
           );
         },
-        home: const Material(
-          type: MaterialType.transparency,
-          // Replaces Material's inherited body style (which carries height 1.43) so text uses the fonts'
-          // own line metrics, as SwiftUI does.
-          child: DefaultTextStyle(
-            style: rootTextStyle,
-            // SwiftUI `lineSpacing` adds space only between lines, never above the first or below the last.
-            textHeightBehavior: TextHeightBehavior(applyHeightToFirstAscent: false, applyHeightToLastDescent: false),
-            child: RootView(),
-          ),
-        ),
+        home: const RootView(),
       ),
     );
   }

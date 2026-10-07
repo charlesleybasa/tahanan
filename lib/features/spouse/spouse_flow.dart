@@ -26,7 +26,6 @@ import '../../widgets/buttons.dart';
 import '../../widgets/fields.dart';
 import '../../widgets/scaffold.dart';
 import '../../widgets/surfaces.dart';
-import '../project/project_screens.dart' show adjusted;
 import 'spouse_model.dart';
 import '../../widgets/itext.dart';
 
@@ -464,7 +463,7 @@ class _SpouseFlowScreenState extends State<SpouseFlowScreen> {
   }
 
   void _saveSpouse(AppState state) {
-    // TODO: API — PUT /api/v1/me/application/spouse
+    unawaited(state.run((r) => r.buyer.saveSpouse(_m.toJson())));
     final idx = state.sections.indexWhere((s) => s.id == 'spouse');
     if (idx < 0) return;
     final s = state.sections[idx];
@@ -628,8 +627,14 @@ class _SpouseFlowScreenState extends State<SpouseFlowScreen> {
               'Send link by SMS',
               icon: TIcon.send,
               iconSize: 18,
-              // TODO: API — POST /api/v1/me/application/spouse/invite { name, mobile }
-              onTap: () => _m.set(() => _m.inviteSent = true),
+              onTap: () {
+                unawaited(
+                  context.read<AppState>().run(
+                    (r) => r.buyer.inviteSpouse(name: _m.inviteName, mobile: _m.inviteMobile),
+                  ),
+                );
+                _m.set(() => _m.inviteSent = true);
+              },
             ),
           ).rise(5),
         ],
@@ -668,10 +673,19 @@ class _SpouseFlowScreenState extends State<SpouseFlowScreen> {
                     const Spinner(size: 22, lineWidth: 3),
                     const SizedBox(width: 12),
                     Expanded(child: Text('Waiting for $name', style: Typo.manrope(14, Typo.bold, Palette.text))),
-                    // TODO: API — resend the invite SMS
-                    SizedBox(
-                      height: 40,
-                      child: Center(child: Text('Resend', style: Typo.manrope(13, Typo.extrabold, Palette.yellow))),
+                    Tap(
+                      semanticLabel: 'Resend invite',
+                      onTap: () async {
+                        final state = context.read<AppState>();
+                        final ok = await state.run(
+                          (r) => r.buyer.inviteSpouse(name: _m.inviteName, mobile: _m.inviteMobile),
+                        );
+                        if (ok) state.showToast('Invite sent again');
+                      },
+                      child: SizedBox(
+                        height: 40,
+                        child: Center(child: Text('Resend', style: Typo.manrope(13, Typo.extrabold, Palette.yellow))),
+                      ),
                     ),
                   ],
                 ),
@@ -746,7 +760,8 @@ class _IdScanState extends State<_IdScan> {
 
   @override
   void dispose() {
-    unawaited(_camera.dispose());
+    // Throws if the camera never started (simulator, permission denied); nothing to release then.
+    _camera.dispose().catchError((Object _) {});
     super.dispose();
   }
 

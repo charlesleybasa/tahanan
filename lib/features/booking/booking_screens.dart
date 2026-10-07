@@ -18,7 +18,6 @@ import '../../widgets/buttons.dart';
 import '../../widgets/fields.dart';
 import '../../widgets/scaffold.dart';
 import '../../widgets/surfaces.dart';
-import '../project/project_screens.dart' show adjusted;
 import '../../widgets/itext.dart';
 
 /// Where a Funnel / Seller app QR should take the buyer.
@@ -72,7 +71,8 @@ class _ScanScreenState extends State<ScanScreen> {
   @override
   void dispose() {
     _leave?.cancel();
-    unawaited(_camera.dispose());
+    // Throws if the camera never started (simulator, permission denied); nothing to release then.
+    _camera.dispose().catchError((Object _) {});
     super.dispose();
   }
 
@@ -525,9 +525,22 @@ class _PaymentScreenState extends State<PaymentScreen> {
     super.dispose();
   }
 
-  void _pay() {
-    // TODO: API — create a payment intent for the consultation fee and hand off to the selected provider.
+  Future<void> _pay() async {
+    final state = context.read<AppState>();
     setState(() => _paying = true);
+    String? checkout;
+    final ok = await state.run((r) async {
+      checkout = await r.payments.createConsultationPayment(unitCode: state.profile?.unit.code ?? '', method: _method);
+      return checkout;
+    });
+    if (!mounted) return;
+    if (!ok) {
+      setState(() => _paying = false);
+      return;
+    }
+    // TODO: API — open `checkout` (provider page or SDK) and wait for the payment webhook/deep link before
+    // showing the receipt. The mock returns null, so the demo goes straight to the receipt.
+    debugPrint('Checkout: $checkout');
     _timer = Timer(const Duration(milliseconds: 1800), () {
       if (mounted) context.go(const Screen(ScreenKind.paid));
     });

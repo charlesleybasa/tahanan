@@ -10,7 +10,6 @@ import '../../widgets/art.dart';
 import '../../widgets/brand.dart';
 import '../../widgets/buttons.dart';
 import '../../widgets/surfaces.dart';
-import '../project/project_screens.dart' show adjusted;
 import 'onboarding_geometry.dart';
 import '../../widgets/itext.dart';
 

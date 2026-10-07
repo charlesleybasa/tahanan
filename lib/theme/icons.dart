@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:path_drawing/path_drawing.dart';
 
-/// The prototype's 44 line icons: 24 × 24 viewBox, 1.8 stroke, round caps and joins (`play` is filled).
+/// The prototype's 44 line icons (plus the media gallery's): 24 × 24 viewBox, 1.8 stroke, round caps and joins (`play` is filled).
 /// Path data is copied verbatim from the native Icons.swift. Spec §5.
 enum TIcon {
   check(['M5 12.5 10 17 19 7']),
@@ -69,13 +69,22 @@ enum TIcon {
   paperclip(['m21 11-8.5 8.5a5 5 0 0 1-7-7L14 4a3.5 3.5 0 0 1 5 5l-8.5 8.5a2 2 0 0 1-3-3L15 7']),
   replay(['M20 11a8 8 0 1 0-2.3 5.7', 'M20 4v7h-7']),
   info(['M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z', 'M12 11v5M12 8h.01']),
-  edit(['M4 20h4L19 9l-4-4L4 16z', 'm13.5 6.5 4 4']);
+  edit(['M4 20h4L19 9l-4-4L4 16z', 'm13.5 6.5 4 4']),
+
+  // Media gallery (added for the Flutter build; same 24 × 24 grid and 1.8 stroke)
+  pause(['M7 5h3.5v14H7zM13.5 5H17v14h-3.5z']),
+  expand(['M14 4h6v6', 'm20 4-7 7', 'M10 20H4v-6', 'm4 20 7-7']),
+  map(['M9 4 3 6v14l6-2 6 2 6-2V4l-6 2z', 'M9 4v14M15 6v14']),
+  plan(['M4 4h16v16H4z', 'M4 12h8V4', 'M12 16v4', 'M16 12h4']),
+  tree(['M12 22v-6', 'M12 3 6 11h3l-4 5h14l-4-5h3z']),
+  video(['M3 6h13v12H3z', 'm16 10 5-3v10l-5-3z']),
+  compass(['M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z', 'm15.5 8.5-2 5-5 2 2-5z']);
 
   const TIcon(this.paths);
 
   final List<String> paths;
 
-  bool get filled => this == TIcon.play;
+  bool get filled => this == TIcon.play || this == TIcon.pause;
 
   static final _cache = <TIcon, Path>{};
 

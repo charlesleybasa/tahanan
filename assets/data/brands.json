@@ -2,121 +2,99 @@
   {
     "id": "ph",
     "name": "Pasinaya Homes",
-    "image": "photoPH",
-    "from": "₱750,000",
-    "gmi": "₱14,000",
-    "monthly": "₱3,464",
-    "product": "Full 2-Storey Townhouse",
-    "description": "An exclusive gated community of full 2-storey, 32 sqm townhomes — ideal for individuals or couples buying their first home. 0-equity, with no downpayment needed.",
+    "type": "RH 2-storey LOFT",
+    "group": "Rowhouse",
+    "from": 750000,
+    "projects": 4,
+    "image": "brands/pasinaya-homes",
+    "shots": ["photoPH"],
     "locations": [
       {
-        "name": "Ternate, Cavite",
-        "barangay": "Brgy. San Juan I",
-        "tcp": "₱800,000",
-        "floorArea": "32",
-        "lotArea": "30",
-        "monthlyAmortization": "₱3,695.55",
-        "gmi": "₱14,000"
+        "name": "PH Naic",
+        "area": "Naic, Cavite",
+        "from": 750000,
+        "products": [
+          {
+            "name": "RH 2-storey LOFT",
+            "code": "RH 2-storey LOFT",
+            "floors": 2,
+            "floor": "32 sqm",
+            "lot": "30 sqm",
+            "tcp": 750000,
+            "financing": {
+              "monthly": 4919.50,
+              "note": "Monthly amortization includes insurance.",
+              "gmi": 14056,
+              "program": "HDMF",
+              "term": "30 years"
+            },
+            "fees": {
+              "title": "Consultation & PF",
+              "rows": [
+                ["Consultation", "₱10,000"],
+                ["Total processing fee (PF)", "₱10,000"],
+                ["Remaining PF after consultation", "₱0"]
+              ],
+              "note": "The ₱10,000 PF is fully covered by the ₱10,000 consultation. No remaining PF."
+            }
+          }
+        ]
       },
-      {
-        "name": "Bay, Laguna",
-        "barangay": "Brgy. Maitim",
-        "tcp": "₱800,000",
-        "floorArea": "32",
-        "lotArea": "30",
-        "monthlyAmortization": "₱3,695.55",
-        "gmi": "₱14,000"
-      },
-      {
-        "name": "San Miguel, Bulacan",
-        "barangay": "Brgy. Balaong",
-        "tcp": "₱750,000",
-        "floorArea": "32",
-        "lotArea": "30",
-        "monthlyAmortization": "₱3,463.65",
-        "gmi": "₱14,000"
-      },
-      {
-        "name": "Magalang, Pampanga",
-        "barangay": "Brgy. San Isidro",
-        "tcp": "₱800,000",
-        "floorArea": "32",
-        "lotArea": "30",
-        "monthlyAmortization": "₱3,695.55",
-        "gmi": "₱14,000"
-      },
-      {
-        "name": "Naic, Cavite",
-        "barangay": "Brgy. Timalan Balsahan",
-        "tcp": "₱930,000",
-        "floorArea": "36",
-        "lotArea": "32",
-        "monthlyAmortization": "₱4,294.92",
-        "gmi": "₱14,000"
-      }
+      { "name": "PH Muzon", "from": 750000, "products": [{ "name": "RH 2-storey LOFT", "floors": 2, "tcp": 750000 }] },
+      { "name": "PH Teresa", "from": 750000, "products": [{ "name": "RH 2-storey LOFT", "floors": 2, "tcp": 750000 }] },
+      { "name": "PH Magalang", "from": 750000, "products": [{ "name": "RH 2-storey LOFT", "floors": 2, "tcp": 750000 }] }
     ]
   },
+  { "id": "pp", "name": "Pagsikat Place", "type": "Duplex Full 2-storey", "group": "Duplex", "from": 1250000, "projects": 4, "image": "brands/pagsikat-place", "shots": ["photoPP"] },
+  { "id": "pv", "name": "Pagsibol Village", "type": "Duplex Full 2-storey", "group": "Duplex", "from": 1800000, "projects": 4, "image": "brands/pagsibol-village", "shots": ["photoPV"] },
+  { "id": "hts", "name": "Pasinaya Heights", "type": "Studio.i", "group": "Condo", "from": 1400000, "projects": 1, "image": "brands/pasinaya-heights", "shots": ["photoHTS"] },
+  { "id": "ag", "name": "Agapeya", "type": "Duplex Full 2-storey", "group": "Duplex", "from": 2500000, "projects": 1, "image": "brands/agapeya" },
+  { "id": "en", "name": "Enclave", "type": "Duplex Full 2-storey", "group": "Duplex", "from": 3600000, "projects": 2, "image": "brands/enclave" },
+  { "id": "pt", "name": "Penthouse", "type": "Cluster Full 3-storey", "group": "Cluster", "from": 5800000, "projects": 1, "image": "brands/penthouse" },
+  { "id": "za", "name": "Zaya", "type": "Studio.i", "group": "Condo", "from": 2500000, "projects": 1, "image": "brands/terraces" },
   {
-    "id": "pp",
-    "name": "Pagsikat Place",
-    "image": "photoPP",
-    "from": "₱1,250,000",
-    "gmi": "₱20,000",
-    "monthly": "₱7,110",
-    "product": "Full 2-Storey Townhouse",
-    "description": "An exclusive gated community of full 2-storey, 44 sqm townhomes with provisions for 2 bedrooms — for first-time buyers who want room to personalize.",
+    "id": "te",
+    "name": "Terraces",
+    "type": "Studio.i · 1BR.i · 2BR.i",
+    "group": "Condo",
+    "from": 2500000,
+    "projects": 2,
+    "image": "brands/terraces",
     "locations": [
       {
-        "name": "Magalang, Pampanga",
-        "barangay": "Brgy. Dolores",
-        "tcp": "₱1,300,000",
-        "floorArea": "44",
-        "lotArea": "36",
-        "monthlyAmortization": "₱7,110.00",
-        "gmi": "₱20,000"
-      }
-    ]
-  },
-  {
-    "id": "hts",
-    "name": "Pasinaya Heights",
-    "image": "photoHTS",
-    "from": "₱1,588,000",
-    "gmi": "₱20,000",
-    "monthly": "₱7,334",
-    "product": "Studio Condominium",
-    "description": "Socialized condominiums with their own exclusive amenity area. Pasinaya Heights supports the government’s 4PH housing program.",
-    "locations": [
-      {
-        "name": "Cabuyao, Laguna",
-        "barangay": "Brgy. Baclaran",
-        "tcp": "₱1,588,000",
-        "floorArea": "28",
-        "lotArea": "—",
-        "monthlyAmortization": "₱7,334.00",
-        "gmi": "₱20,000"
-      }
-    ]
-  },
-  {
-    "id": "pv",
-    "name": "Pagsibol Village",
-    "image": "photoPV",
-    "from": "₱1,404,000",
-    "gmi": "₱14,212",
-    "monthly": "₱8,855",
-    "product": "Full 2-Storey Duplex",
-    "description": "An exclusive gated community of full 2-storey duplex homes with provisions for 2 bedrooms — space for families to shape their own layout.",
-    "locations": [
-      {
-        "name": "Naic, Cavite",
-        "barangay": "Brgy. Sabang",
-        "tcp": "₱1,350,000",
-        "floorArea": "36",
-        "lotArea": "44",
-        "monthlyAmortization": "₱8,855.09",
-        "gmi": "₱24,400"
-      }
+        "name": "Terraces Tradizo, Imus",
+        "area": "Imus, Cavite",
+        "from": 2500000,
+        "products": [
+          { "name": "Studio", "code": "Studio.i", "floor": "20 sqm", "lot": "N/A", "tcp": 2500000 },
+          {
+            "name": "1 Bedroom",
+            "code": "1BR.i",
+            "floor": "28 sqm",
+            "lot": "N/A",
+            "tcp": 3600000,
+            "financing": {
+              "monthly": 26943.84,
+              "note": "Insurance inclusion in monthly amortization is not specified.",
+              "gmi": 89813,
+              "program": "REM",
+              "term": "30 years"
+            },
+            "fees": {
+              "title": "Consultation & down payment",
+              "rows": [
+                ["Consultation", "₱10,000"],
+                ["Total down payment (DP)", "₱180,000 · 5% of TCP"],
+                ["Remaining DP after consultation", "₱170,000"]
+              ],
+              "highlight": ["Monthly down payment", "₱28,333.33 × 6 months"],
+              "note": "The ₱10,000 consultation is applied to the ₱180,000 down payment, leaving ₱170,000 payable over 6 months. Monthly DP is separate from loan amortization."
+            }
+          },
+          { "name": "2 Bedroom", "code": "2BR.i", "floor": "40 sqm", "lot": "N/A", "tcp": 4200000 }
+        ]
+      },
+      { "name": "Terraces Jubilation, Biñan", "area": "Biñan, Laguna", "from": 3200000, "productCount": 2 }
     ]
   }
 ]

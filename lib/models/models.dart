@@ -2,69 +2,208 @@ typedef Json = Map<String, Object?>;
 
 List<Json> _list(Object? v) => (v as List<Object?>).cast<Json>();
 
-// MARK: Project knowledge
+// MARK: Catalog (Figma "02 · Home & Discover": brand → location → product)
+
+/// "₱750,000" / "₱4,919.50": whole pesos drop the centavos, as in the source spreadsheet.
+String peso(num n) {
+  final whole = n.truncate();
+  final cents = ((n - whole) * 100).round();
+  final digits = whole.toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (_) => ',');
+  return cents == 0 ? '₱$digits' : '₱$digits.${cents.toString().padLeft(2, '0')}';
+}
+
+String plural(int n, String one, [String? many]) => '$n ${n == 1 ? one : (many ?? '${one}s')}';
+
+/// A gallery photo or video uploaded in the CMS. [url] and [poster] are absolute URLs.
+class MediaRef {
+  const MediaRef({required this.category, required this.caption, required this.type, required this.url, this.poster});
+
+  factory MediaRef.fromJson(Json j) => MediaRef(
+    category: j['category']! as String,
+    caption: (j['caption'] as String?) ?? '',
+    type: j['type']! as String,
+    url: j['url']! as String,
+    poster: j['poster'] as String?,
+  );
+
+  /// "Project video", "Facade", "Floor plan", … (the Figma gallery categories).
+  final String category, caption;
+
+  /// `photo` or `video`.
+  final String type;
+  final String url;
+  final String? poster;
+}
+
+List<MediaRef> _media(Object? v) => v == null ? const [] : _list(v).map(MediaRef.fromJson).toList();
+
+class Financing {
+  const Financing({
+    required this.monthly,
+    required this.note,
+    required this.gmi,
+    required this.program,
+    required this.term,
+  });
+
+  factory Financing.fromJson(Json j) => Financing(
+    monthly: j['monthly']! as num,
+    note: j['note']! as String,
+    gmi: j['gmi']! as num,
+    program: j['program']! as String,
+    term: j['term']! as String,
+  );
+
+  final num monthly, gmi;
+  final String note, program, term;
+}
+
+/// "Consultation & PF" or "Consultation & down payment".
+class FeeBlock {
+  const FeeBlock({required this.title, required this.rows, required this.note, this.highlight});
+
+  factory FeeBlock.fromJson(Json j) => FeeBlock(
+    title: j['title']! as String,
+    rows: [for (final r in (j['rows']! as List<Object?>).cast<List<Object?>>()) (r[0]! as String, r[1]! as String)],
+    note: j['note']! as String,
+    highlight: switch (j['highlight']) {
+      final List<Object?> h => (h[0]! as String, h[1]! as String),
+      _ => null,
+    },
+  );
+
+  final String title, note;
+  final List<(String, String)> rows;
+  final (String, String)? highlight;
+}
+
+class Product {
+  const Product({
+    required this.name,
+    required this.tcp,
+    this.code,
+    this.floor,
+    this.lot,
+    this.floors = 1,
+    this.financing,
+    this.fees,
+    this.media = const [],
+  });
+
+  factory Product.fromJson(Json j) => Product(
+    name: j['name']! as String,
+    tcp: j['tcp']! as num,
+    code: j['code'] as String?,
+    floor: j['floor'] as String?,
+    lot: j['lot'] as String?,
+    floors: (j['floors'] as int?) ?? 1,
+    financing: switch (j['financing']) {
+      final Json f => Financing.fromJson(f),
+      _ => null,
+    },
+    fees: switch (j['fees']) {
+      final Json f => FeeBlock.fromJson(f),
+      _ => null,
+    },
+    media: _media(j['media']),
+  );
+
+  final String name;
+  final num tcp;
+
+  /// Source spreadsheet product name ("1BR.i"); shown only when it differs from [name].
+  final String? code;
+  final String? floor, lot;
+
+  /// Storeys, for the sample floor plan.
+  final int floors;
+  final Financing? financing;
+  final FeeBlock? fees;
+
+  /// Product gallery; empty until uploaded (the app then shows labelled samples).
+  final List<MediaRef> media;
+
+  String? get sourceCode => code != null && code != name ? code : null;
+}
 
 class Location {
   const Location({
     required this.name,
-    required this.barangay,
-    required this.tcp,
-    required this.floorArea,
-    required this.lotArea,
-    required this.monthlyAmortization,
-    required this.gmi,
+    required this.from,
+    this.area,
+    this.products,
+    this.productCount,
+    this.media = const [],
   });
 
   factory Location.fromJson(Json j) => Location(
     name: j['name']! as String,
-    barangay: j['barangay']! as String,
-    tcp: j['tcp']! as String,
-    floorArea: j['floorArea']! as String,
-    lotArea: j['lotArea']! as String,
-    monthlyAmortization: j['monthlyAmortization']! as String,
-    gmi: j['gmi']! as String,
+    from: j['from']! as num,
+    area: j['area'] as String?,
+    products: j['products'] == null ? null : _list(j['products']).map(Product.fromJson).toList(),
+    productCount: j['productCount'] as int?,
+    media: _media(j['media']),
   );
 
-  final String name, barangay, tcp, floorArea, lotArea, monthlyAmortization, gmi;
+  final String name;
+  final num from;
+  final String? area;
+
+  /// Null when the spreadsheet lists the count but not the products.
+  final List<Product>? products;
+  final int? productCount;
+
+  int get count => products?.length ?? productCount ?? 0;
+
+  /// Project gallery; empty until uploaded (the app then shows labelled samples).
+  final List<MediaRef> media;
 }
+
+enum HomeGroup { rowhouse, duplex, condo, cluster }
 
 class Brand {
   const Brand({
     required this.id,
     required this.name,
-    required this.image,
+    required this.type,
+    required this.group,
     required this.from,
-    required this.gmi,
-    required this.monthly,
-    required this.product,
-    required this.description,
-    required this.locations,
+    required this.projects,
+    required this.image,
+    this.shots = const [],
+    this.locations,
   });
 
   factory Brand.fromJson(Json j) => Brand(
     id: j['id']! as String,
     name: j['name']! as String,
+    type: j['type']! as String,
+    group: HomeGroup.values.byName((j['group']! as String).toLowerCase()),
+    from: j['from']! as num,
+    projects: j['projects']! as int,
     image: j['image']! as String,
-    from: j['from']! as String,
-    gmi: j['gmi']! as String,
-    monthly: j['monthly']! as String,
-    product: j['product']! as String,
-    description: j['description']! as String,
-    locations: _list(j['locations']).map(Location.fromJson).toList(),
+    shots: ((j['shots'] as List<Object?>?) ?? const []).cast<String>(),
+    locations: j['locations'] == null ? null : _list(j['locations']).map(Location.fromJson).toList(),
   );
 
-  final String id, name, image, from, gmi, monthly, product, description;
-  final List<Location> locations;
+  final String id, name, type;
+  final HomeGroup group;
+  final num from;
+  final int projects;
 
-  /// Home carousel pill: "5 locations" or the single location's name.
-  String get carouselLocationLabel => locations.length > 1 ? '${locations.length} locations' : locations[0].name;
+  /// Website artwork (an artist's rendering).
+  final String image;
 
-  /// Brand hero: "5 locations" or "Brgy. Dolores, Magalang, Pampanga".
-  String get heroLocationLabel =>
-      locations.length > 1 ? '${locations.length} locations' : '${locations[0].barangay}, ${locations[0].name}';
+  /// Extra exterior photos for the sample gallery.
+  final List<String> shots;
 
-  /// Pasinaya Homes has its own row shot; the others reuse the facade.
-  String get streetImage => id == 'ph' ? 'photoRow' : image;
+  /// Null until the spreadsheet names this brand's locations.
+  final List<Location>? locations;
+
+  int get locationCount => locations?.length ?? projects;
+
+  /// Home carousel pill: "4 locations".
+  String get locationLabel => plural(locationCount, 'location');
 }
 
 // MARK: Requirements

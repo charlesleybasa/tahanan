@@ -9,7 +9,8 @@ void main() {
     await tester.pumpWidget(TahananApp(state: state!, router: AppRouter()));
     await tester.pump(const Duration(seconds: 2));
 
-    expect(find.text('Explore communities'), findsOneWidget);
+    expect(find.text('Explore all brands'), findsOneWidget);
+    expect(find.text('See all 9'), findsOneWidget);
     expect(find.text('Pasinaya Homes'), findsWidgets);
     expect(find.text('Documents in review'), findsOneWidget);
   });
@@ -21,7 +22,7 @@ void main() {
     final v = r.visit;
     r.go(Screen.help);
     expect(r.visit, v);
-    r.go(const Screen.brand(0));
+    r.go(Screen.catalog);
     expect(r.enter, EnterStyle.screen);
   });
 }

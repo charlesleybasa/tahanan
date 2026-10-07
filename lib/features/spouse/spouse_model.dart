@@ -96,6 +96,30 @@ class SpouseFlowModel extends ChangeNotifier {
 
   String get fullName => [first, middle, last, suffix].where((s) => s.isNotEmpty).join(' ');
 
+  /// Body for `PUT /me/application/spouse` (see docs/BACKEND_INTEGRATION.md).
+  Map<String, String> toJson() => {
+    'firstName': first,
+    'middleName': noMiddleName ? '' : middle,
+    'lastName': last,
+    'suffix': suffix,
+    if (birthdate != null) 'birthdate': birthdate!.toIso8601String().substring(0, 10),
+    'sex': sex,
+    'citizenship': citizenship,
+    'mobile': mobile,
+    'email': email,
+    'sameAddress': '$sameAddress',
+    if (!sameAddress) ...{'street': street, 'barangay': barangay, 'city': city, 'province': province, 'zip': zip},
+    'idType': idType,
+    'idNumber': idNumber,
+    'tin': tin,
+    'employmentType': employmentType,
+    'employer': employer,
+    'position': position,
+    'yearsEmployed': '$years',
+    'monthlyIncome': '$spouseIncome',
+    'consent': '$consent',
+  };
+
   static const _months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
   String get birthdateText {

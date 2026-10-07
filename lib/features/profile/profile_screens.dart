@@ -33,10 +33,10 @@ class ProfileScreen extends StatelessWidget {
         preferredCameraDevice: CameraDevice.front,
         imageQuality: 85,
       );
-      // TODO: API — upload the selfie to Supabase Storage and save the URL on the profile.
       if (img != null) {
         final bytes = await img.readAsBytes();
         state.update(() => state.avatar = bytes);
+        unawaited(state.run((r) => r.auth.uploadAvatar(bytes, filename: img.name)));
       }
     } catch (_) {
       state.showToast('Camera isn’t available on this device', icon: TIcon.info, tint: Palette.orange);
@@ -467,8 +467,8 @@ class _AccountScreenState extends State<AccountScreen> {
         'Email me a link instead',
         icon: TIcon.external,
         onTap: () {
-          // TODO: API — send the magic link; the inbox link returns through tahanan://auth/verify-email.
-          // The demo simulates the round trip.
+          // The inbox link returns through tahanan://auth/verify-email (RootView). The mock build simulates it.
+          unawaited(context.read<AppState>().run((r) => r.auth.sendEmailVerificationLink()));
           _set(EmailVerification.openingLink);
           _linkTimer = Timer(const Duration(milliseconds: 1800), () {
             if (mounted) _set(EmailVerification.verified);
@@ -666,8 +666,9 @@ class _SecurityScreenState extends State<SecurityScreen> {
                 PrimaryButton(
                   'Update password',
                   icon: null,
-                  onTap: () {
-                    // TODO: API — update the password
+                  onTap: () async {
+                    final ok = await state.run((r) => r.auth.changePassword(current: _current, next: _new));
+                    if (!ok || !mounted) return;
                     setState(() => _current = _new = _confirm = '');
                     state.showToast('Password updated');
                   },

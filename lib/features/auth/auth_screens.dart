@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 import '../../app/app_state.dart';
+import '../../data/api/api_client.dart';
 import '../../app/navigation.dart';
 import '../../app/router.dart';
 import '../../theme/theme.dart';
@@ -60,9 +61,12 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> _logIn() async {
     if (_busy) return;
     _busy = true;
+    final state = context.read<AppState>();
     try {
-      await context.read<AppState>().signIn(email: _email, password: _password);
+      await state.signIn(email: _email, password: _password);
       if (mounted) context.go(Screen.home);
+    } on ApiException catch (e) {
+      state.showToast(e.message, icon: TIcon.info, tint: Palette.orange);
     } finally {
       _busy = false;
     }
@@ -72,9 +76,14 @@ class _LoginScreenState extends State<LoginScreen> {
     switch (await authenticateBiometrics('Log in to Tahanan')) {
       case BiometricOutcome.success:
       case BiometricOutcome.unavailable:
-        // TODO: API — exchange the stored refresh token for a new session instead of a mock sign-in.
-        // Demo: devices without biometrics (and simulators) go straight in.
-        await _logIn();
+        // Biometrics unlock the stored session; with no session (or mock data) fall back to the form's sign-in.
+        final state = context.read<AppState>();
+        if (await state.repos.auth.refresh()) {
+          await state.refresh();
+          if (mounted) context.go(Screen.home);
+        } else {
+          await _logIn();
+        }
       case BiometricOutcome.cancelled:
       case BiometricOutcome.failed:
         break;
@@ -267,9 +276,13 @@ class _SignupScreenState extends State<SignupScreen> {
             PrimaryButton(
               'Create account',
               onTap: () async {
-                // New users are saved as Leads.
-                await context.read<AppState>().signIn(email: _email, password: '');
-                if (context.mounted) context.go(const Screen(ScreenKind.welcome));
+                final state = context.read<AppState>();
+                try {
+                  await state.signUp(name: _name, email: _email, mobile: _mobile);
+                  if (context.mounted) context.go(const Screen(ScreenKind.welcome));
+                } on ApiException catch (e) {
+                  state.showToast(e.message, icon: TIcon.info, tint: Palette.orange);
+                }
               },
             ).rise(7),
             const SizedBox(height: 12),
@@ -487,8 +500,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         autofill: AutofillHints.email,
       ).rise(3),
       const SizedBox(height: 22),
-      // TODO: API — send the password reset email
-      PrimaryButton('Send reset code', icon: TIcon.send, iconSize: 18, onTap: () => _go(1)).rise(4),
+      PrimaryButton(
+        'Send reset code',
+        icon: TIcon.send,
+        iconSize: 18,
+        onTap: () async {
+          if (await context.read<AppState>().run((r) => r.auth.requestPasswordReset(_email))) _go(1);
+        },
+      ).rise(4),
     ],
   );
 

@@ -14,6 +14,7 @@ import '../../widgets/buttons.dart';
 import '../../widgets/fields.dart';
 import '../../widgets/surfaces.dart';
 import '../../widgets/itext.dart';
+import '../discover/location_sheet.dart';
 
 /// Swaps sheet steps with the prototype's `.transition(.fadeIn)`: the old step leaves at once, the new one fades in.
 class StepSwitch extends StatelessWidget {
@@ -43,6 +44,11 @@ class SheetBody extends StatelessWidget {
       SheetKind.changeEmail => ChangeEmailSheet(onClose: state.closeSheet),
       SheetKind.changeMobile => ChangeMobileSheet(onClose: state.closeSheet),
       SheetKind.upload => UploadSheet(requirementId: state.uploadRequirementId ?? '', onClose: state.closeSheet),
+      SheetKind.location => LocationSheet(
+        brandIndex: state.sheetBrand,
+        origin: state.sheetOrigin,
+        onClose: state.closeSheet,
+      ),
     };
   }
 }
@@ -147,9 +153,16 @@ class _UploadSheetState extends State<UploadSheet> {
       _filename = name;
       _step = 1;
     });
-    await state.repos.requirements.upload(requirementId: widget.requirementId, bytes: bytes, filename: name);
-    await Future<void>.delayed(const Duration(milliseconds: 1800));
+    final upload = state.run(
+      (r) => r.requirements.upload(requirementId: widget.requirementId, bytes: bytes, filename: name),
+    );
+    // The progress step stays up for at least 1.8 s, as in the design.
+    final (ok, _) = await (upload, Future<void>.delayed(const Duration(milliseconds: 1800))).wait;
     if (!mounted) return;
+    if (!ok) {
+      setState(() => _step = 0);
+      return;
+    }
     state.markSubmitted(widget.requirementId);
     setState(() => _step = 2);
   }
@@ -309,7 +322,7 @@ class _LinkAccountSheetState extends State<LinkAccountSheet> {
               icon: TIcon.link,
               iconSize: 18,
               onTap: () {
-                unawaited(state.repos.buyer.linkAccount(homefulId: _homefulId, otp: _code));
+                unawaited(state.run((r) => r.buyer.linkAccount(homefulId: _homefulId, otp: _code)));
                 _next();
               },
             ),
@@ -362,8 +375,14 @@ class _ChangeEmailSheetState extends State<ChangeEmailSheet> {
             autofill: AutofillHints.email,
           ),
           const SizedBox(height: 16),
-          // TODO: API — update the user's email; Supabase sends the code and link
-          PrimaryButton('Send code to new email', icon: TIcon.send, iconSize: 18, onTap: _next),
+          PrimaryButton(
+            'Send code to new email',
+            icon: TIcon.send,
+            iconSize: 18,
+            onTap: () async {
+              if (await context.read<AppState>().run((r) => r.auth.requestEmailChange(_email))) _next();
+            },
+          ),
         ],
       ),
       1 => Column(
@@ -415,8 +434,14 @@ class _ChangeMobileSheetState extends State<ChangeMobileSheet> {
           const SizedBox(height: 18),
           PhoneField(label: 'New mobile number', value: _mobile, onChanged: (v) => setState(() => _mobile = v)),
           const SizedBox(height: 16),
-          // TODO: API — send SMS OTP to the new number
-          PrimaryButton('Send SMS code', icon: TIcon.send, iconSize: 18, onTap: _next),
+          PrimaryButton(
+            'Send SMS code',
+            icon: TIcon.send,
+            iconSize: 18,
+            onTap: () async {
+              if (await context.read<AppState>().run((r) => r.auth.requestMobileChange(_mobile))) _next();
+            },
+          ),
         ],
       ),
       1 => Column(
