@@ -44,7 +44,7 @@ class _ScreenEnterState extends State<ScreenEnter> with SingleTickerProviderStat
       child: child,
       builder: (context, child) {
         final p = _t.value;
-        if (p >= 1) return child!;
+        // Keep the wrappers mounted at completion so the page retains state.
         Widget w = Opacity(opacity: p.clamp(0, 1), child: child);
         if (scaled) {
           w = Transform.scale(scale: mix(1.035, 1, p), child: blurred(10 * (1 - p), w));

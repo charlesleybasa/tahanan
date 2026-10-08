@@ -66,6 +66,12 @@ class Screen {
   /// Screens that enter without the scale/blur transition (they animate their own content).
   bool get entersPlain => kind == ScreenKind.splash || kind == ScreenKind.forgotPassword;
 
+  /// Back-navigation origin does not make a Discover page a new destination.
+  Screen get entranceIdentity => switch (kind) {
+    ScreenKind.project || ScreenKind.product => Screen(kind, a: a, b: b, c: c),
+    _ => this,
+  };
+
   @override
   bool operator ==(Object other) =>
       other is Screen && other.kind == kind && other.a == a && other.b == b && other.c == c && other.id == id;
@@ -84,7 +90,7 @@ enum EnterStyle { screen, tab, plain }
 
 class AppRouter extends ChangeNotifier {
   AppRouter({Screen start = Screen.home}) : _screen = start {
-    _visited.add(start);
+    _visited.add(start.entranceIdentity);
   }
 
   Screen _screen;
@@ -95,7 +101,7 @@ class AppRouter extends ChangeNotifier {
 
   Screen get screen => _screen;
 
-  /// Bumped on every navigation so re-entering a screen replays its entrance.
+  /// Bumped on navigation to reset page state; visited pages skip entrances.
   int get visit => _visit;
   EnterStyle get enter => _enter;
   bool get tabSwitch => _enter == EnterStyle.tab;
@@ -106,11 +112,10 @@ class AppRouter extends ChangeNotifier {
     if (next == _screen) return;
     final tab = _screen.tab != null && next.tab != null;
     _enter = next.entersPlain ? EnterStyle.plain : (tab ? EnterStyle.tab : EnterStyle.screen);
-    _hasVisited = _visited.contains(next);
-    _visited.add(next);
+    _hasVisited = _visited.contains(next.entranceIdentity);
+    _visited.add(next.entranceIdentity);
     _screen = next;
     _visit++;
     notifyListeners();
   }
 }
-

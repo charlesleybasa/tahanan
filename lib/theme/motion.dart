@@ -53,8 +53,10 @@ bool reduceMotion(BuildContext context) => MediaQuery.maybeDisableAnimationsOf(c
 
 /// Applies a Gaussian blur equal to CSS `filter: blur(r)` (σ = r).
 Widget blurred(double radius, Widget child) {
-  if (radius < 0.01) return child;
   return ImageFiltered(
+    // Keep the element tree stable when the blur finishes. Removing this
+    // wrapper remounts descendants and restarts their entrance animations.
+    enabled: radius >= 0.01,
     imageFilter: ImageFilter.blur(sigmaX: radius, sigmaY: radius, tileMode: TileMode.decal),
     child: child,
   );
