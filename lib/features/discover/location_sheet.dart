@@ -86,7 +86,7 @@ class _LocationRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = location;
-    final meta = '${plural(l.count, 'product')} · From ${peso(l.from)}';
+    final meta = '${plural(l.count, 'unit')} · From ${peso(l.from)}';
     final sub = Typo.manrope(13, Typo.regular, Palette.soft);
     return Pressable(
       onTap: onTap,

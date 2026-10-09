@@ -303,7 +303,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with SingleTickerPr
                   children: [
                     Text('Booking found', softWrap: false, style: Typo.manrope(14, Typo.extrabold, Palette.text)),
                     const SizedBox(height: 3),
-                    Text('CAV-PHC-03-B12-L07', softWrap: false, style: Typo.mono(11, Typo.medium, Palette.muted)),
+                    Text('4PHCL-01-008-085', softWrap: false, style: Typo.mono(11, Typo.medium, Palette.muted)),
                   ],
                 ),
               ),

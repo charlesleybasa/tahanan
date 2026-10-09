@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 import '../theme/theme.dart';
+import 'adaptive.dart';
 import 'buttons.dart';
 
 /// Vertical scroller with the prototype's screen padding (2 below the safe area, 20 gutters).
@@ -22,7 +23,9 @@ class ScreenScroll extends StatelessWidget {
     return SingleChildScrollView(
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       padding: EdgeInsets.fromLTRB(horizontal, insets.top + top, horizontal, insets.bottom + bottom),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: children),
+      child: MaxWidth(
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: children),
+      ),
     );
   }
 }

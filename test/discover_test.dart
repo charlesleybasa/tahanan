@@ -60,6 +60,8 @@ void main() {
 
   testWidgets('Gallery viewer opens on the tapped item and closes back to the page', (tester) async {
     final (_, router) = await _pumpApp(tester, const Screen.project(0, 0));
+    await tester.ensureVisible(find.text('Project tour'));
+    await _settle(tester, 5);
     await tester.tap(find.text('Project tour'));
     await _settle(tester);
     expect(find.text('1 of 8'), findsOneWidget);

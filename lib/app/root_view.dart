@@ -1,12 +1,15 @@
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
+import '../features/application/application_edit_screen.dart';
 import '../features/application/application_screen.dart';
 import '../features/auth/auth_screens.dart';
 import '../features/discover/catalog_screen.dart';
 import '../features/discover/product_screen.dart';
 import '../features/discover/project_screen.dart';
+import '../features/booking/booking_flow.dart';
 import '../features/booking/booking_screens.dart';
+import '../features/booking/id_capture_screen.dart';
 import '../features/help/help_screens.dart';
 import '../features/home/home_screen.dart';
 import '../features/onboarding/onboarding_screen.dart';
@@ -74,20 +77,25 @@ class _RootViewState extends State<RootView> with WidgetsBindingObserver {
         // Keep the 4 main tabs alive in the background to prevent re-triggering entrance animations
         Offstage(
           offstage: tab == null,
-          child: IndexedStack(
-            index: tab?.index ?? 0,
-            children: const [
-              HomeScreen(),
-              ApplicationScreen(),
-              HelpScreen(),
-              ProfileScreen(),
-            ],
+          child: DisplayFeatureSubScreen(
+            anchorPoint: Offset.zero,
+            child: IndexedStack(
+              index: tab?.index ?? 0,
+              children: const [HomeScreen(), ApplicationScreen(), HelpScreen(), ProfileScreen()],
+            ),
           ),
         ),
         if (tab == null)
           KeyedSubtree(
             key: ValueKey(router.visit),
-            child: ScreenEnter(style: router.enter, skip: router.hasVisited, child: _screen(screen)),
+            child: ScreenEnter(
+              style: router.enter,
+              skip: router.hasVisited,
+              // Two-pane screens split around a hinge themselves; the rest stay on one side of it.
+              child: _twoPane(screen.kind)
+                  ? _screen(screen)
+                  : DisplayFeatureSubScreen(anchorPoint: Offset.zero, child: _screen(screen)),
+            ),
           ),
         if (tab != null)
           Positioned(
@@ -116,6 +124,8 @@ class _RootViewState extends State<RootView> with WidgetsBindingObserver {
     );
   }
 
+  static bool _twoPane(ScreenKind k) => k == ScreenKind.project || k == ScreenKind.product || k == ScreenKind.booking;
+
   Widget _screen(Screen s) => switch (s.kind) {
     ScreenKind.splash => const SplashScreen(),
     ScreenKind.onboarding => const OnboardingScreen(),
@@ -133,10 +143,12 @@ class _RootViewState extends State<RootView> with WidgetsBindingObserver {
       from: s.id ?? Discover.catalog,
     ),
     ScreenKind.scan => const ScanScreen(),
-    ScreenKind.booking => const BookingScreen(),
+    ScreenKind.booking => const ScannedUnitScreen(),
+    ScreenKind.idCapture => const IdCaptureScreen(),
     ScreenKind.payment => const PaymentScreen(),
     ScreenKind.paid => const PaidScreen(),
     ScreenKind.application => const ApplicationScreen(),
+    ScreenKind.applicationEdit => ApplicationEditScreen(startStep: s.a),
     ScreenKind.spouse => const SpouseFlowScreen(),
     ScreenKind.profile => const ProfileScreen(),
     ScreenKind.account => const AccountScreen(),

@@ -1,58 +1,86 @@
 [
   {
     "id": "r1",
-    "name": "Valid government ID",
-    "owner": "Principal buyer",
+    "name": "Selfie image",
+    "owner": "Identity",
     "status": "acc",
-    "date": "Sep 15"
+    "date": "Oct 9"
   },
   {
     "id": "r2",
-    "name": "Latest payslips (3 months)",
-    "owner": "Principal buyer",
-    "status": "rev",
-    "date": "Sep 18"
+    "name": "Government ID 1 image",
+    "owner": "Identity",
+    "status": "acc",
+    "date": "Oct 9"
   },
   {
     "id": "r3",
-    "name": "Certificate of employment",
-    "owner": "Principal buyer",
-    "status": "sub",
-    "date": "Sep 20"
+    "name": "Government ID 2 image",
+    "owner": "Identity",
+    "status": "rev",
+    "date": "Oct 9"
   },
   {
     "id": "r4",
-    "name": "TIN ID or BIR Form 1902",
-    "owner": "Principal buyer",
-    "status": "acc",
-    "date": "Sep 15"
+    "name": "Birth certificate document",
+    "owner": "Identity",
+    "status": "sub",
+    "date": "Oct 8"
   },
   {
     "id": "r5",
-    "name": "Marriage contract (PSA)",
-    "owner": "Principal buyer",
-    "status": "todo",
-    "date": null
+    "name": "Photo image",
+    "owner": "Identity",
+    "status": "acc",
+    "date": "Oct 9"
   },
   {
     "id": "r6",
-    "name": "Spouse valid government ID",
-    "owner": "Spouse",
+    "name": "Certificate of employment document",
+    "owner": "Employment & income",
+    "status": "rev",
+    "date": "Oct 9"
+  },
+  {
+    "id": "r7",
+    "name": "One month latest payslip document",
+    "owner": "Employment & income",
+    "status": "sub",
+    "date": "Oct 8"
+  },
+  {
+    "id": "r8",
+    "name": "Three months certified payslips document",
+    "owner": "Employment & income",
     "status": "todo",
     "date": null
   },
   {
-    "id": "r7",
-    "name": "Spouse proof of income",
-    "owner": "Spouse",
-    "status": "acc",
-    "date": "Sep 16"
+    "id": "r9",
+    "name": "Letter of consent – employer document",
+    "owner": "Employment & income",
+    "status": "todo",
+    "date": null
   },
   {
-    "id": "r8",
-    "name": "Proof of billing",
-    "owner": "Spouse",
-    "status": "acc",
-    "date": "Sep 16"
+    "id": "r10",
+    "name": "ESAV document",
+    "owner": "Employment & income",
+    "status": "todo",
+    "date": null
+  },
+  {
+    "id": "r11",
+    "name": "Proof of billing address document",
+    "owner": "Address & payment",
+    "status": "todo",
+    "date": null
+  },
+  {
+    "id": "r12",
+    "name": "Cash deposit proof of payment",
+    "owner": "Address & payment",
+    "status": "todo",
+    "date": null
   }
 ]

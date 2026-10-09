@@ -11,17 +11,12 @@ import '../../widgets/buttons.dart';
 import '../../widgets/scaffold.dart';
 import '../../widgets/surfaces.dart';
 import '../../widgets/itext.dart';
+import 'application_form.dart';
 
-/// My application — maps 1:1 to native `ApplicationView.swift`.
-class ApplicationScreen extends StatefulWidget {
+/// My application: the Customer Information Form as four collapsible review cards (the first one that still needs
+/// answers opens by itself), an Edit application button, and the document requirements tab.
+class ApplicationScreen extends StatelessWidget {
   const ApplicationScreen({super.key});
-
-  @override
-  State<ApplicationScreen> createState() => _ApplicationScreenState();
-}
-
-class _ApplicationScreenState extends State<ApplicationScreen> {
-  String? _open = 'personal';
 
   @override
   Widget build(BuildContext context) {
@@ -55,91 +50,195 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
             badge: (i) => i == 1 && state.todoCount > 0 ? state.todoCount : null,
           ),
         ).rise(2),
-        if (state.applicationTab == ApplicationTab.info) ..._info(state) else const RequirementsTab(),
+        if (state.applicationTab == ApplicationTab.info) const _InfoTab() else const RequirementsTab(),
       ],
     );
   }
+}
 
-  List<Widget> _info(AppState state) => [
-    Padding(
-      padding: const EdgeInsets.only(top: 16),
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(18),
-        decoration: ShapeDecoration(
-          gradient: const LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Palette.navyLight, Palette.navy],
+class _InfoTab extends StatelessWidget {
+  const _InfoTab();
+
+  @override
+  Widget build(BuildContext context) {
+    final state = context.watch<AppState>();
+    final form = state.form;
+    final first = form.firstIncomplete;
+    final open = state.openSteps ?? {if (first >= 0) formSteps[first].id};
+    final allOpen = open.length == formSteps.length;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 16),
+          child: PrimaryButton(
+            'Edit application',
+            icon: TIcon.edit,
+            iconSize: 18,
+            onTap: () => context.go(Screen.applicationEdit(first < 0 ? 0 : first)),
           ),
-          shape: squircle(26, side: hairline(Palette.white(0.1))),
-        ),
-        child: Row(
+        ).rise(3),
+        Padding(
+          padding: const EdgeInsets.only(top: 14, bottom: 4),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  first < 0 ? 'All sections complete' : '${form.overallPercent}% complete',
+                  style: Typo.manrope(13, Typo.bold, Palette.muted),
+                ),
+              ),
+              LinkButton(
+                allOpen ? 'Collapse all' : 'Expand all',
+                size: 13,
+                weight: Typo.extrabold,
+                onTap: () =>
+                    state.update(() => state.openSteps = allOpen ? <String>{} : {for (final s in formSteps) s.id}),
+              ),
+            ],
+          ),
+        ).rise(3),
+        for (final (i, step) in formSteps.indexed) ...[
+          if (i > 0) const SizedBox(height: 10),
+          _StepCard(
+            index: i,
+            step: step,
+            open: open.contains(step.id),
+            startHere: i == first,
+            onToggle: () => state.update(() {
+              final next = {...open};
+              next.contains(step.id) ? next.remove(step.id) : next.add(step.id);
+              state.openSteps = next;
+            }),
+          ),
+        ],
+        const SizedBox(height: 10),
+        GlassCard(
           children: [
-            ProgressRing(
-              fraction: 245 / 360,
-              color: Palette.yellow,
-              track: Palette.white(0.12),
-              size: 70,
-              inner: 56,
-              innerFill: Palette.navy,
-              child: Text('68%', style: Typo.outfit(17, Typo.bold, Palette.text)),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            Tap(
+              onTap: () => state.update(() => state.applicationTab = ApplicationTab.requirements),
+              semanticLabel: 'Document requirements',
+              child: RowLayout(
                 children: [
-                  Text('Almost pre-qualified', style: Typo.outfit(18, Typo.semibold, Palette.text)),
-                  const SizedBox(height: 4),
-                  IText(
-                    'Finish spouse details so Homeful can review your loan faster.',
-                    style: Typo.manrope(13, Typo.regular, Palette.muted).copyWith(height: 1.6),
+                  IconTile(icon: TIcon.document, tint: Palette.todoText, background: Palette.orange.o(0.16)),
+                  RowText(
+                    title: '5 · Document requirements',
+                    subtitle:
+                        '${state.requirements.where((r) => r.status != RequirementStatus.todo).length} of '
+                        '${state.requirements.length} uploaded · ${state.todoCount} to upload',
+                    subtitleSize: 12,
+                    subtitleColor: Palette.subtle,
                   ),
+                  const Chevron(),
                 ],
               ),
             ),
           ],
-        ),
-      ),
-    ).rise(3),
-    Padding(
-      padding: const EdgeInsets.only(top: 14),
-      child: Column(
-        children: [
-          for (final (i, s) in state.sections.indexed) ...[if (i > 0) const SizedBox(height: 10), _section(s)],
-        ],
-      ),
-    ).rise(4),
-  ];
+        ).rise(4),
+      ],
+    );
+  }
+}
 
-  Color _ringColor(int pct) => pct == 100 ? Palette.green : (pct > 0 ? Palette.yellow : Palette.ringIdle);
+/// One collapsible review card for a form step.
+class _StepCard extends StatelessWidget {
+  const _StepCard({
+    required this.index,
+    required this.step,
+    required this.open,
+    required this.startHere,
+    required this.onToggle,
+  });
 
-  Widget _section(ApplicationSection s) {
-    final open = _open == s.id;
-    final c = _ringColor(s.percent);
+  final int index;
+  final FormStep step;
+  final bool open, startHere;
+  final VoidCallback onToggle;
+
+  Color _ring(int pct) => pct == 100 ? Palette.green : (pct > 0 ? Palette.yellow : Palette.ringIdle);
+
+  @override
+  Widget build(BuildContext context) {
+    final form = context.watch<AppState>().form;
+    final pct = form.percent(step);
+    final left = form.missing(step);
+    final c = _ring(pct);
     return GlassCard(
       children: [
-        Tap(
-          onTap: () => setState(() => _open = open ? null : s.id),
-          semanticLabel: '${s.title}, ${open ? 'expanded' : 'collapsed'}',
-          child: RowLayout(
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 12, 12, 12),
+          child: Row(
             children: [
-              ProgressRing(
-                fraction: s.percent / 100,
-                color: c,
-                size: 44,
-                inner: 34,
-                child: s.percent == 100
-                    ? TIconView(TIcon.check, size: 18, color: c)
-                    : Text('${s.percent}%', style: Typo.manrope(10, Typo.extrabold, c)),
+              Expanded(
+                child: Tap(
+                  onTap: onToggle,
+                  semanticLabel: '${step.title}, ${open ? 'expanded' : 'collapsed'}',
+                  child: Row(
+                    children: [
+                      ProgressRing(
+                        fraction: pct / 100,
+                        color: c,
+                        size: 44,
+                        inner: 34,
+                        child: pct == 100
+                            ? TIconView(TIcon.check, size: 18, color: c)
+                            : Text('$pct%', style: Typo.manrope(10, Typo.extrabold, c)),
+                      ),
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('${index + 1} · ${step.title}', style: Typo.manrope(15, Typo.extrabold, Palette.text)),
+                            const SizedBox(height: 3),
+                            Row(
+                              children: [
+                                if (startHere) ...[
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                    decoration: const ShapeDecoration(color: Palette.yellow, shape: StadiumBorder()),
+                                    child: Text('START HERE', style: Typo.manrope(9, Typo.extrabold, Palette.ink)),
+                                  ),
+                                  const SizedBox(width: 6),
+                                ],
+                                Flexible(
+                                  child: Text(
+                                    left == 0 ? 'Complete' : '$left to complete',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: Typo.manrope(
+                                      12,
+                                      Typo.bold,
+                                      left == 0 ? Palette.acceptedText : Palette.todoText,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      AnimatedRotation(
+                        turns: open ? 0.5 : 0,
+                        duration: const Duration(milliseconds: 300),
+                        curve: Motion.easeInOut,
+                        child: const TIconView(TIcon.chevronDown, color: Palette.muted),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-              RowText(title: s.title, subtitle: s.subtitle, subtitleSize: 12, subtitleColor: Palette.subtle),
-              AnimatedRotation(
-                turns: open ? 0.5 : 0,
-                duration: const Duration(milliseconds: 300),
-                curve: Motion.easeInOut,
-                child: const TIconView(TIcon.chevronDown, color: Palette.muted),
+              const SizedBox(width: 8),
+              Pressable(
+                onTap: () => context.go(Screen.applicationEdit(index)),
+                semanticLabel: 'Edit ${step.title}',
+                child: Container(
+                  height: 36,
+                  padding: const EdgeInsets.symmetric(horizontal: 14),
+                  alignment: Alignment.center,
+                  decoration: ShapeDecoration(shape: StadiumBorder(side: hairline(Palette.white(0.16)))),
+                  child: Text('Edit', style: Typo.manrope(13, Typo.extrabold, Palette.text)),
+                ),
               ),
             ],
           ),
@@ -148,62 +247,99 @@ class _ApplicationScreenState extends State<ApplicationScreen> {
           duration: const Duration(milliseconds: 300),
           curve: Motion.easeInOut,
           alignment: Alignment.topCenter,
-          child: !open
-              ? const SizedBox(width: double.infinity)
-              : FadeIn(
-                  duration: 0.3,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                    child: Column(
-                      children: [
-                        if (s.fields.isNotEmpty)
-                          DecoratedBox(
-                            decoration: BoxDecoration(
-                              border: Border(top: BorderSide(color: Palette.white(0.08))),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 6),
-                              child: Column(
-                                children: [
-                                  for (final f in s.fields)
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(vertical: 10),
-                                      child: Row(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(f.key, style: Typo.manrope(14, Typo.regular, Palette.subtle)),
-                                          const SizedBox(width: 12),
-                                          Expanded(
-                                            child: Text(
-                                              f.value,
-                                              textAlign: TextAlign.right,
-                                              style: Typo.manrope(14, Typo.bold, Palette.text),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        const SizedBox(height: 8),
-                        if (s.id == 'spouse')
-                          PrimaryButton(
-                            s.cta,
-                            height: 52,
-                            chipSize: 40,
-                            onTap: () => context.go(const Screen(ScreenKind.spouse)),
-                          )
-                        else
-                          // TODO: API — personal details, co-borrower and AIF forms are not in the design yet.
-                          GhostButton(s.cta, height: 48, onTap: () {}),
-                      ],
-                    ),
-                  ),
-                ),
+          child: !open ? const SizedBox(width: double.infinity) : FadeIn(duration: 0.3, child: _body(context, form)),
         ),
       ],
+    );
+  }
+
+  Widget _body(BuildContext context, ApplicationForm form) {
+    final rows = <Widget>[];
+    for (final g in step.groups) {
+      if (step.id == 'coborrower' && g.title == 'Co-borrower 2' && !form.secondCoBorrower) {
+        rows.add(
+          Padding(
+            padding: const EdgeInsets.only(top: 6),
+            child: Tap(
+              onTap: () {
+                form.setSecondCoBorrower(true);
+                context.go(Screen.applicationEdit(index));
+              },
+              semanticLabel: 'Add co-borrower 2',
+              child: SizedBox(
+                height: 52,
+                child: Row(
+                  children: [
+                    Container(
+                      width: 36,
+                      height: 36,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Palette.submittedText.o(0.5), width: 1.5),
+                      ),
+                      child: const TIconView(TIcon.plus, size: 16, color: Palette.submittedText),
+                    ),
+                    const SizedBox(width: 12),
+                    Text('Add co-borrower 2', style: Typo.manrope(14, Typo.extrabold, Palette.submittedText)),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+        continue;
+      }
+      rows.add(
+        Padding(
+          padding: const EdgeInsets.only(top: 12, bottom: 2),
+          child: Text(g.title.toUpperCase(), style: Typo.overline()),
+        ),
+      );
+      for (final f in g.fields) {
+        final v = form.display(f);
+        rows.add(
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Flexible(flex: 5, child: Text(f.label, style: Typo.manrope(14, Typo.regular, Palette.subtle))),
+                const SizedBox(width: 12),
+                Expanded(
+                  flex: 6,
+                  child: v.isEmpty && f.required
+                      ? Tap(
+                          onTap: () => context.go(Screen.applicationEdit(index)),
+                          semanticLabel: 'Add ${f.label}',
+                          child: Text(
+                            'Add',
+                            textAlign: TextAlign.right,
+                            style: Typo.manrope(13, Typo.extrabold, Palette.todoText),
+                          ),
+                        )
+                      : Text(
+                          v.isEmpty ? '—' : v,
+                          textAlign: TextAlign.right,
+                          style: (f.kind == FieldKind.mono
+                              ? Typo.mono(14, Typo.semibold, Palette.text)
+                              : Typo.manrope(14, Typo.bold, Palette.text)),
+                        ),
+                ),
+              ],
+            ),
+          ),
+        );
+      }
+    }
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          border: Border(top: BorderSide(color: Palette.white(0.08))),
+        ),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: rows),
+      ),
     );
   }
 }
@@ -299,7 +435,7 @@ class RequirementsTab extends StatelessWidget {
             ),
           ),
         ).rise(3),
-        for (final owner in const ['Principal buyer', 'Spouse'])
+        for (final owner in {for (final r in reqs) r.owner})
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

@@ -38,7 +38,7 @@ Android emulator: use `http://10.0.2.2:3100/api/v1` to reach a server on your Ma
 
 ```sh
 flutter analyze        # lints in analysis_options.yaml; must be clean
-flutter test           # widget, navigation, layout-regression and API-client tests
+flutter test           # widget, navigation, layout-regression, adaptive-layout and API-client tests
 ```
 
 CI config is ready in `docs/ci/flutter.yml`; move it to `.github/workflows/` to run analyze and tests on every push (pushing workflows needs a token with the `workflow` scope).
@@ -58,8 +58,8 @@ lib/
     api/api_client.dart     JSON/HTTP client: bearer auth, { data } envelope, errors, 401 → refresh → retry
     api/api_config.dart     --dart-define configuration
   models/models.dart        immutable models with fromJson (the API contract)
-  theme/                    design tokens: colors, typography, spacing, shapes, motion, icons
-  widgets/                  shared UI primitives (buttons, glass surfaces, fields, overlays, art)
+  theme/                    design tokens: colors, typography, spacing, layout (breakpoints), shapes, motion, icons
+  widgets/                  shared UI primitives (buttons, glass surfaces, fields, overlays, art, adaptive)
   features/<area>/          screens per area: auth, home, discover, booking, application, spouse, help, profile, …
 assets/data/*.json          mock data = sample API responses
 specs/exact_ui_design_tokens.md   the token spec the theme implements
@@ -75,13 +75,45 @@ native_ios_backup/          the original SwiftUI app (reference only, not built)
   `squircle()` / `ClipRSuperellipse` for continuous corners, borders as foreground decorations.
 - Every remaining backend touch point is marked `// TODO: API`.
 
-### Discover flow (Figma "02 · Home & Discover")
+### Discover flow
 
 Home carousel / **All brands** catalog (filter by home type) → **Choose a location** sheet (skipped for
-single-project brands) → **project page** (gallery, compare strip, products) → **product page** (affordability
-check against the buyer's income, gallery, financing, fees, docked "Scan seller QR"). Galleries show CMS media when
-the API supplies `media`, otherwise clearly labelled sample photos, videos and drawn placeholders. Data the
-spreadsheet hasn't supplied yet renders as a dashed "pending" note, never invented values.
+single-project brands) → **brand location page** (arch hero with the starting price, facts, availability, About the
+project, gallery, **Available units** ladder, How to get there, Homeowner stories, "Book your home") → **unit page**
+(price, specs, income gauge, gallery, "What you pay" receipt, next steps, docked "Scan seller QR"). Galleries show
+CMS media when the API supplies `media`, otherwise clearly labelled sample media. Sections whose data the API hasn't
+supplied are hidden or shown as a dashed "pending" note, never invented values.
+
+### Booking flow
+
+Scan a seller's **booking QR** → the unit page in booking mode ("From seller QR", "Proceed booking") → Terms &
+Privacy prompt (scroll-gated) → **1 · Attach ID & Selfie** (`id_capture_screen.dart`: ID type → capture or upload
+→ selfie → review) → **2 · Pay** (`booking_flow.dart`: method → reminders sheet → card form or InstaPay QR) →
+**3 · Payment successful** → **Getting started** sheet → **Edit application** (the Customer Information Form,
+`application_edit_screen.dart`, fields defined once in `application_form.dart`).
+
+### Adaptive layout (phones, foldables, tablets)
+
+Rules live in `lib/theme/layout.dart` and `lib/widgets/adaptive.dart`:
+
+| Width | Devices | Behaviour |
+| --- | --- | --- |
+| < 600 dp | phones, folded foldables (Galaxy Z Fold cover, Pixel Fold outer) | the 390 pt design, edge to edge |
+| 600–759 dp | unfolded Galaxy Z Fold, small tablets | content in a centered 600 dp column; bars, sheets and the tab bar cap at 560 dp |
+| ≥ 760 dp | tablets, Pixel Fold unfolded | brand and unit pages split into two panes (hero + facts / details) |
+| vertical hinge | Surface Duo spanned, book-style fold half-open | single-column screens stay on one screen (`DisplayFeatureSubScreen`); two-pane pages put one pane on each side |
+
+- Build new screens on `ScreenScroll` (centred and capped automatically) and `BottomCTABar`.
+- Use `AdaptivePanes` when a screen has two natural halves; check `AdaptivePanes.splits(context)` first.
+- Never hard-code a screen width; use `LayoutBuilder` or `Layout.width(context)`.
+- `test/adaptive_layout_test.dart` renders every screen on iPhone SE, iPhone 17 Pro, Galaxy Z Fold (cover and
+  unfolded), Pixel Fold, iPad 11" and Surface Duo (with hinge) and fails on any overflow. Add new screens to it.
+
+### Motion
+
+Entrances use `Reveal` (fade + 18 pt rise, 0.5 s, staggered ≤ 0.6 s) and one-shot intros (`ArchHero`, `CountUp`,
+bars). No blur in entrances on discover pages (expensive on low-end Android). Every intro is skipped on revisits
+(`SkipEntrance`) and when the OS asks for reduced motion (`reduceMotion`).
 
 ## Release
 

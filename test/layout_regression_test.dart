@@ -9,7 +9,16 @@ import 'test_fonts.dart';
 void main() {
   setUpAll(loadAppFonts);
 
-  for (final k in [ScreenKind.about, ScreenKind.application]) {
+  for (final k in [
+    ScreenKind.about,
+    ScreenKind.application,
+    ScreenKind.applicationEdit,
+    ScreenKind.booking,
+    ScreenKind.project,
+    ScreenKind.idCapture,
+    ScreenKind.payment,
+    ScreenKind.paid,
+  ]) {
     testWidgets('$k at Android size', (tester) async {
       tester.view.physicalSize = const Size(1080, 2400);
       tester.view.devicePixelRatio = 2.625;

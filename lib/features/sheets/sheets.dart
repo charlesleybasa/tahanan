@@ -14,6 +14,7 @@ import '../../widgets/buttons.dart';
 import '../../widgets/fields.dart';
 import '../../widgets/surfaces.dart';
 import '../../widgets/itext.dart';
+import '../booking/booking_flow.dart';
 import '../discover/location_sheet.dart';
 
 /// Swaps sheet steps with the prototype's `.transition(.fadeIn)`: the old step leaves at once, the new one fades in.
@@ -49,6 +50,9 @@ class SheetBody extends StatelessWidget {
         origin: state.sheetOrigin,
         onClose: state.closeSheet,
       ),
+      SheetKind.terms => TermsSheet(onClose: state.closeSheet),
+      SheetKind.paymentReminders => PaymentRemindersSheet(onClose: state.closeSheet),
+      SheetKind.gettingStarted => GettingStartedSheet(onClose: state.closeSheet),
     };
   }
 }

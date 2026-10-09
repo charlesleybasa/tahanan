@@ -5,11 +5,13 @@ import 'package:flutter/widgets.dart';
 
 import '../data/api/api_client.dart';
 import '../data/repositories.dart';
+import '../features/application/application_form.dart';
+import '../features/booking/id_capture_screen.dart' show IdCaptureData;
 import '../models/models.dart';
 import '../theme/theme.dart';
 import '../widgets/overlays.dart';
 
-enum SheetKind { link, changeEmail, changeMobile, upload, location }
+enum SheetKind { link, changeEmail, changeMobile, upload, location, terms, paymentReminders, gettingStarted }
 
 enum ApplicationTab { info, requirements }
 
@@ -18,7 +20,9 @@ enum EmailVerification { idle, enterCode, openingLink, verified }
 
 /// App-wide data and UI state shared across screens. Screen-local state lives in each screen.
 class AppState extends ChangeNotifier {
-  AppState._(this.repos);
+  AppState._(this.repos) {
+    form.addListener(notifyListeners);
+  }
 
   final Repositories repos;
 
@@ -29,6 +33,21 @@ class AppState extends ChangeNotifier {
   BuyerProfile? profile;
   List<Transaction> transactions = const [];
   List<ApplicationSection> sections = [];
+
+  /// The buyer's answers to the Customer Information Form (Personal info + Edit application).
+  final ApplicationForm form = ApplicationForm();
+
+  /// Review cards that are expanded on My application (null = not chosen yet: the first incomplete one opens).
+  Set<String>? openSteps;
+
+  /// Payment method chosen on the Pay step: `card` or `instapay`.
+  String payMethod = 'card';
+
+  /// Where the Pay step is: `choose` (method list), `card` or `instapay`.
+  String payStage = 'choose';
+
+  /// The ID and selfie attached in booking step 1.
+  final IdCaptureData idCapture = IdCaptureData();
 
   SheetKind? sheet;
   String? uploadRequirementId;
@@ -79,10 +98,23 @@ class AppState extends ChangeNotifier {
       transactions = r[3] as List<Transaction>;
       sections = r[4] as List<ApplicationSection>;
       emailVerification = profile!.emailVerified ? EmailVerification.verified : EmailVerification.idle;
+      _seedForm();
     } on ApiException catch (e) {
       debugPrint('Buyer data not loaded: $e');
     }
     notifyListeners();
+  }
+
+  /// Pre-fills the form from the account once; answers the buyer already typed are kept.
+  void _seedForm() {
+    final p = profile;
+    if (p == null || form.values.containsKey('buyer.first')) return;
+    final parts = p.fullName.split(' ');
+    form.values['buyer.first'] = p.firstName;
+    form.values['buyer.last'] = parts.length > 1 ? parts.last : '';
+    if (parts.length > 2) form.values['buyer.middle'] = parts.sublist(1, parts.length - 1).join(' ');
+    form.values['buyer.email'] = p.email;
+    form.values['job.income'] = '${p.grossMonthlyIncome}';
   }
 
   void update(VoidCallback change) {

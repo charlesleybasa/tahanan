@@ -436,7 +436,16 @@ class BottomCTABar extends StatelessWidget {
           stops: const [0, 0.35],
         ),
       ),
-      child: Padding(padding: EdgeInsets.fromLTRB(20, 16, 20, 8 + bottom), child: child),
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(20, 16, 20, 8 + bottom),
+        child: Center(
+          heightFactor: 1,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: Layout.bar),
+            child: child,
+          ),
+        ),
+      ),
     );
   }
 }

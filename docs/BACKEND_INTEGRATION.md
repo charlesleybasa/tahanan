@@ -80,7 +80,19 @@ Deep links already handled by the app (`lib/app/root_view.dart`): `tahanan://aut
   "from": 750000,
   "products": [Product],                // optional; omit and send "productCount" when only the count is known
   "productCount": 2,
-  "media": [Media]                      // optional project gallery
+  "media": [Media],                     // optional project gallery
+  "info": ProjectInfo                   // optional → the page hides each missing section
+}
+// ProjectInfo (location page: About, availability, How to get there, Homeowner stories). Every field is optional.
+{
+  "description": "Pasinaya Homes is an exclusive gated community…",
+  "highlights": ["0 equity", "No downpayment", "Gated community"],
+  "sold": 100, "remaining": 50,         // both needed for the availability bar
+  "address": "Naic, Cavite",
+  "travel": [{ "value": "30 min", "label": "From Manila" }],
+  "mapUrl": "https://maps.google.com/?q=…",   // "Open in Maps"
+  "guideUrl": "https://youtu.be/…",           // "Route video"
+  "stories": [{ "name": "Juan Carlos Santos", "quote": "…", "since": "2023", "rating": 5 }]
 }
 // Product
 {
@@ -124,6 +136,7 @@ The affordability check on the product page compares `financing.gmi` with the bu
 | GET | `/me/application` | — | `ApplicationSection[]` (`application.json`) |
 | POST | `/me/link-account` | `{ homefulId }`. Sends an OTP | 204 |
 | POST | `/me/link-account/verify` | `{ homefulId, otp }` | 204 |
+| PATCH | `/me/application` | Customer Information Form answers, `{ "<fieldId>": "value" }` (ids in `application_form.dart`) | 204 · **not wired yet** |
 | PUT | `/me/application/spouse` | spouse fields, see `SpouseFlowModel.toJson()` | 204 |
 | POST | `/me/application/spouse/invite` | `{ name, mobile }`. SMS link for the spouse to fill in | 204 |
 
@@ -162,13 +175,18 @@ Search the code for `TODO: API`. Each one is an explicit gap with no hidden mock
 - **Token persistence**: `MemoryTokenStore` keeps the session in memory. Swap in Keychain/Keystore storage (for
   example, `flutter_secure_storage`) and refresh the session every 3 h and on app foreground.
 - **Payment hand-off**: open `checkoutUrl` or the provider SDK, then show the receipt after the provider confirms
-  (by webhook or deep link). File: `lib/features/booking/booking_screens.dart`.
-- **Seller QR payload**: the real format comes from the Funnel/Seller app (for example, a signed URL). File:
-  `booking_screens.dart`.
+  (by webhook or deep link). The InstaPay view should render the QR Ph payload the provider returns. File:
+  `lib/features/booking/booking_flow.dart`.
+- **Seller QR payload**: the real format comes from the Funnel/Seller app (for example, a signed URL). Parse it in
+  `booking_screens.dart` and open that unit (`ScannedUnitScreen` in `product_screen.dart` currently resolves the
+  buyer's profile unit).
+- **Customer Information Form**: save answers with `PATCH /me/application`
+  (`application_edit_screen.dart`), and cascade Region → Province → City → Barangay from PSGC data
+  (`application_form.dart`).
+- **Terms & Privacy text** for the booking prompt: `booking_flow.dart`.
 - **Live ticket replies and attachments**: `lib/app/app_state.dart` and `lib/features/help/help_screens.dart`.
 - **Legal copy** (privacy policy and terms) from the CMS: `lib/features/profile/profile_screens.dart`.
-- **Destinations not in the design yet**: notifications inbox, full transaction history, and forms to edit
-  booking, personal, co-borrower and AIF details.
+- **Destinations not in the design yet**: notifications inbox, full transaction history and the AIF form.
 
 ## Where to look
 

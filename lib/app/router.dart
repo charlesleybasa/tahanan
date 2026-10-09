@@ -15,9 +15,11 @@ enum ScreenKind {
   product,
   scan,
   booking,
+  idCapture,
   payment,
   paid,
   application,
+  applicationEdit,
   spouse,
   profile,
   account,
@@ -39,6 +41,9 @@ class Screen {
     : this(ScreenKind.project, a: brand, b: location, id: from);
   const Screen.product(int brand, int location, int product, {String from = Discover.catalog})
     : this(ScreenKind.product, a: brand, b: location, c: product, id: from);
+
+  /// Edit application, opened on [step] (0 personal … 3 co-borrower).
+  const Screen.applicationEdit([int step = 0]) : this(ScreenKind.applicationEdit, a: step);
   const Screen.ticket(String ticketId) : this(ScreenKind.ticket, id: ticketId);
 
   /// About: 0 = privacy, 1 = terms.
@@ -84,6 +89,9 @@ class Screen {
 abstract final class Discover {
   static const home = 'home';
   static const catalog = 'catalog';
+
+  /// A unit opened from a seller's booking QR.
+  static const scan = 'scan';
 }
 
 enum EnterStyle { screen, tab, plain }

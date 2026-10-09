@@ -20,51 +20,57 @@ class FloatingTabBar extends StatelessWidget {
     const shape = RoundedSuperellipseBorder(borderRadius: BorderRadius.all(Radius.circular(37)));
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14),
-      child: SizedBox(
-        height: 74,
-        child: Stack(
-          clipBehavior: Clip.none,
-          children: [
-            Positioned.fill(
-              child: DecoratedBox(
-                decoration: ShapeDecoration(
-                  shape: shape,
-                  shadows: [
-                    BoxShadow(color: const Color(0xFF000000).o(0.6), blurRadius: 22, offset: const Offset(0, 24)),
-                  ],
-                ),
-              ),
-            ),
-            Positioned.fill(
-              child: ClipRSuperellipse(
-                borderRadius: const BorderRadius.all(Radius.circular(37)),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+      child: Center(
+        heightFactor: 1,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: Layout.bar),
+          child: SizedBox(
+            height: 74,
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Positioned.fill(
                   child: DecoratedBox(
                     decoration: ShapeDecoration(
-                      color: Palette.tabGlass,
-                      shape: shape.copyWith(side: hairline(Palette.white(0.1))),
+                      shape: shape,
+                      shadows: [
+                        BoxShadow(color: const Color(0xFF000000).o(0.6), blurRadius: 22, offset: const Offset(0, 24)),
+                      ],
                     ),
                   ),
                 ),
-              ),
-            ),
-            Positioned.fill(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    _item(MainTab.home, TIcon.home, 'Tahanan', 'Home'),
-                    _item(MainTab.application, TIcon.document, 'My docs', 'My application'),
-                    _ScanButton(onTap: onScan),
-                    _item(MainTab.help, TIcon.help, 'Help', 'Help'),
-                    _item(MainTab.profile, TIcon.person, 'Profile', 'Profile'),
-                  ],
+                Positioned.fill(
+                  child: ClipRSuperellipse(
+                    borderRadius: const BorderRadius.all(Radius.circular(37)),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                      child: DecoratedBox(
+                        decoration: ShapeDecoration(
+                          color: Palette.tabGlass,
+                          shape: shape.copyWith(side: hairline(Palette.white(0.1))),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+                Positioned.fill(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(child: _item(MainTab.home, TIcon.home, 'Tahanan', 'Home')),
+                        Expanded(child: _item(MainTab.application, TIcon.document, 'My docs', 'My application')),
+                        _ScanButton(onTap: onScan),
+                        Expanded(child: _item(MainTab.help, TIcon.help, 'Help', 'Help')),
+                        Expanded(child: _item(MainTab.profile, TIcon.person, 'Profile', 'Profile')),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -77,7 +83,6 @@ class FloatingTabBar extends StatelessWidget {
       semanticLabel: label,
       selected: on,
       child: SizedBox(
-        width: 62,
         height: 58,
         child: TweenAnimationBuilder<Color?>(
           tween: ColorTween(end: on ? Palette.yellow : Palette.tabIdle),
@@ -88,12 +93,9 @@ class FloatingTabBar extends StatelessWidget {
             children: [
               TIconView(icon, size: 22, color: c),
               const SizedBox(height: 4),
-              Text(
-                title,
-                maxLines: 1,
-                softWrap: false,
-                overflow: TextOverflow.visible,
-                style: Typo.manrope(11, Typo.extrabold, c),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(title, maxLines: 1, softWrap: false, style: Typo.manrope(11, Typo.extrabold, c)),
               ),
             ],
           ),
@@ -297,6 +299,7 @@ class _BottomSheetPanelState extends State<BottomSheetPanel> with TickerProvider
               },
               child: Container(
                 width: double.infinity,
+                constraints: const BoxConstraints(maxWidth: Layout.bar),
                 padding: EdgeInsets.fromLTRB(22, 12, 22, 34 + bottom),
                 decoration: BoxDecoration(
                   color: Palette.panel,

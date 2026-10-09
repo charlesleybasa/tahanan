@@ -407,7 +407,7 @@ class _JourneyCardState extends State<JourneyCard> with SingleTickerProviderStat
                           padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
                           decoration: BoxDecoration(color: Palette.ink.o(0.1), borderRadius: BorderRadius.circular(8)),
                           child: Text(
-                            unit?.code ?? 'CAV-PHC-03-B12-L07',
+                            unit?.code ?? '4PHCL-01-008-085',
                             style: Typo.mono(11, Typo.semibold, Palette.ink),
                           ),
                         ),
@@ -441,15 +441,20 @@ class _JourneyCardState extends State<JourneyCard> with SingleTickerProviderStat
                       opacity: 0.7,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 50),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            for (final s in const ['Booked', 'Docs', 'Pre-qual', 'Loan', 'Move-in'])
-                              Text(
-                                s.toUpperCase(),
-                                style: Typo.manrope(10, Typo.extrabold, Palette.ink).copyWith(letterSpacing: 0.4),
-                              ),
-                          ],
+                        // Scales down on narrow phones (Galaxy Z Fold cover, iPhone SE) instead of overflowing.
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Row(
+                            children: [
+                              for (final (i, s) in const ['Booked', 'Docs', 'Pre-qual', 'Loan', 'Move-in'].indexed) ...[
+                                if (i > 0) const SizedBox(width: 18),
+                                Text(
+                                  s.toUpperCase(),
+                                  style: Typo.manrope(10, Typo.extrabold, Palette.ink).copyWith(letterSpacing: 0.4),
+                                ),
+                              ],
+                            ],
+                          ),
                         ),
                       ),
                     ),

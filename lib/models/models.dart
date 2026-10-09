@@ -134,6 +134,7 @@ class Location {
     this.products,
     this.productCount,
     this.media = const [],
+    this.info,
   });
 
   factory Location.fromJson(Json j) => Location(
@@ -143,6 +144,10 @@ class Location {
     products: j['products'] == null ? null : _list(j['products']).map(Product.fromJson).toList(),
     productCount: j['productCount'] as int?,
     media: _media(j['media']),
+    info: switch (j['info']) {
+      final Json i => ProjectInfo.fromJson(i),
+      _ => null,
+    },
   );
 
   final String name;
@@ -157,6 +162,67 @@ class Location {
 
   /// Project gallery; empty until uploaded (the app then shows labelled samples).
   final List<MediaRef> media;
+
+  /// Description, availability, directions and homeowner stories. Null until entered in the CMS.
+  final ProjectInfo? info;
+}
+
+/// A homeowner testimonial on a project page.
+class HomeownerStory {
+  const HomeownerStory({required this.name, required this.quote, this.since, this.rating = 5});
+
+  factory HomeownerStory.fromJson(Json j) => HomeownerStory(
+    name: j['name']! as String,
+    quote: j['quote']! as String,
+    since: j['since'] as String?,
+    rating: (j['rating'] as int?) ?? 5,
+  );
+
+  final String name, quote;
+
+  /// Year the buyer became a verified homeowner ("2023").
+  final String? since;
+  final int rating;
+}
+
+/// Project information for a location page (all fields optional so the CMS can fill them in gradually).
+class ProjectInfo {
+  const ProjectInfo({
+    this.description,
+    this.highlights = const [],
+    this.sold,
+    this.remaining,
+    this.address,
+    this.travel = const [],
+    this.mapUrl,
+    this.guideUrl,
+    this.stories = const [],
+  });
+
+  factory ProjectInfo.fromJson(Json j) => ProjectInfo(
+    description: j['description'] as String?,
+    highlights: ((j['highlights'] as List<Object?>?) ?? const []).cast<String>(),
+    sold: j['sold'] as int?,
+    remaining: j['remaining'] as int?,
+    address: j['address'] as String?,
+    travel: [
+      for (final t in ((j['travel'] as List<Object?>?) ?? const []).cast<Json>())
+        (t['value']! as String, t['label']! as String),
+    ],
+    mapUrl: j['mapUrl'] as String?,
+    guideUrl: j['guideUrl'] as String?,
+    stories: ((j['stories'] as List<Object?>?) ?? const []).cast<Json>().map(HomeownerStory.fromJson).toList(),
+  );
+
+  final String? description, address, mapUrl, guideUrl;
+  final List<String> highlights;
+
+  /// Homes sold and still available, for the availability bar.
+  final int? sold, remaining;
+
+  /// ("30 min", "From Manila") pairs.
+  final List<(String, String)> travel;
+  final List<HomeownerStory> stories;
 }
 
 enum HomeGroup { rowhouse, duplex, condo, cluster }

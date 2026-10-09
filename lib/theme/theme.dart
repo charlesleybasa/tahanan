@@ -7,6 +7,7 @@ import 'typography.dart';
 export 'colors.dart';
 export 'gradients.dart';
 export 'icons.dart';
+export 'layout.dart';
 export 'motion.dart';
 export 'shapes.dart';
 export 'spacing.dart';

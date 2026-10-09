@@ -1120,8 +1120,9 @@ List<Widget> spousePersonalStep(BuildContext context, SpouseFlowModel m) => [
 
 /// Date input styled as `.field`; tapping opens an iOS-style wheel picker.
 class BirthdateField extends StatelessWidget {
-  const BirthdateField({super.key, required this.date, required this.onChanged, this.border});
+  const BirthdateField({super.key, required this.date, required this.onChanged, this.border, this.label = 'Birthdate'});
 
+  final String label;
   final DateTime? date;
   final ValueChanged<DateTime> onChanged;
   final Color? border;
@@ -1173,11 +1174,11 @@ class BirthdateField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const FieldLabel('Birthdate'),
+        FieldLabel(label),
         const SizedBox(height: 8),
         Tap(
           onTap: () => _pick(context),
-          semanticLabel: 'Birthdate${date == null ? '' : ', ${format(date!)}'}',
+          semanticLabel: '$label${date == null ? '' : ', ${format(date!)}'}',
           child: FieldChrome(
             focused: false,
             border: border,
